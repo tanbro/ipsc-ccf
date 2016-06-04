@@ -39,8 +39,85 @@
           <type>1</type>
           <targetflow>
           </targetflow>
+          <target>1023</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1023</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 method</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>method == "ivr.call.perform"</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
           <target>
           </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1027</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1027</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程</NodeName>
+    <ExtendedProperty>SubFlowName=call_perform;InvokeType=0;ChNo=;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>method</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>21</type>
+          <targetflow>call_perform</targetflow>
+          <target>1000</target>
         </ExitPort>
       </Exit>
     </PropertySet>
