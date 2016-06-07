@@ -90,7 +90,7 @@
       <AffectList />
       <EffectList>
         <valuelist>
-          <value>call_info</value>
+          <value>cid</value>
         </valuelist>
       </EffectList>
       <Exit>
@@ -311,7 +311,6 @@ cid_rmap = _gd_['cid_rmap']
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	cid = uuid()
-	Trace('1')
 	cid_map[cid] = call_info = {
 		'id': id_,
 		'cid': cid,

@@ -18,7 +18,7 @@
     <PropertySet>
       <AffectList>
         <varlist>
-          <var>call_info</var>
+          <var>cid</var>
         </varlist>
       </AffectList>
       <Exit>
@@ -101,6 +101,8 @@
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=cid_map = _gd_['cid_map']
 cid_rmap = _gd_['cid_rmap']
+
+call_info = cid_map[cid]
 
 id_ = call_info['id']
 params = call_info['params']
