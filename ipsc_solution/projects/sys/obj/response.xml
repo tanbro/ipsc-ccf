@@ -21,10 +21,10 @@
           <var>id</var>
         </varlist>
         <varlist>
-          <var>error</var>
+          <var>result</var>
         </varlist>
         <varlist>
-          <var>result</var>
+          <var>error</var>
         </varlist>
       </AffectList>
       <Exit>
@@ -37,6 +37,43 @@
         </ExitPort>
         <ExitPort>
           <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1097</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1097</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>bool(error)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
           <targetflow>
           </targetflow>
           <target>
