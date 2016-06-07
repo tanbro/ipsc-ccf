@@ -156,6 +156,11 @@
           <ZoneType>0</ZoneType>
           <Value>15000</Value>
         </let>
+        <let>
+          <VarName>last_err</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>None</Value>
+        </let>
       </letlist>
       <Exit>
         <ExitPort>
@@ -303,23 +308,27 @@ cid_rmap = _gd_['cid_rmap']
     <NodeID>1078</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本::call.perform initiated</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=cid = uuid()
-cid_map[cid] = call_info = {
-	'id': id_,
-	'cid': cid,
-	'params': params,
-	'chan': chan,
-	'begin_time': now(),
-	'answer_time': None,
-	'end_time': None,
-	'dropped_by': 'usr',
-	'reason': None,
-	'cause': None,
-}
-cid_rmap[chan] = cid
-
-jsonrpc.send_result(id_, cid)
-
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	cid = uuid()
+	Trace('1')
+	cid_map[cid] = call_info = {
+		'id': id_,
+		'cid': cid,
+		'params': params,
+		'chan': chan,
+		'begin_time': now(),
+		'answer_time': None,
+		'end_time': None,
+		'dropped_by': 'usr',
+		'reason': None,
+		'cause': None,
+	}
+	cid_rmap[chan] = cid
+	jsonrpc.send_result(id_, cid)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -334,7 +343,7 @@ jsonrpc.send_result(id_, cid)
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1027</target>
+          <target>1109</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -343,7 +352,14 @@ jsonrpc.send_result(id_, cid)
     <NodeID>1079</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本::call.perform error</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(id_)</ExtendedProperty>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	cid_map.pop(cid, None)
+	cid_rmap.pop(chan, None)
+	jsonrpc.send_error(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -432,6 +448,42 @@ jsonrpc.send_method(
           </targetflow>
           <target>
           </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1109</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1027</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1079</target>
         </ExitPort>
       </Exit>
     </PropertySet>

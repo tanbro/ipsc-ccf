@@ -15,7 +15,7 @@ def get_client(local_only=False, raise_if_empty=True):
     local_candidates = []
     remote_candidates = []
     for unit_id, client_id, client_type, add_info in SmartbusGetNodeInfo(0):
-        if client_id > 5:
+        if client_type > 5:
             if unit_id == local_unit_id:
                 local_candidates.append((unit_id, client_id, client_type))
             elif not local_only:
@@ -25,7 +25,7 @@ def get_client(local_only=False, raise_if_empty=True):
     elif (not local_only) and remote_candidates:
         return randchoice(remote_candidates)
     elif raise_if_empty:
-        raise IndexError()
+        raise IvrError(0, '找不到可用的bus客户端')
     else:
         return None
 
@@ -111,4 +111,3 @@ def send_error(id_, code=0, message='', data=None):
 #         self.code = code
 #         self.message = message
 #         self.data = data
-
