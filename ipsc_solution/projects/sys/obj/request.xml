@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-06-03T10:07:06+08:00</ModifyDate>
+    <ModifyDate>2016-06-08T02:19:25+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -39,7 +39,7 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1062</target>
+          <target>1074</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -47,7 +47,7 @@
   <FlowNode>
     <NodeID>1023</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 method</NodeName>
+    <NodeName>判断 init method</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
@@ -69,7 +69,7 @@
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1074</target>
+          <target>1076</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -77,163 +77,6 @@
           </targetflow>
           <target>
           </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1027</NodeID>
-    <NodeType>INVOKESUB</NodeType>
-    <NodeName>调子流程 call_perform</NodeName>
-    <ExtendedProperty>SubFlowName=call_perform;InvokeType=0;ChNo=;Timeout=;RunMode=0</ExtendedProperty>
-    <PropertySet>
-      <AffectList />
-      <EffectList>
-        <valuelist>
-          <value>cid</value>
-        </valuelist>
-      </EffectList>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1068</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1068</target>
-        </ExitPort>
-        <ExitPort>
-          <type>21</type>
-          <targetflow>call_perform</targetflow>
-          <target>1000</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1057</NodeID>
-    <NodeType>DELAY</NodeType>
-    <NodeName>延时 next_rpc_req</NodeName>
-    <ExtendedProperty>IsCheckHangup=1;Delay=delay_msec;Contect=;WorkCh=chan;OutData=next_rpc_req</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1090</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1066</target>
-        </ExitPort>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1062</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>delay_msec</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>15000</Value>
-        </let>
-        <let>
-          <VarName>last_err</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>None</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1023</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1066</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 next_rpc_req</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=id_, method, params = next_rpc_req</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1023</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1068</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 answered</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>call_info['answer_time']</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1089</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1090</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -241,9 +84,12 @@
   <FlowNode>
     <NodeID>1074</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call initiate</NodeName>
+    <NodeName>脚本 subflow init</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=cid_map = _gd_['cid_map']
 cid_rmap = _gd_['cid_rmap']
+
+delay_msec = 120 * 1000
+last_err = None
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -258,7 +104,7 @@ cid_rmap = _gd_['cid_rmap']
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1076</target>
+          <target>1023</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -382,13 +228,18 @@ except IvrError as err:
     <NodeID>1089</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call.on_answer</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_method(
-	method='ivr.call.on_answered',
-	params={
-		'cid': cid,
-	}
-)
-</ExtendedProperty>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	call_info['answer_time'] = now()
+	jsonrpc.send_method(
+		method='ivr.call.on_answered',
+		params={
+			'cid': cid,
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -402,51 +253,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1057</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1090</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.on_finished</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=cid_map.pop(cid)
-cid_rmap.pop(chan)
-
-call_info['end_time'] = now()
-call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
-
-if call_info['answer_time']:
-	answered_duration = call_info['end_time'] - call_info['answer_time']
-else:
-	answered_duration = None
-
-jsonrpc.send_method(
-	method='ivr.call.on_finished',
-	params={
-		'cid': call_info['cid'],
-		'dropped_by': call_info['dropped_by'],
-		'cause': call_info['cause'],
-		'answered_duration': answered_duration,
-	}
-)
-</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -476,13 +283,306 @@ jsonrpc.send_method(
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1027</target>
+          <target>1164</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
           <targetflow>
           </targetflow>
           <target>1079</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1122</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 method</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>method == 'ivr.call.start_play'</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1175</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1164</NodeID>
+    <NodeType>WAITDIALEX</NodeType>
+    <NodeName>等待拨号</NodeName>
+    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=chan;Option=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>6</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>1166</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1089</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1166</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 dropped_by</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=call_info['dropped_by'] = 'sys'</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1129</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.on_finished</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	cid_map.pop(cid, None)
+	cid_rmap.pop(chan, None)
+
+	call_info['end_time'] = now()
+	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
+
+	if call_info['answer_time']:
+		answered_duration = call_info['end_time'] - call_info['answer_time']
+	else:
+		answered_duration = None
+
+	jsonrpc.send_method(
+		method='ivr.call.on_finished',
+		params={
+			'cid': call_info['cid'],
+			'dropped_by': call_info['dropped_by'],
+			'cause': call_info['cause'],
+			'answered_duration': answered_duration,
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1139</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 parse data</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=id_, method, params = json.loads(data)</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1122</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1142</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 Delay</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(delay_msec, True, chan, -1, "BusNotifyTitle=%s" % (cid)))
+err, data = ret_val
+if err != 1:
+    TraceErr('Delay error: %s' % err)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1143</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1143</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 Delay returns</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>err == 1</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1139</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1163</NodeID>
+    <NodeType>PLAY</NodeType>
+    <NodeName>放音</NodeName>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
+    <PropertySet>
+      <DynamicVoice>
+        <VarVoice>
+          <content>params['file_path']</content>
+          <type>0</type>
+          <option>
+          </option>
+        </VarVoice>
+      </DynamicVoice>
+      <SubTitle />
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1175</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.start_play return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_result(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1163</target>
         </ExitPort>
       </Exit>
     </PropertySet>
