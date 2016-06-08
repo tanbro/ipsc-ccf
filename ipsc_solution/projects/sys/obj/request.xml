@@ -569,13 +569,13 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1248</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 Delay returns</NodeName>
+    <NodeName>判断 not last_err</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <switch>
         <case>
-          <expression>err == 1</expression>
+          <expression>not bool(last_err)</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>
@@ -864,21 +864,21 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1253</target>
+          <target>1258</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1253</NodeID>
+    <NodeID>1258</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 Delay returns</NodeName>
+    <NodeName>判断 not last_err</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <switch>
         <case>
-          <expression>err == 1</expression>
+          <expression>not bool(last_err)</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>
