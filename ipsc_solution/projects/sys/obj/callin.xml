@@ -20,8 +20,7 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1180</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
@@ -36,6 +35,47 @@
           </targetflow>
           <target>
           </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1180</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 request</NodeName>
+    <ExtendedProperty>SubFlowName=request;InvokeType=0;ChNo=;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>None</value>
+        </valuelist>
+        <valuelist>
+          <value>"sys.call.inbound"</value>
+        </valuelist>
+        <valuelist>
+          <value>None</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>21</type>
+          <targetflow>request</targetflow>
+          <target>1000</target>
         </ExitPort>
       </Exit>
     </PropertySet>

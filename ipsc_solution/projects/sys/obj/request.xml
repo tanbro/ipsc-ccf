@@ -47,7 +47,7 @@
   <FlowNode>
     <NodeID>1023</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 init method</NodeName>
+    <NodeName>判断 call perform</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
@@ -69,7 +69,7 @@
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1076</target>
+          <target>1192</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -104,13 +104,96 @@ last_err = None
           <type>1</type>
           <targetflow>
           </targetflow>
+          <target>1181</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1122</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 method</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>method == 'ivr.call.redirect'</expression>
+          <ExitType>102</ExitType>
+        </case>
+        <case>
+          <expression>method == 'ivr.call.start_play'</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>102</type>
+          <targetflow>
+          </targetflow>
+          <target>1226</target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1175</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1181</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断.call inbound</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>method == "sys.call.inbound"</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1216</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
           <target>1023</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1076</NodeID>
+    <NodeID>1192</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
     <ExtendedProperty>WorkCh=;Dnis=params['to_uri'];Ani=params['from_uri'];OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=;RingTimeout=50;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
@@ -127,33 +210,33 @@ last_err = None
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>1079</target>
+          <target>1195</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1078</target>
+          <target>1194</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1079</target>
+          <target>1195</target>
         </ExitPort>
         <ExitPort>
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>1079</target>
+          <target>1195</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1078</NodeID>
+    <NodeID>1194</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本::call.perform initiated</NodeName>
+    <NodeName>脚本 call.perform initiated</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	cid = uuid()
@@ -162,6 +245,7 @@ try:
 		'cid': cid,
 		'params': params,
 		'chan': chan,
+		'dir': 'outbound',
 		'begin_time': now(),
 		'answer_time': None,
 		'end_time': None,
@@ -188,15 +272,15 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1109</target>
+          <target>1203</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1079</NodeID>
+    <NodeID>1195</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本::call.perform error</NodeName>
+    <NodeName>脚本 call.perform error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	cid_map.pop(cid, None)
@@ -225,7 +309,7 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1089</NodeID>
+    <NodeID>1200</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call.on_answer</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
@@ -259,7 +343,7 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1109</NodeID>
+    <NodeID>1203</NodeID>
     <NodeType>JUDGE</NodeType>
     <NodeName>判断 not last_err</NodeName>
     <ExtendedProperty>
@@ -283,56 +367,19 @@ except IvrError as err:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1164</target>
+          <target>1208</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
           <targetflow>
           </targetflow>
-          <target>1079</target>
+          <target>1195</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1122</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 method</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>method == 'ivr.call.start_play'</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1175</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1164</NodeID>
+    <NodeID>1208</NodeID>
     <NodeType>WAITDIALEX</NodeType>
     <NodeName>等待拨号</NodeName>
     <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=chan;Option=</ExtendedProperty>
@@ -348,13 +395,13 @@ except IvrError as err:
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>1166</target>
+          <target>1210</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1089</target>
+          <target>1200</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
@@ -366,7 +413,7 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1166</NodeID>
+    <NodeID>1210</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 dropped_by</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=call_info['dropped_by'] = 'sys'</ExtendedProperty>
@@ -389,49 +436,50 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1129</NodeID>
+    <NodeID>1216</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.on_finished</NodeName>
+    <NodeName>脚本 call.on_callin</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	cid_map.pop(cid, None)
-	cid_rmap.pop(chan, None)
-
-	call_info['end_time'] = now()
-	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
-
-	if call_info['answer_time']:
-		answered_duration = call_info['end_time'] - call_info['answer_time']
-	else:
-		answered_duration = None
-
-	jsonrpc.send_method(
-		method='ivr.call.on_finished',
-		params={
-			'cid': call_info['cid'],
-			'dropped_by': call_info['dropped_by'],
-			'cause': call_info['cause'],
-			'answered_duration': answered_duration,
-		}
+	cid = uuid()
+	chan = GetChNum()
+	params = dict(
+		cid = cid,
+		from_uri = GetCallingNo(),
+		to_uri = GetCalledNo(),
 	)
+	cid_map[cid] = call_info = {
+		'id': id_,
+		'cid': cid,
+		'params': params,
+		'chan': chan,
+		'dir': 'inbound',
+		'begin_time': now(),
+		'answer_time': None,
+		'end_time': None,
+		'dropped_by': 'usr',
+		'reason': None,
+		'cause': None,
+	}
+	cid_rmap[chan] = cid
+	jsonrpc.send_method(method='call.on_callin', params=params)
 except IvrError as err:
 	TraceErr(err)
-	last_err = err</ExtendedProperty>
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1129</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -517,6 +565,89 @@ if err != 1:
           <targetflow>
           </targetflow>
           <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1129</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.on_finished</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	cid_map.pop(cid, None)
+	cid_rmap.pop(chan, None)
+
+	call_info['end_time'] = now()
+	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
+
+	if call_info['answer_time']:
+		answered_duration = call_info['end_time'] - call_info['answer_time']
+	else:
+		answered_duration = None
+
+	jsonrpc.send_method(
+		method='ivr.call.on_finished',
+		params={
+			'cid': call_info['cid'],
+			'dropped_by': call_info['dropped_by'],
+			'cause': call_info['cause'],
+			'answered_duration': answered_duration,
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1226</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 redirect</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		redirect_uri = params['redirect_uri']
+		destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
+		ReadySipRedirect(chan, 301, destip, destport)
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
