@@ -442,11 +442,16 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	cid = uuid()
-	chan = GetChNum()
+	chan = GetCurrentCh()
+	from_uri = 'sip:{}'.format(GetOrgCallNo())
+	if GetCalledNo():
+		to_uri = 'sip:{}'.format(GetCalledNo)
+	else:
+		to_uri = None
 	params = dict(
 		cid = cid,
-		from_uri = GetCallingNo(),
-		to_uri = GetCalledNo(),
+		from_uri = from_uri,
+		to_uri = to_uri
 	)
 	cid_map[cid] = call_info = {
 		'id': id_,
@@ -626,7 +631,7 @@ try:
 	try:
 		redirect_uri = params['redirect_uri']
 		destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
-		ReadySipRedirect(chan, 301, destip, destport)
+		ReadySipRedirect(chan, 301, destuser, destip, destport)
 		jsonrpc.send_result(id_)
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
