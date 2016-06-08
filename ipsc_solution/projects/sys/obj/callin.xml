@@ -10,14 +10,19 @@
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
-    <NodeID>1096</NodeID>
-    <NodeType>SUBSTART</NodeType>
-    <NodeName>子流程开始</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
+    <NodeID>1177</NodeID>
+    <NodeType>START</NodeType>
+    <NodeName>开始</NodeName>
+    <ExtendedProperty>IsAutoConn=0;OutCallinState=0</ExtendedProperty>
     <PropertySet>
-      <AffectList />
       <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
         <ExitPort>
           <type>2</type>
           <targetflow>
@@ -26,7 +31,7 @@
           </target>
         </ExitPort>
         <ExitPort>
-          <type>1</type>
+          <type>7</type>
           <targetflow>
           </targetflow>
           <target>

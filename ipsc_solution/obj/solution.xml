@@ -8,7 +8,7 @@
     <SolutionDesc />
     <SolutionVer>1.0.0</SolutionVer>
     <CreateDate>2016-06-03T08:05:54+08:00</CreateDate>
-    <ModifyDate>2016-06-03T16:06:03+08:00</ModifyDate>
+    <ModifyDate>2016-06-08T10:22:56+08:00</ModifyDate>
     <DesignVer>5.0</DesignVer>
   </SolutionInfo>
   <SysDBConnect>
@@ -45,4 +45,19 @@
     <Option>
     </Option>
   </Project>
+  <CallRouterToProject>
+    <ProjectID>sys</ProjectID>
+    <MatchMode>4</MatchMode>
+    <RouteCtrlType>0</RouteCtrlType>
+    <RouteTeleno>
+    </RouteTeleno>
+    <IsRegularExpression>0</IsRegularExpression>
+    <DevNo>
+    </DevNo>
+    <DevType>
+    </DevType>
+    <DevGroupID>
+    </DevGroupID>
+    <MediaType>1</MediaType>
+  </CallRouterToProject>
 </Solution>
