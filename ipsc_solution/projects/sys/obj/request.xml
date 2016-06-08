@@ -561,7 +561,43 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
+          <target>1248</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1248</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 Delay returns</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>err == 1</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
           <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -822,11 +858,45 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1129</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1253</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1253</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 Delay returns</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>err == 1</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
           <targetflow>
           </targetflow>
           <target>
