@@ -125,6 +125,10 @@ last_err = None
           <expression>method == 'ivr.call.start_play'</expression>
           <ExitType>101</ExitType>
         </case>
+        <case>
+          <expression>method == 'ivr.call.answer'</expression>
+          <ExitType>103</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -145,6 +149,12 @@ last_err = None
           <targetflow>
           </targetflow>
           <target>1175</target>
+        </ExitPort>
+        <ExitPort>
+          <type>103</type>
+          <targetflow>
+          </targetflow>
+          <target>1246</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -786,6 +796,41 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1163</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1246</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 answer</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		SendAcceptCall()
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
