@@ -69,7 +69,7 @@
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1192</target>
+          <target>1232</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -196,7 +196,7 @@ last_err = None
     <NodeID>1192</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to_uri'];Ani=params['from_uri'];OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=;RingTimeout=50;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=;RingTimeout=50;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -431,6 +431,73 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1232</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call perform parse</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	user, host, port = utils.parse_sip_uri(params['from_uri'])
+	from_uri = '{0}@{1}:{2}'.format(user, host, port)
+	user, host, port = utils.parse_sip_uri(params['to_uri'])
+	to_uri = '{0}@{1}:{2}'.format(user, host, port)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1235</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1235</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1192</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
         </ExitPort>
       </Exit>
     </PropertySet>
