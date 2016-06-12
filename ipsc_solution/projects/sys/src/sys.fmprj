@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project>
-  <MaxNodeID>1320</MaxNodeID>
+  <MaxNodeID>1342</MaxNodeID>
   <MachineOut>1</MachineOut>
   <ProjectInfo>
     <ProjectID>sys</ProjectID>
@@ -10,7 +10,7 @@
     <ProjectVer>1.0</ProjectVer>
     <ProjectType>0</ProjectType>
     <CreateDate>2016-06-03T16:19:37+08:00</CreateDate>
-    <ModifyDate>2016-06-08T15:13:13+08:00</ModifyDate>
+    <ModifyDate>2016-06-12T14:00:57+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </ProjectInfo>
   <ChannelOrderSet>
@@ -34,18 +34,6 @@
     <LocalAreaID>
     </LocalAreaID>
   </SystemOption>
-  <ProjectFlow>
-    <ProjectID>sys</ProjectID>
-    <FlowID>request</FlowID>
-    <FlowFidPath>.\projects\sys\src\request.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\request.xma</FlowXmaPath>
-  </ProjectFlow>
-  <ProjectFlow>
-    <ProjectID>sys</ProjectID>
-    <FlowID>callin</FlowID>
-    <FlowFidPath>.\projects\sys\src\callin.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\callin.xma</FlowXmaPath>
-  </ProjectFlow>
   <CallRouter>
     <CallRouterID>1</CallRouterID>
     <MatchMode>4</MatchMode>
@@ -94,4 +82,22 @@
   <Function>
     <FileName>utils.fun</FileName>
   </Function>
+  <ProjectFlow>
+    <ProjectID>sys</ProjectID>
+    <FlowID>request</FlowID>
+    <FlowFidPath>.\projects\sys\src\request.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\request.xma</FlowXmaPath>
+  </ProjectFlow>
+  <ProjectFlow>
+    <ProjectID>sys</ProjectID>
+    <FlowID>callin</FlowID>
+    <FlowFidPath>.\projects\sys\src\callin.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\callin.xma</FlowXmaPath>
+  </ProjectFlow>
+  <ProjectFlow>
+    <ProjectID>sys</ProjectID>
+    <FlowID>on_conf_disposed</FlowID>
+    <FlowFidPath>.\projects\sys\src\on_conf_disposed.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\on_conf_disposed.xma</FlowXmaPath>
+  </ProjectFlow>
 </Project>

@@ -88,8 +88,9 @@
     <NodeID>1133</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>初始化 _gd_</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=_gd_['cid_map'] = {} # cid -&gt; chan
-_gd_['cid_rmap'] = {} # chan -&gt; cid
+    <ExtendedProperty>ZoneType=0;ScriptContent=_gd_['call_map'] = {} # chan =&gt; call_info
+_gd_['conf_map'] = {} # conf_id -&gt; conf_info
+
 </ExtendedProperty>
     <PropertySet>
       <Exit>

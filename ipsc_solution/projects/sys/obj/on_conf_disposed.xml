@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <FlowItem>
+    <FlowID>on_conf_disposed</FlowID>
+    <FlowName>on_conf_disposed</FlowName>
+    <FlowDesc />
+    <FlowVer>1.0</FlowVer>
+    <CreateDate>2016-06-12T14:00:57+08:00</CreateDate>
+    <ModifyDate>2016-06-12T06:00:57+08:00</ModifyDate>
+    <DesignVer>2.0</DesignVer>
+  </FlowItem>
+  <FlowNode>
+    <NodeID>1321</NodeID>
+    <NodeType>SUBSTART</NodeType>
+    <NodeName>子流程开始</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+</root>
