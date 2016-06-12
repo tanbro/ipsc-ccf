@@ -552,7 +552,7 @@ try:
 	chan = GetCurrentCh()
 	from_uri = 'sip:{}'.format(GetOrgCallNo())
 	if GetCalledNo():
-		to_uri = 'sip:{}'.format(GetCalledNo)
+		to_uri = 'sip:{}'.format(GetCalledNo())
 	else:
 		to_uri = None
 	params = dict(
