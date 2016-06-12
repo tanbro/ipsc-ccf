@@ -98,7 +98,7 @@
     <ExtendedProperty>ZoneType=0;ScriptContent=cid_map = _gd_['cid_map']
 cid_rmap = _gd_['cid_rmap']
 
-delay_msec = 120 * 1000
+delay_msec = 30 * 1000
 last_err = None
 </ExtendedProperty>
     <PropertySet>
