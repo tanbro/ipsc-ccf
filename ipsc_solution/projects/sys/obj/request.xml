@@ -205,7 +205,7 @@ conf_map_r = _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
           <type>106</type>
           <targetflow>
           </targetflow>
-          <target>1336</target>
+          <target>1353</target>
         </ExitPort>
         <ExitPort>
           <type>107</type>
@@ -1146,7 +1146,7 @@ except IvrError as err:
     <NodeID>1336</NodeID>
     <NodeType>JOINCONFEX</NodeType>
     <NodeName>加入会议组</NodeName>
-    <ExtendedProperty>ConfID=int(params['conf_id']);InitVolume=;WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=65536;AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
+    <ExtendedProperty>ConfID=confid;InitVolume=;WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=65536;AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
     <PropertySet>
       <Actions />
       <Exit>
@@ -1184,13 +1184,49 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1353</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.enter_conf prepare</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		conf_res_id = params['conf_id']
+		conf_info = conf_map[conf_res_id]
+		confid = conf_info['conf_id']
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1336</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1348</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 exit_conf</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		confid = conf_map[conf_id]['conf_id']
+		conf_res_id = params['conf_id']
+		conf_info = conf_map[conf_res_id]
+		confid = conf_info['conf_id']
 		RemoveConfer(confid, chan)
 		jsonrpc.send_result(id_)
 	except Exception as err:
@@ -1258,7 +1294,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	res_id = uuid()
-	conf_info = conf_map[res_id] = {
+	conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
 		'id': id_,
 		'conf_id': conf_id,
 		'res_id': res_id, 
