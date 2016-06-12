@@ -314,7 +314,8 @@ elif err != 1:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1341</target>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
