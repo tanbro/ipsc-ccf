@@ -47,7 +47,7 @@
   <FlowNode>
     <NodeID>1023</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 call perform</NodeName>
+    <NodeName>判断 initiate method</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
@@ -55,6 +55,10 @@
         <case>
           <expression>method == "ivr.call.perform"</expression>
           <ExitType>101</ExitType>
+        </case>
+        <case>
+          <expression>method == 'ivr.conf.create'</expression>
+          <ExitType>102</ExitType>
         </case>
       </switch>
       <Exit>
@@ -70,6 +74,12 @@
           <targetflow>
           </targetflow>
           <target>1232</target>
+        </ExitPort>
+        <ExitPort>
+          <type>102</type>
+          <targetflow>
+          </targetflow>
+          <target>1268</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -112,7 +122,7 @@ last_err = None
   <FlowNode>
     <NodeID>1122</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 method</NodeName>
+    <NodeName>判断 management method</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
@@ -128,6 +138,10 @@ last_err = None
         <case>
           <expression>method == 'ivr.call.answer'</expression>
           <ExitType>103</ExitType>
+        </case>
+        <case>
+          <expression>method == 'ivr.call.drop'</expression>
+          <ExitType>104</ExitType>
         </case>
       </switch>
       <Exit>
@@ -155,6 +169,12 @@ last_err = None
           <targetflow>
           </targetflow>
           <target>1246</target>
+        </ExitPort>
+        <ExitPort>
+          <type>104</type>
+          <targetflow>
+          </targetflow>
+          <target>1273</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -631,8 +651,16 @@ except IvrError as err:
     <NodeName>脚本 Delay</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(delay_msec, True, chan, -1, "BusNotifyTitle=%s" % (cid)))
 err, data = ret_val
-if err != 1:
-    TraceErr('Delay error: %s' % err)
+if err == -4:
+    TraceErr('Delay arguments error')
+elif err == -8:
+	Trace('Delay Timeout')
+elif err == -61:
+	TraceErr('Channel close when Delay')
+elif err == -200:
+	TraceErr('Delay error')
+elif err != 1
+	TraceErr('Delay error: %s', err)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -660,8 +688,16 @@ if err != 1:
     <PropertySet>
       <switch>
         <case>
+          <expression>err == -8</expression>
+          <ExitType>102</ExitType>
+        </case>
+        <case>
           <expression>err == 1</expression>
           <ExitType>101</ExitType>
+        </case>
+        <case>
+          <expression>err == -61</expression>
+          <ExitType>103</ExitType>
         </case>
       </switch>
       <Exit>
@@ -673,16 +709,28 @@ if err != 1:
           </target>
         </ExitPort>
         <ExitPort>
+          <type>102</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
           <type>101</type>
           <targetflow>
           </targetflow>
           <target>1139</target>
         </ExitPort>
         <ExitPort>
-          <type>100</type>
+          <type>103</type>
           <targetflow>
           </targetflow>
           <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -841,6 +889,75 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1273</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 drop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		Hnagup(chan, params.get('cause'))
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1279</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1279</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1163</NodeID>
     <NodeType>PLAY</NodeType>
     <NodeName>放音</NodeName>
@@ -937,6 +1054,31 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1268</NodeID>
+    <NodeType>CREATECONFEX</NodeType>
+    <NodeName>创建会议组</NodeName>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_sec', 180);ReallocResNum=0;PlayFile=params.get('bg_file');PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=;DeleConfLimitType=0;DeleConfLimit=params.get('dispose_threshold, 1)</ExtendedProperty>
+    <PropertySet>
+      <Events />
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
