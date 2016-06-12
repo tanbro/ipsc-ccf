@@ -132,16 +132,20 @@ last_err = None
           <ExitType>102</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.start_play'</expression>
-          <ExitType>101</ExitType>
-        </case>
-        <case>
           <expression>method == 'ivr.call.answer'</expression>
           <ExitType>103</ExitType>
         </case>
         <case>
           <expression>method == 'ivr.call.drop'</expression>
           <ExitType>104</ExitType>
+        </case>
+        <case>
+          <expression>method == 'ivr.call.start_play'</expression>
+          <ExitType>101</ExitType>
+        </case>
+        <case>
+          <expression>method == 'ivr.call.stop_play'</expression>
+          <ExitType>105</ExitType>
         </case>
       </switch>
       <Exit>
@@ -159,12 +163,6 @@ last_err = None
           <target>1226</target>
         </ExitPort>
         <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1175</target>
-        </ExitPort>
-        <ExitPort>
           <type>103</type>
           <targetflow>
           </targetflow>
@@ -175,6 +173,18 @@ last_err = None
           <targetflow>
           </targetflow>
           <target>1273</target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1175</target>
+        </ExitPort>
+        <ExitPort>
+          <type>105</type>
+          <targetflow>
+          </targetflow>
+          <target>1290</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -688,16 +698,16 @@ elif err != 1
     <PropertySet>
       <switch>
         <case>
+          <expression>err == -61</expression>
+          <ExitType>103</ExitType>
+        </case>
+        <case>
           <expression>err == -8</expression>
           <ExitType>102</ExitType>
         </case>
         <case>
           <expression>err == 1</expression>
           <ExitType>101</ExitType>
-        </case>
-        <case>
-          <expression>err == -61</expression>
-          <ExitType>103</ExitType>
         </case>
       </switch>
       <Exit>
@@ -707,6 +717,12 @@ elif err != 1
           </targetflow>
           <target>
           </target>
+        </ExitPort>
+        <ExitPort>
+          <type>103</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
         </ExitPort>
         <ExitPort>
           <type>102</type>
@@ -719,12 +735,6 @@ elif err != 1
           <targetflow>
           </targetflow>
           <target>1139</target>
-        </ExitPort>
-        <ExitPort>
-          <type>103</type>
-          <targetflow>
-          </targetflow>
-          <target>1129</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -1048,6 +1058,75 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1163</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1290</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 stop_play</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		StopPlay(chan)
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1295</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1295</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
