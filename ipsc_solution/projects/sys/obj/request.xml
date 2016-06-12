@@ -178,7 +178,7 @@ last_err = None
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1175</target>
+          <target>1163</target>
         </ExitPort>
         <ExitPort>
           <type>105</type>
@@ -851,49 +851,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1129</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1258</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1258</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 not last_err</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>not bool(last_err)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
           <target>1142</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1129</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -920,49 +884,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1129</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1279</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1279</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 not last_err</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>not bool(last_err)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
           <target>1142</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1129</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -987,19 +915,19 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1129</target>
+          <target>1300</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1142</target>
+          <target>1175</target>
         </ExitPort>
         <ExitPort>
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>1129</target>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -1007,7 +935,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1175</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.start_play return</NodeName>
+    <NodeName>脚本 call.start_play ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_result(id_)
@@ -1021,30 +949,30 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1129</target>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1260</target>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1260</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 not last_err</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
+    <NodeID>1300</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.start_play error result</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_result(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
-      <switch>
-        <case>
-          <expression>not bool(last_err)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
       <Exit>
         <ExitPort>
           <type>2</type>
@@ -1054,16 +982,10 @@ except IvrError as err:
           </target>
         </ExitPort>
         <ExitPort>
-          <type>101</type>
+          <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1163</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1129</target>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -1090,7 +1012,7 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1129</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -1132,7 +1054,7 @@ except IvrError as err:
           <type>100</type>
           <targetflow>
           </targetflow>
-          <target>1129</target>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
