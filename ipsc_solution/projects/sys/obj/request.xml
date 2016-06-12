@@ -668,8 +668,8 @@ elif err == -8:
 elif err == -61:
 	TraceErr('Channel close when Delay')
 elif err == -200:
-	TraceErr('Delay error')
-elif err != 1
+	TraceErr('Delay internal error')
+elif err != 1:
 	TraceErr('Delay error: %s', err)
 </ExtendedProperty>
     <PropertySet>
