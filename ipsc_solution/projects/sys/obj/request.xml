@@ -98,11 +98,16 @@
     <ExtendedProperty>ZoneType=0;ScriptContent=delay_msec = 30 * 1000
 last_err = None
 
+res_id = None
 chan = None
 conf_id = None
 
-call_map = _gd_['call_map']
-conf_map = _gd_['conf_map']</ExtendedProperty>
+call_map = _gd_['call_map'] # chan =&gt; call_info
+conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+
+call_map_r = _gd_['call_map_r'] = {} # res_id =&gt; call_info
+conf_map_r = _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -206,8 +211,7 @@ conf_map = _gd_['conf_map']</ExtendedProperty>
           <type>107</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1348</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -456,7 +460,7 @@ elif err != 1:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	res_id = uuid()
-	call_info = call_map[chan] = {
+	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id,
 		'params': params,
@@ -498,6 +502,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_map.pop(chan, None)
+	call_map_r.pop(res_id, None)
 	jsonrpc.send_error(id_)
 except IvrError as err:
 	TraceErr(err)
@@ -734,7 +739,7 @@ try:
 		from_uri = from_uri,
 		to_uri = to_uri
 	)
-	call_info = {
+	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id,
 		'params': params,
@@ -812,6 +817,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_map.pop(chan, None)
+	call_map_r.pop(res_id, None)
 
 	call_info['end_time'] = now()
 	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
@@ -1075,42 +1081,6 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1295</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1295</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 not last_err</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>not bool(last_err)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
           <target>1142</target>
         </ExitPort>
       </Exit>
@@ -1176,7 +1146,7 @@ except IvrError as err:
     <NodeID>1336</NodeID>
     <NodeType>JOINCONFEX</NodeType>
     <NodeName>加入会议组</NodeName>
-    <ExtendedProperty>ConfID=int(params['conf_id']);InitVolume=;WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=;AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
+    <ExtendedProperty>ConfID=int(params['conf_id']);InitVolume=;WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=65536;AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
     <PropertySet>
       <Actions />
       <Exit>
@@ -1206,6 +1176,40 @@ except IvrError as err:
         </ExitPort>
         <ExitPort>
           <type>8</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1348</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 exit_conf</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		confid = conf_map[conf_id]['conf_id']
+		RemoveConfer(confid, chan)
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
           <targetflow>
           </targetflow>
           <target>1142</target>

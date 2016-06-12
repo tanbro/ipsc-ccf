@@ -89,7 +89,9 @@
     <NodeType>SCRIPT</NodeType>
     <NodeName>初始化 _gd_</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=_gd_['call_map'] = {} # chan =&gt; call_info
+_gd_['call_map_r'] = {} # res_id =&gt; call_info
 _gd_['conf_map'] = {} # conf_id -&gt; conf_info
+_gd_['conf_map_r'] = {} # res_id -&gt; conf_info
 
 </ExtendedProperty>
     <PropertySet>
