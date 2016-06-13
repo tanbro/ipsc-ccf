@@ -96,8 +96,8 @@
   </ProjectFlow>
   <ProjectFlow>
     <ProjectID>sys</ProjectID>
-    <FlowID>conf_on_disposed</FlowID>
-    <FlowFidPath>.\projects\sys\src\conf_on_disposed.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\conf_on_disposed.xma</FlowXmaPath>
+    <FlowID>conf</FlowID>
+    <FlowFidPath>.\projects\sys\src\conf.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\conf.xma</FlowXmaPath>
   </ProjectFlow>
 </Project>

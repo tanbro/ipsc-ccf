@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Flow>
   <FlowItem>
-    <FlowID>callin</FlowID>
-    <FlowName>callin</FlowName>
+    <FlowID>call_inbound</FlowID>
+    <FlowName>call_inbound</FlowName>
     <FlowDesc>
     </FlowDesc>
     <FlowVer>1.0</FlowVer>
