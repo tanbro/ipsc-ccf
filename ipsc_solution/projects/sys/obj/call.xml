@@ -56,10 +56,6 @@
           <expression>method == "ivr.call.perform"</expression>
           <ExitType>101</ExitType>
         </case>
-        <case>
-          <expression>method == 'ivr.conf.create'</expression>
-          <ExitType>102</ExitType>
-        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -76,17 +72,10 @@
           <target>1232</target>
         </ExitPort>
         <ExitPort>
-          <type>102</type>
-          <targetflow>
-          </targetflow>
-          <target>1268</target>
-        </ExitPort>
-        <ExitPort>
           <type>100</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1365</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -95,8 +84,7 @@
     <NodeID>1074</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 subflow init</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=delay_msec = 30 * 1000
-last_err = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 
 res_id = None
 chan = None
@@ -162,10 +150,6 @@ conf_map_r = _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
           <expression>method == 'ivr.call.exit_conf'</expression>
           <ExitType>107</ExitType>
         </case>
-        <case>
-          <expression>method == 'ivr.conf.drop'</expression>
-          <ExitType>108</ExitType>
-        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -218,12 +202,6 @@ conf_map_r = _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
           <target>1348</target>
         </ExitPort>
         <ExitPort>
-          <type>108</type>
-          <targetflow>
-          </targetflow>
-          <target>1361</target>
-        </ExitPort>
-        <ExitPort>
           <type>100</type>
           <targetflow>
           </targetflow>
@@ -270,6 +248,36 @@ conf_map_r = _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1365</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 invalid method</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_error(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1139</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 parse data</NodeName>
@@ -295,7 +303,7 @@ conf_map_r = _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
     <NodeID>1142</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(delay_msec, bool(chan), iif(chan, chan, 0), -1, "BusNotifyTitle=%s" % res_id))
+    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, True, chan, -1, "BusNotifyTitle=%s" % res_id))
 err, data = ret_val
 if err == -4:
     TraceErr('Delay arguments error')
@@ -359,8 +367,7 @@ elif err != 1:
           <type>103</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1129</target>
         </ExitPort>
         <ExitPort>
           <type>102</type>
@@ -379,43 +386,6 @@ elif err != 1:
           <targetflow>
           </targetflow>
           <target>1142</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1341</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 RES</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>bool(chan)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1129</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -467,7 +437,7 @@ elif err != 1:
     <NodeName>脚本 call.perform initiated</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = uuid()
+	res_id = utils.make_flow_id()
 	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id,
@@ -477,7 +447,7 @@ try:
 		'begin_time': now(),
 		'answer_time': None,
 		'end_time': None,
-		'dropped_by': 'usr',
+		'dropped_by': None,
 		'reason': None,
 		'cause': None,
 	}
@@ -732,10 +702,10 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1216</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.on_callin</NodeName>
+    <NodeName>脚本 inbound</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = uuid()
+	res_id = utils.make_flow_id()
 	chan = GetCurrentCh()
 	from_uri = 'sip:{}'.format(GetOrgCallNo())
 	if GetCalledNo():
@@ -756,7 +726,7 @@ try:
 		'begin_time': now(),
 		'answer_time': None,
 		'end_time': None,
-		'dropped_by': 'usr',
+		'dropped_by': None,
 		'reason': None,
 		'cause': None,
 	}
@@ -1154,7 +1124,7 @@ except IvrError as err:
     <NodeID>1336</NodeID>
     <NodeType>JOINCONFEX</NodeType>
     <NodeName>加入会议组</NodeName>
-    <ExtendedProperty>ConfID=confid;InitVolume=;WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=65536;AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
+    <ExtendedProperty>ConfID=conf_id;InitVolume=;WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=65536;AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
     <PropertySet>
       <Actions />
       <Exit>
@@ -1200,7 +1170,7 @@ try:
 	try:
 		conf_res_id = params['conf_id']
 		conf_info = conf_map[conf_res_id]
-		confid = conf_info['conf_id']
+		conf_id = conf_info['conf_id']
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
 		raise
@@ -1234,8 +1204,8 @@ try:
 	try:
 		conf_res_id = params['conf_id']
 		conf_info = conf_map[conf_res_id]
-		confid = conf_info['conf_id']
-		RemoveConfer(confid, chan)
+		conf_id = conf_info['conf_id']
+		RemoveConfer(conf_id, chan)
 		jsonrpc.send_result(id_)
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
@@ -1257,138 +1227,6 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1142</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1268</NodeID>
-    <NodeType>CREATECONFEX</NodeType>
-    <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_sec', 180);ReallocResNum=0;PlayFile=params.get('bg_file');PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('dispose_threshold', 1)</ExtendedProperty>
-    <PropertySet>
-      <Events>
-        <EventList>
-          <EventID>1</EventID>
-          <EventType>28</EventType>
-          <Value>
-          </Value>
-          <Mode>0</Mode>
-          <SubFlowID>on_conf_disposed</SubFlowID>
-          <Param>
-          </Param>
-        </EventList>
-      </Events>
-      <Exit>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1308</target>
-        </ExitPort>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1309</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1308</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf.create ok return</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	res_id = uuid()
-	conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
-		'id': id_,
-		'conf_id': conf_id,
-		'res_id': res_id, 
-		'begin_time': now(),
-		'end_time': None,
-	}
-	jsonrpc.send_result(id_, res_id)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
-</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1309</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf.create error result</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	jsonrpc.send_result(id_)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
-</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1361</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf.drop</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	try:
-		DeleConf(conf_id)
-		jsonrpc.send_result(id_)
-	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
-</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
         </ExitPort>
       </Exit>
     </PropertySet>

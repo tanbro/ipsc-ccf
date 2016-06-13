@@ -29,6 +29,194 @@
           <type>1</type>
           <targetflow>
           </targetflow>
+          <target>1367</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1367</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 subflow init</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+
+res_id = None
+chan = None
+conf_id = None
+
+call_map = _gd_['call_map'] # chan =&gt; call_info
+conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+
+call_map_r = _gd_['call_map_r'] = {} # res_id =&gt; call_info
+conf_map_r = _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1389</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1372</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1383</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=;ScriptContent=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1372</NodeID>
+    <NodeType>CREATECONFEX</NodeType>
+    <NodeName>创建会议组</NodeName>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_sec', 180);ReallocResNum=0;PlayFile=params.get('bg_file');PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('dispose_threshold', 1)</ExtendedProperty>
+    <PropertySet>
+      <Events>
+        <EventList>
+          <EventID>1</EventID>
+          <EventType>28</EventType>
+          <Value>
+          </Value>
+          <Mode>0</Mode>
+          <SubFlowID>on_conf_disposed</SubFlowID>
+          <Param>
+          </Param>
+        </EventList>
+      </Events>
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1373</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1374</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1373</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.create ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	res_id = uuid()
+	conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
+		'id': id_,
+		'conf_id': conf_id,
+		'res_id': res_id, 
+		'begin_time': now(),
+		'end_time': None,
+	}
+	jsonrpc.send_result(id_, res_id)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1383</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1383</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1374</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.create error result</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_result(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1383</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1383</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1389</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.drop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		DeleConf(conf_id)
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1383</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
           <target>
           </target>
         </ExitPort>
