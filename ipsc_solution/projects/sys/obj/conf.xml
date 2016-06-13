@@ -343,7 +343,7 @@ elif err != 1:
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_sec', 180);ReallocResNum=0;PlayFile=params.get('bg_file', '');PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('dispose_threshold', 1)</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_sec', 180);ReallocResNum=0;PlayFile=params.get('bg_file');PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('dispose_threshold', 1)</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
@@ -391,9 +391,6 @@ try:
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
-
-Trace('conf_map:\n%s\n' % conf_map)
-Trace('conf_map_r:\n%s\n' % conf_map_r)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
