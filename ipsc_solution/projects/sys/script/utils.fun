@@ -22,7 +22,7 @@ def parse_sip_uri(sip_uri):
         destuserhost = uri_parts[1]
         destport = int(uri_parts[2])
     if not destuserhost:
-        raise IvrError(0, '不支持的 SIP URI 表达式: %s' % redirect_uri)
+        raise IvrError(0, '不支持的 SIP URI 表达式: %s' % sip_uri)
     userhost_parts = destuserhost.split('@', 1)
     if len(userhost_parts) == 1:
         destip = userhost_parts[0]
