@@ -50,7 +50,7 @@
     <CallCtrlType>3</CallCtrlType>
     <Option>
     </Option>
-    <FlowID>callin</FlowID>
+    <FlowID>call_inbound</FlowID>
     <MediaType>-1</MediaType>
   </CallRouter>
   <AgentCtrl>
@@ -84,20 +84,20 @@
   </Function>
   <ProjectFlow>
     <ProjectID>sys</ProjectID>
-    <FlowID>request</FlowID>
-    <FlowFidPath>.\projects\sys\src\request.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\request.xma</FlowXmaPath>
+    <FlowID>call</FlowID>
+    <FlowFidPath>.\projects\sys\src\call.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\call.xma</FlowXmaPath>
   </ProjectFlow>
   <ProjectFlow>
     <ProjectID>sys</ProjectID>
-    <FlowID>callin</FlowID>
-    <FlowFidPath>.\projects\sys\src\callin.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\callin.xma</FlowXmaPath>
+    <FlowID>call_inbound</FlowID>
+    <FlowFidPath>.\projects\sys\src\call_inbound.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\call_inbound.xma</FlowXmaPath>
   </ProjectFlow>
   <ProjectFlow>
     <ProjectID>sys</ProjectID>
-    <FlowID>on_conf_disposed</FlowID>
-    <FlowFidPath>.\projects\sys\src\on_conf_disposed.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\on_conf_disposed.xma</FlowXmaPath>
+    <FlowID>conf_on_disposed</FlowID>
+    <FlowFidPath>.\projects\sys\src\conf_on_disposed.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\conf_on_disposed.xma</FlowXmaPath>
   </ProjectFlow>
 </Project>
