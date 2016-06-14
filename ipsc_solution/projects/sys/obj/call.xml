@@ -655,8 +655,12 @@ except IvrError as err:
     <NodeName>脚本 call perform parse</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	user, host, port = utils.parse_sip_uri(params['from_uri'])
-	from_uri = '{0}@{1}:{2}'.format(user, host, port)
+	org_from_uri = params.get('from_uri')
+	if bool(org_from_uri):
+		user, host, port = utils.parse_sip_uri(org_from_uri)
+		from_uri = '{0}@{1}:{2}'.format(user, host, port)
+	else:
+		from_uri = ''
 	user, host, port = utils.parse_sip_uri(params['to_uri'])
 	to_uri = '{0}@{1}:{2}'.format(user, host, port)
 except IvrError as err:
@@ -1187,7 +1191,7 @@ except IvrError as err:
 try:
 	try:
 		conf_res_id = params['conf_id']
-		conf_info = conf_map[conf_res_id]
+		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
