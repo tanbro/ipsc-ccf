@@ -68,7 +68,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1372</target>
+          <target>1447</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -363,7 +363,7 @@ elif err != 1:
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_sec', 180);ReallocResNum=0;PlayFile=params.get('background_file_path');PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('dispose_threshold', 1)</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_sec', 180);ReallocResNum=0;PlayFile=params.get('background_play_repeating');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('release_threshold', 1)</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
@@ -453,6 +453,76 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1446</NodeID>
+    <NodeType>CREATECONFEX</NodeType>
+    <NodeName>创建会议组</NodeName>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_sec', 180);ReallocResNum=0;PlayFile=params.get('background_play_repeating');PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('release_threshold', 1)</ExtendedProperty>
+    <PropertySet>
+      <Events>
+        <EventList>
+          <EventID>1</EventID>
+          <EventType>28</EventType>
+          <Value>
+          </Value>
+          <Mode>0</Mode>
+          <SubFlowID>"conf_released"</SubFlowID>
+          <Param>
+          </Param>
+        </EventList>
+      </Events>
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1373</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1374</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1447</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 background_play_repeating</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>params.get('background_play_repeating')</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1372</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1446</target>
         </ExitPort>
       </Exit>
     </PropertySet>

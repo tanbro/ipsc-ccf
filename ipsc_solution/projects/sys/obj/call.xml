@@ -968,7 +968,7 @@ except IvrError as err:
     <PropertySet>
       <DynamicVoice>
         <VarVoice>
-          <content>params['file_path']</content>
+          <content>params['play_file']</content>
           <type>0</type>
           <option>
           </option>
