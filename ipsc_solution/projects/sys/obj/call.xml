@@ -1225,7 +1225,7 @@ except IvrError as err:
 try:
 	try:
 		conf_res_id = params['conf_id']
-		conf_info = conf_map[conf_res_id]
+		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
 		RemoveConfer(conf_id, chan)
 		jsonrpc.send_result(id_)
