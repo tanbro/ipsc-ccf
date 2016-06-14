@@ -121,6 +121,14 @@ except IvrError as err:
           <expression>method == 'ivr.conf.release'</expression>
           <ExitType>101</ExitType>
         </case>
+        <case>
+          <expression>method == 'ivr.conf.start_play'</expression>
+          <ExitType>102</ExitType>
+        </case>
+        <case>
+          <expression>method == 'ivr.conf.stop_play'</expression>
+          <ExitType>103</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -135,6 +143,18 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1389</target>
+        </ExitPort>
+        <ExitPort>
+          <type>102</type>
+          <targetflow>
+          </targetflow>
+          <target>1432</target>
+        </ExitPort>
+        <ExitPort>
+          <type>103</type>
+          <targetflow>
+          </targetflow>
+          <target>1440</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -467,6 +487,76 @@ except IvrError as err:
           </targetflow>
           <target>
           </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1432</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.start_play</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		StartConfPlay(
+			conf_id,
+			params['file_path'],
+			mode=int(params.get('is_loop', False))
+		)
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1440</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.stop_play</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		StopConfPlay(conf_id)
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
         </ExitPort>
       </Exit>
     </PropertySet>
