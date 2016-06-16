@@ -261,18 +261,12 @@ except IvrError as err:
     <NodeID>1142</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, True, chan, -1, "BusNotifyTitle=%s" % res_id))
+    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, 2, chan, -1, "BusNotifyTitle=%s" % res_id))
 err, data = ret_val
-if err == -4:
-    TraceErr('Delay arguments error')
-elif err == -8:
-	Trace('Delay Timeout')
-elif err == -61:
-	TraceErr('Channel close when Delay')
-elif err == -200:
-	TraceErr('Delay internal error')
+if err == -8:
+	pass
 elif err != 1:
-	TraceErr('Delay error: %s', err)
+	TraceErr('Delay error %s: %s' % (err, data))
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -564,7 +558,7 @@ except IvrError as err:
     <NodeID>1465</NodeID>
     <NodeType>INVOKESUB</NodeType>
     <NodeName>调子流程</NodeName>
-    <ExtendedProperty>SubFlowName=call_aync_dial;InvokeType=1;ChNo=virt_chan;Timeout=;RunMode=0</ExtendedProperty>
+    <ExtendedProperty>SubFlowName=call_aync_dial;InvokeType=1;ChNo=chan;Timeout=;RunMode=0</ExtendedProperty>
     <PropertySet>
       <AffectList />
       <EffectList>
