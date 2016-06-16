@@ -55,7 +55,7 @@ call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
 #
-call_info = conf_map_r[res_id]
+call_info = call_map_r[res_id]
 chan = call_info['chan']
 </ExtendedProperty>
     <PropertySet>
