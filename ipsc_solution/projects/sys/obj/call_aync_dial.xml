@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <FlowItem>
+    <FlowID>call_aync_dial</FlowID>
+    <FlowName>call_aync_dial</FlowName>
+    <FlowDesc />
+    <FlowVer>1.0</FlowVer>
+    <CreateDate>2016-06-16T17:33:24+08:00</CreateDate>
+    <ModifyDate>2016-06-16T09:33:24+08:00</ModifyDate>
+    <DesignVer>2.0</DesignVer>
+  </FlowItem>
+  <FlowNode>
+    <NodeID>1454</NodeID>
+    <NodeType>SUBSTART</NodeType>
+    <NodeName>子流程开始</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <AffectList>
+        <varlist>
+          <var>id_</var>
+        </varlist>
+        <varlist>
+          <var>res_id</var>
+        </varlist>
+      </AffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1455</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1455</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=ok = False
+last_err = None
+
+call_map = _gd_['call_map'] # chan =&gt; call_info
+conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+
+call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
+conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+
+#
+call_info = conf_map_r[res_id]
+chan = call_info['chan']
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1457</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1457</NodeID>
+    <NodeType>WAITDIALEX</NodeType>
+    <NodeName>等待拨号</NodeName>
+    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=chan;Option=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>6</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1473</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1464</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call out complete</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if ok:
+		call_info['answer_time'] = now()
+		jsonrpc.send_method(
+			method='ivr.call.on_answered',
+			params={
+				'res_id': res_id,
+			}
+		)
+	else:
+		pass
+except IvrError as err:
+	TraceErr(err)
+	last_err = err</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1473</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 ok</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>ok</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>True</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1475</NodeID>
+    <NodeType>AFTERPROC</NodeType>
+    <NodeName>后处理</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1464</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+</root>
