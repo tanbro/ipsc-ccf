@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-06-16T09:33:24+08:00</ModifyDate>
+    <ModifyDate>2016-06-17T05:39:07+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -78,7 +78,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
   <FlowNode>
     <NodeID>1122</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 management method</NodeName>
+    <NodeName>判断 operation method</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
@@ -96,19 +96,19 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <ExitType>103</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.start_play'</expression>
+          <expression>method == 'ivr.call.play_start'</expression>
           <ExitType>101</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.stop_play'</expression>
+          <expression>method == 'ivr.call.play_stop'</expression>
           <ExitType>105</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.enter_conf'</expression>
+          <expression>method == 'ivr.call.conf_enter'</expression>
           <ExitType>106</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.exit_conf'</expression>
+          <expression>method == 'ivr.call.conf_exit'</expression>
           <ExitType>107</ExitType>
         </case>
       </switch>
@@ -142,7 +142,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1163</target>
+          <target>1506</target>
         </ExitPort>
         <ExitPort>
           <type>105</type>
@@ -557,7 +557,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1465</NodeID>
     <NodeType>INVOKESUB</NodeType>
-    <NodeName>调子流程</NodeName>
+    <NodeName>调子流程 call async dial</NodeName>
     <ExtendedProperty>SubFlowName=call_aync_dial;InvokeType=1;ChNo=chan;Timeout=;RunMode=0</ExtendedProperty>
     <PropertySet>
       <AffectList />
@@ -621,7 +621,7 @@ try:
 		'reason': None,
 		'cause': None,
 	}
-	jsonrpc.send_method(method='call.on_callin', params=params)
+	jsonrpc.send_method(method='call.on_incoming', params=params)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -682,7 +682,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1129</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.on_dropped</NodeName>
+    <NodeName>脚本 call.on_released</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_map.pop(chan)
@@ -697,7 +697,7 @@ try:
 		answered_duration = None
 
 	jsonrpc.send_method(
-		method='ivr.call.on_dropped',
+		method='ivr.call.on_released',
 		params={
 			'res_id': call_info['res_id'],
 			'dropped_by': call_info['dropped_by'],
@@ -831,46 +831,9 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1163</NodeID>
-    <NodeType>PLAY</NodeType>
-    <NodeName>放音</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=;Mode=1;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
-    <PropertySet>
-      <DynamicVoice>
-        <VarVoice>
-          <content>params['play_file']</content>
-          <type>0</type>
-          <option>
-          </option>
-        </VarVoice>
-      </DynamicVoice>
-      <SubTitle />
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1300</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1175</target>
-        </ExitPort>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
     <NodeID>1175</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.start_play ok return</NodeName>
+    <NodeName>脚本 call.play_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_result(id_)
@@ -898,10 +861,10 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1300</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.start_play error result</NodeName>
+    <NodeName>脚本 call.play_start error result</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(id_)
+	jsonrpc.send_error(id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -924,9 +887,78 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1502</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async play</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_play;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1300</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1175</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_play</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1506</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 NewVCh</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>vch</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>NewVCh()</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1300</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1502</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1290</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 stop_play</NodeName>
+    <NodeName>脚本 play stop</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:

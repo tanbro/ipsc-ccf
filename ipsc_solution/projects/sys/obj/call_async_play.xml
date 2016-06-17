@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <FlowItem>
-    <FlowID>call_aync_dial</FlowID>
-    <FlowName>call_aync_dial</FlowName>
+    <FlowID>call_async_play</FlowID>
+    <FlowName>call_async_play</FlowName>
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
-    <CreateDate>2016-06-16T17:33:24+08:00</CreateDate>
+    <CreateDate>2016-06-17T13:39:07+08:00</CreateDate>
     <ModifyDate>2016-06-17T05:39:08+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
-    <NodeID>1454</NodeID>
+    <NodeID>1489</NodeID>
     <NodeType>SUBSTART</NodeType>
     <NodeName>子流程开始</NodeName>
     <ExtendedProperty>
@@ -22,6 +22,9 @@
         </varlist>
         <varlist>
           <var>res_id</var>
+        </varlist>
+        <varlist>
+          <var>params</var>
         </varlist>
       </AffectList>
       <Exit>
@@ -36,13 +39,13 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1455</target>
+          <target>1490</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1455</NodeID>
+    <NodeID>1490</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=ok = False
@@ -57,7 +60,9 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 #
 call_info = call_map_r[res_id]
 chan = call_info['chan']
-</ExtendedProperty>
+
+#
+begin_time = now()</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -71,68 +76,26 @@ chan = call_info['chan']
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1457</target>
+          <target>1492</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1457</NodeID>
-    <NodeType>WAITDIALEX</NodeType>
-    <NodeName>等待拨号</NodeName>
-    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=chan;Option=</ExtendedProperty>
+    <NodeID>1492</NodeID>
+    <NodeType>PLAY</NodeType>
+    <NodeName>放音</NodeName>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
     <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>6</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>4</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1473</target>
-        </ExitPort>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1464</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call out complete</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	if ok:
-		call_info['answer_time'] = now()
-		jsonrpc.send_method(
-			method='ivr.call.on_answered',
-			params={
-				'res_id': res_id,
-			}
-		)
-	else:
-		pass
-except IvrError as err:
-	TraceErr(err)
-	last_err = err</ExtendedProperty>
-    <PropertySet>
+      <DynamicVoice>
+        <VarVoice>
+          <content>params['play_file']</content>
+          <type>0</type>
+          <option>
+          </option>
+        </VarVoice>
+      </DynamicVoice>
+      <SubTitle />
       <Exit>
         <ExitPort>
           <type>2</type>
@@ -145,13 +108,37 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1480</target>
+          <target>1496</target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1473</NodeID>
+    <NodeID>1494</NodeID>
+    <NodeType>AFTERPROC</NodeType>
+    <NodeName>后处理</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1503</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1496</NodeID>
     <NodeType>LET</NodeType>
     <NodeName>赋值 ok</NodeName>
     <ExtendedProperty>
@@ -183,24 +170,44 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1475</NodeID>
-    <NodeType>AFTERPROC</NodeType>
-    <NodeName>后处理</NodeName>
+    <NodeID>1498</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 ok</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
+      <switch>
+        <case>
+          <expression>ok</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
       <Exit>
         <ExitPort>
-          <type>1</type>
+          <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1464</target>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1499</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1477</NodeID>
+    <NodeID>1499</NodeID>
     <NodeType>SUBEND</NodeType>
     <NodeName>子流程结束</NodeName>
     <ExtendedProperty>IsHangup=0</ExtendedProperty>
@@ -225,38 +232,36 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1480</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 ok</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
+    <NodeID>1503</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call on play completed</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_method(
+		method='call.on_play_completed',
+		params={
+			'res_id': res_id,
+			'begin_time': begin_time,
+			'end_time': now()
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
-      <switch>
-        <case>
-          <expression>ok</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1498</target>
         </ExitPort>
         <ExitPort>
-          <type>101</type>
+          <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1477</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
+          <target>1498</target>
         </ExitPort>
       </Exit>
     </PropertySet>
