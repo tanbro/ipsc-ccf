@@ -20,7 +20,7 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1180</target>
+          <target>1487</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
@@ -43,18 +43,15 @@
     <NodeID>1180</NodeID>
     <NodeType>INVOKESUB</NodeType>
     <NodeName>调子流程 call</NodeName>
-    <ExtendedProperty>SubFlowName=call;InvokeType=0;ChNo=;Timeout=;RunMode=0</ExtendedProperty>
+    <ExtendedProperty>SubFlowName=call;InvokeType=0;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
     <PropertySet>
       <AffectList />
       <EffectList>
         <valuelist>
-          <value>None</value>
+          <value>id_</value>
         </valuelist>
         <valuelist>
-          <value>"sys.call.inbound"</value>
-        </valuelist>
-        <valuelist>
-          <value>None</value>
+          <value>params</value>
         </valuelist>
       </EffectList>
       <Exit>
@@ -76,6 +73,47 @@
           <type>21</type>
           <targetflow>call</targetflow>
           <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1487</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 NewVCh</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>vch</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>NewVCh()</Value>
+        </let>
+        <let>
+          <VarName>id_</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>None</Value>
+        </let>
+        <let>
+          <VarName>params</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>None</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1180</target>
         </ExitPort>
       </Exit>
     </PropertySet>

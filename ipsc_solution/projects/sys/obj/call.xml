@@ -180,7 +180,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <PropertySet>
       <switch>
         <case>
-          <expression>not bool(id_)</expression>
+          <expression>(id_ is None) and (params is None)</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>

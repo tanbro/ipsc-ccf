@@ -56,7 +56,7 @@
     <PropertySet>
       <switch>
         <case>
-          <expression>eventtype in (1,2)</expression>
+          <expression>eventtype == 1</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>
