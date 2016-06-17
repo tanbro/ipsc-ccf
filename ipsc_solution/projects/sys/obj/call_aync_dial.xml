@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-16T17:33:24+08:00</CreateDate>
-    <ModifyDate>2016-06-17T05:39:08+08:00</ModifyDate>
+    <ModifyDate>2016-06-17T08:38:48+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -57,6 +57,8 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 #
 call_info = call_map_r[res_id]
 chan = call_info['chan']
+
+begin_time = now()
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -101,7 +103,7 @@ chan = call_info['chan']
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1473</target>
+          <target>1539</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
@@ -116,19 +118,21 @@ chan = call_info['chan']
   <FlowNode>
     <NodeID>1464</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call out complete</NodeName>
+    <NodeName>脚本 call dial completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	call_info['answer_time'] = now()
 	if ok:
-		call_info['answer_time'] = now()
-		jsonrpc.send_method(
-			method='ivr.call.on_answered',
-			params={
-				'res_id': res_id,
-			}
-		)
+		error = None
 	else:
-		pass
+		error = 'error'
+	params={
+		'res_id': res_id,
+		'begin_time': begin_time,
+		'end_time': now(),
+		'error': error
+	}
+	jsonrpc.send_method(method='ivr.call.on_dial_completed', params=params)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err</ExtendedProperty>
@@ -138,46 +142,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1477</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1480</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1473</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 ok</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>ok</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>True</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
+          <target>1477</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -194,7 +165,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1464</target>
+          <target>1480</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -249,10 +220,42 @@ except IvrError as err:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1477</target>
+          <target>1464</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1539</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 ok</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>ok</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>True</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
           <targetflow>
           </targetflow>
           <target>
