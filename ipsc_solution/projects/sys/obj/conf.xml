@@ -6,13 +6,13 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-12T14:00:57+08:00</CreateDate>
-    <ModifyDate>2016-06-17T08:38:48+08:00</ModifyDate>
+    <ModifyDate>2016-06-18T02:26:50+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
     <NodeID>1367</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf subflow init</NodeName>
+    <NodeName>脚本 conf init</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 
 res_id = None
@@ -38,73 +38,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1393</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1393</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 initiate method</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>method == 'ivr.conf.create'</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1447</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1394</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1394</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 invalid method</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	jsonrpc.send_error(id_)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
-</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
+          <target>1372</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -203,9 +137,6 @@ except IvrError as err:
       <AffectList>
         <varlist>
           <var>id_</var>
-        </varlist>
-        <varlist>
-          <var>method</var>
         </varlist>
         <varlist>
           <var>params</var>
@@ -363,7 +294,7 @@ elif err != 1:
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_seconds', 180);ReallocResNum=0;PlayFile=params.get('background_play_repeating');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('release_threshold', 1)</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params['max_seconds'];ReallocResNum=0;PlayFile=params.get('background_play_file', '');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('release_threshold', 1)</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
@@ -373,6 +304,46 @@ elif err != 1:
           </Value>
           <Mode>0</Mode>
           <SubFlowID>"conf_released"</SubFlowID>
+          <Param>
+          </Param>
+        </EventList>
+        <EventList>
+          <EventID>2</EventID>
+          <EventType>24</EventType>
+          <Value>
+          </Value>
+          <Mode>0</Mode>
+          <SubFlowID>"conf_entered"</SubFlowID>
+          <Param>
+          </Param>
+        </EventList>
+        <EventList>
+          <EventID>3</EventID>
+          <EventType>25</EventType>
+          <Value>
+          </Value>
+          <Mode>0</Mode>
+          <SubFlowID>'conf_existed'</SubFlowID>
+          <Param>
+          </Param>
+        </EventList>
+        <EventList>
+          <EventID>4</EventID>
+          <EventType>26</EventType>
+          <Value>
+          </Value>
+          <Mode>0</Mode>
+          <SubFlowID>'conf_play_completed'</SubFlowID>
+          <Param>
+          </Param>
+        </EventList>
+        <EventList>
+          <EventID>5</EventID>
+          <EventType>27</EventType>
+          <Value>
+          </Value>
+          <Mode>0</Mode>
+          <SubFlowID>'conf_record_completed'</SubFlowID>
           <Param>
           </Param>
         </EventList>
@@ -453,76 +424,6 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1427</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1446</NodeID>
-    <NodeType>CREATECONFEX</NodeType>
-    <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params.get('max_seconds', 180);ReallocResNum=0;PlayFile=params.get('background_play_repeating');PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('release_threshold', 1)</ExtendedProperty>
-    <PropertySet>
-      <Events>
-        <EventList>
-          <EventID>1</EventID>
-          <EventType>28</EventType>
-          <Value>
-          </Value>
-          <Mode>0</Mode>
-          <SubFlowID>"conf_released"</SubFlowID>
-          <Param>
-          </Param>
-        </EventList>
-      </Events>
-      <Exit>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1373</target>
-        </ExitPort>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1374</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1447</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 background_play_repeating</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>params.get('background_play_repeating')</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1372</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1446</target>
         </ExitPort>
       </Exit>
     </PropertySet>

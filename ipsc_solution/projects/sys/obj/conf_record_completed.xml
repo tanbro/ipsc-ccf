@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <FlowItem>
+    <FlowID>conf_record_completed</FlowID>
+    <FlowName>conf_record_completed</FlowName>
+    <FlowDesc />
+    <FlowVer>1.0</FlowVer>
+    <CreateDate>2016-06-18T10:26:50+08:00</CreateDate>
+    <ModifyDate>2016-06-18T02:26:50+08:00</ModifyDate>
+    <DesignVer>2.0</DesignVer>
+  </FlowItem>
+  <FlowNode>
+    <NodeID>1583</NodeID>
+    <NodeType>SUBSTART</NodeType>
+    <NodeName>子流程开始</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <AffectList>
+        <varlist>
+          <var>conf_id</var>
+        </varlist>
+      </AffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+</root>
