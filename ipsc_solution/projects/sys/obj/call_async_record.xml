@@ -49,6 +49,8 @@
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=ok = False
+error = None
+
 last_err = None
 
 call_map = _gd_['call_map'] # chan =&gt; call_info
@@ -63,6 +65,7 @@ chan = call_info['chan']
 
 #
 begin_time = now()
+call_info['async_work_ch'] = GetCurrentCh()
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -94,7 +97,7 @@ begin_time = now()
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1558</target>
+          <target>1562</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -156,7 +159,7 @@ begin_time = now()
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1562</target>
+          <target>1559</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -199,6 +202,7 @@ begin_time = now()
     <NodeName>脚本 call on record completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	call_info['async_work_ch'] = None
 	if ok:
 		error = None
 	else:
@@ -220,13 +224,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1559</target>
+          <target>1558</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1559</target>
+          <target>1558</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -235,7 +239,7 @@ except IvrError as err:
     <NodeID>1565</NodeID>
     <NodeType>RECORD</NodeType>
     <NodeName>录音</NodeName>
-    <ExtendedProperty>Format=3;ChNo=chan;BreaktDtmfStr="#";OutKey=;Timeout=params['max_seconds'];FileName=params['record_file'];IsPlayBeep=0;TruncateTail=0;RecordVolume=;PlayFile=;MediaType=0;Option=</ExtendedProperty>
+    <ExtendedProperty>Format=3;ChNo=chan;BreaktDtmfStr=params.get('finish_key', '');OutKey=;Timeout=params['max_seconds'];FileName=params['record_file'];IsPlayBeep=1;TruncateTail=0;RecordVolume=;PlayFile=;MediaType=0;Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>

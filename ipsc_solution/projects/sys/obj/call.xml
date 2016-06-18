@@ -108,6 +108,10 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <ExitType>108</ExitType>
         </case>
         <case>
+          <expression>method == 'ivr.call.record_stop'</expression>
+          <ExitType>109</ExitType>
+        </case>
+        <case>
           <expression>method == 'ivr.call.conf_enter'</expression>
           <ExitType>106</ExitType>
         </case>
@@ -159,6 +163,12 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <targetflow>
           </targetflow>
           <target>1576</target>
+        </ExitPort>
+        <ExitPort>
+          <type>109</type>
+          <targetflow>
+          </targetflow>
+          <target>1599</target>
         </ExitPort>
         <ExitPort>
           <type>106</type>
@@ -1119,6 +1129,39 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1575</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1599</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 record stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		BreakPlayRec(call_info['async_work_ch'])
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>

@@ -56,11 +56,11 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <ExitType>101</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.conf.start_play'</expression>
+          <expression>method == 'ivr.conf.play_start'</expression>
           <ExitType>102</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.conf.stop_play'</expression>
+          <expression>method == 'ivr.conf.play_stop'</expression>
           <ExitType>103</ExitType>
         </case>
       </switch>

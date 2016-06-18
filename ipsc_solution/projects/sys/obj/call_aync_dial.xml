@@ -142,13 +142,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1477</target>
+          <target>1480</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1477</target>
+          <target>1480</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -165,7 +165,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1480</target>
+          <target>1464</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -220,7 +220,7 @@ except IvrError as err:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1464</target>
+          <target>1477</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>

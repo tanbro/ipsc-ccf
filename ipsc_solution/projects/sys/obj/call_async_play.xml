@@ -49,6 +49,7 @@
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=ok = False
+error = None
 last_err = None
 
 call_map = _gd_['call_map'] # chan =&gt; call_info
@@ -133,7 +134,7 @@ call_info['async_work_ch'] = GetCurrentCh()</ExtendedProperty>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1498</target>
+          <target>1503</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -195,7 +196,7 @@ call_info['async_work_ch'] = GetCurrentCh()</ExtendedProperty>
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1503</target>
+          <target>1499</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -238,6 +239,7 @@ call_info['async_work_ch'] = GetCurrentCh()</ExtendedProperty>
     <NodeName>脚本 call on play completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	call_info['async_work_ch'] = None
 	if ok:
 		error = None
 	else:
@@ -259,13 +261,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1499</target>
+          <target>1498</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1499</target>
+          <target>1498</target>
         </ExitPort>
       </Exit>
     </PropertySet>
