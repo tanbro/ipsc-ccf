@@ -56,15 +56,15 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
 last_err = None
 try:
-	conf_info = conf_map[conf_id]
-	res_id = conf_info['res_id']
-
-	jsonrpc.send_method(
-		method='ivr.conf.on_record_completed',
-		params={
-			'res_id': res_id,
-		}
-	)
+	conf_info = conf_map.gett(conf_id)
+	if conf_info:
+		res_id = conf_info['res_id']
+		jsonrpc.send_method(
+			method='ivr.conf.on_record_completed',
+			params={
+				'res_id': res_id,
+			}
+		)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err</ExtendedProperty>
