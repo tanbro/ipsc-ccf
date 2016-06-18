@@ -10,7 +10,7 @@
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
-    <NodeID>1582</NodeID>
+    <NodeID>1585</NodeID>
     <NodeType>SUBSTART</NodeType>
     <NodeName>子流程开始</NodeName>
     <ExtendedProperty>
@@ -20,7 +20,55 @@
         <varlist>
           <var>conf_id</var>
         </varlist>
+        <varlist>
+          <var>action_type_id</var>
+        </varlist>
+        <varlist>
+          <var>pr_index</var>
+        </varlist>
       </AffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1591</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1591</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf play completed</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=call_map = _gd_['call_map'] # chan =&gt; call_info
+conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+
+call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
+conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+
+last_err = None
+try:
+	conf_info = conf_map[conf_id]
+	res_id = conf_info['res_id']
+
+	jsonrpc.send_method(
+		method='ivr.conf.on_play_completed',
+		params={
+			'res_id': res_id,
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err</ExtendedProperty>
+    <PropertySet>
       <Exit>
         <ExitPort>
           <type>2</type>

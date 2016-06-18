@@ -323,7 +323,7 @@ elif err != 1:
           <Value>
           </Value>
           <Mode>0</Mode>
-          <SubFlowID>'conf_existed'</SubFlowID>
+          <SubFlowID>'conf_exited'</SubFlowID>
           <Param>
           </Param>
         </EventList>

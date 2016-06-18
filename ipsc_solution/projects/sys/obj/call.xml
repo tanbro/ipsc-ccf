@@ -1227,7 +1227,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		conf_res_id = params['conf_id']
+		conf_res_id = params['conf_res_id']
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
 	except Exception as err:
@@ -1261,7 +1261,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		conf_res_id = params['conf_id']
+		conf_res_id = params['conf_res_id']
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
 		RemoveConfer(conf_id, chan)

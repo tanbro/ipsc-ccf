@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Flow>
   <FlowItem>
-    <FlowID>conf_existed</FlowID>
-    <FlowName>conf_existed</FlowName>
+    <FlowID>conf_exited</FlowID>
+    <FlowName>conf_exited</FlowName>
     <FlowDesc>
     </FlowDesc>
     <FlowVer>1.0</FlowVer>
