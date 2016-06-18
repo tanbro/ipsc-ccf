@@ -56,8 +56,15 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
 last_err = None
 try:
-	conf_info = conf_map.get(conf_id)
-	call_info = conf_map.get(chan)
+	conf_info = call_info = None
+	try:
+		conf_info = conf_map[conf_id]
+	except KeyError as e:
+		TraceErr('conference id &lt;%s&gt; NOT existed' % e)
+	try:
+		call_info = call_map[chan]
+	except KeyError as e:
+		TraceErr('call channel &lt;%s&gt; NOT existed' % e)
 	if conf_info and call_info:
 		res_id = conf_info['res_id']
 		call_res_id = call_info['res_id']
