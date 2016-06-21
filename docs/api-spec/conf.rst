@@ -1,7 +1,7 @@
 会议 API
 ###########
 
-.. module:: call
+.. module:: conf
 
 构造
 ***********

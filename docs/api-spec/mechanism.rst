@@ -325,7 +325,7 @@ data            数据包体。我们使用这个参数，以 :term:`JSON` `obje
         \"52008e82378211e6ba3668f7288d9a79\", \
         \"ivr.call.drop\" \
         { \
-          \"reason\": 200 \
+          \"cause\": 200 \
         } \
     ]";
 
@@ -414,7 +414,7 @@ size            包体字节长度
 它对应于调用 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ，启动 `ID` 为 ``call`` 的流程。
 
 .. note::
-  所有的资源创建 :term:`RPC` 的返回值都是字符串类型的资源 `ID`,
+  所有的资源创建 :term:`RPC` 的返回值都是字符串类型的资源 `ID`。
   在 `CTI API` 定义文档中， **省略** 针对该返回值的描述。
 
 资源操作 :term:`RPC`
