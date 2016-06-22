@@ -998,6 +998,7 @@ except IvrError as err:
 try:
 	try:
 		BreakPlayRec(call_info['async_work_ch'])
+		call_info['async_work_ch'] = None
 		jsonrpc.send_result(id_)
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
@@ -1156,6 +1157,7 @@ except IvrError as err:
 try:
 	try:
 		BreakPlayRec(call_info['async_work_ch'])
+		call_info['async_work_ch'] = None
 		jsonrpc.send_result(id_)
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))

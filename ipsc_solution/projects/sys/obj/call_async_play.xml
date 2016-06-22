@@ -48,8 +48,11 @@
     <NodeID>1490</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=ok = False
-error = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=error = None
+finish_key = None
+repeated = 0
+repeate = int(params.get('repeat', 0))
+
 last_err = None
 
 call_map = _gd_['call_map'] # chan =&gt; call_info
@@ -64,15 +67,15 @@ chan = call_info['chan']
 
 #
 begin_time = now()
-call_info['async_work_ch'] = GetCurrentCh()</ExtendedProperty>
+call_info['async_work_ch'] = GetCurrentCh()
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1639</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -87,11 +90,11 @@ call_info['async_work_ch'] = GetCurrentCh()</ExtendedProperty>
     <NodeID>1492</NodeID>
     <NodeType>PLAY</NodeType>
     <NodeName>放音</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=params.get('finish_keys');Mode=0;OutKey=finish_key;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
     <PropertySet>
       <DynamicVoice>
         <VarVoice>
-          <content>params['play_file']</content>
+          <content>params['content']</content>
           <type>0</type>
           <option>
           </option>
@@ -103,21 +106,19 @@ call_info['async_work_ch'] = GetCurrentCh()</ExtendedProperty>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1634</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1496</target>
+          <target>1632</target>
         </ExitPort>
         <ExitPort>
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1636</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -140,47 +141,15 @@ call_info['async_work_ch'] = GetCurrentCh()</ExtendedProperty>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1496</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 ok</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>ok</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>True</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
     <NodeID>1498</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 ok</NodeName>
+    <NodeName>判断 not error</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <switch>
         <case>
-          <expression>ok</expression>
+          <expression>not bool(error)</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>
@@ -240,15 +209,13 @@ call_info['async_work_ch'] = GetCurrentCh()</ExtendedProperty>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['async_work_ch'] = None
-	if ok:
-		error = None
-	else:
-		error = 'error'
 	params = {
 			'res_id': res_id,
+			'error': error,
 			'begin_time': begin_time,
 			'end_time': now(),
-			'error': error
+			'repeated': repeated,
+			'finish_key': finish_key,
 		}
 	jsonrpc.send_method(method='call.on_play_completed', params=params)
 except IvrError as err:
@@ -268,6 +235,207 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1498</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1625</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 repeat</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>repeated &lt;= repeat</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1627</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1627</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 repeated</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>repeated</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>repeated + 1</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1492</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1632</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not finish_key</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(finish_key)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1625</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1634</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>"play error"</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1636</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>"hungup when playing"</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1639</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'unknown'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>

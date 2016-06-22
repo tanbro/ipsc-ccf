@@ -67,8 +67,7 @@ call_info['answer_time'] = None
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1640</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -306,6 +305,38 @@ except IvrError as err:
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
           <Value>'dial timeout'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1640</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'unknown'</Value>
         </let>
       </letlist>
       <Exit>

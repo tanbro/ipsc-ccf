@@ -58,14 +58,25 @@
     已经应答的呼叫不可被重定向。
     调用后，呼叫资源被释放。
 
-开始播放声音文件
+开始放音
 =================
 
-.. function:: play_start(res_id, play_file: str)
+.. function:: play_start(res_id, content, repeat, finish_keys)
 
   :param str res_id: 要操作的呼叫资源 `ID`。
 
-停止播放声音文件
+  :param content: 待播放内容
+
+    * 当该参数为字符串时，播放字符串所对应的声音文件。
+    * 当该参数为列表时，暂时不支持！TODO ....
+
+  :type content: str, list
+
+  :param int repeat: 重复播放次数。0表示不重复播放，1表示播放两次，以此类推。
+  :param str finish_keys: 播放打断按键码串。
+    在播放过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止播放。
+
+停止放音
 =================
 
 .. function:: play_stop(res_id)
@@ -122,21 +133,18 @@
 ===========
 在外呼拨号失败、超时或者被接听时发生
 
-.. function:: on_dial_completed(res_id, begin_time, answer_time, end_time, error)
+.. function:: on_dial_completed(res_id, error, begin_time, answer_time, end_time)
 
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
-
+  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
   :param int begin_time: 本次拨号的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-
   :param int answer_time: 本次拨号的被应答时间(:term:`CTI` 服务器的 :term:`Unix time`)。
     如果外呼拨号没有被应答，则该参数的值是 ``null``。
 
   :param int end_time: 本次拨号的结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
 
     .. note:: 这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
-
-  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
 
 呼叫被释放
 ============
@@ -148,7 +156,7 @@
   :param str call_dir: 呼叫方向
 
     ============ ============
-    值           说明
+    值            说明
     ============ ============
     ``inbound``  入方向呼叫
     ``outbound`` 出方向呼叫
@@ -172,12 +180,18 @@
 
   :param int cause: 呼叫结束的原因码。详见 :term:`SIP` 状态码定义。
 
-文件放音结束
+放音结束
 =============
 
-.. function:: on_play_completed(res_id)
+.. function:: on_play_completed(res_id, error, begin_time, end_time, repeated, finish_key)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果播放失败，该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time: 放音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 放音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int repeated: 放音的实际循环次数。
+  :param str finish_key: 中断此次放音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
+
 
 录音结束
 =============

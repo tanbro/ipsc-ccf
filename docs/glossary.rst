@@ -15,6 +15,9 @@
   PSTN
     http://wikipedia.org/wiki/Public_switched_telephone_network
 
+  DTMF
+    http://wikipedia.org/wiki/Dual-tone_multi-frequency_signaling
+
   RPC
     http://en.wikipedia.org/wiki/Remote_procedure_call
 
