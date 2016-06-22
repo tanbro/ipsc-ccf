@@ -45,7 +45,7 @@
     <NodeID>1455</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=ok = False
+    <ExtendedProperty>ZoneType=0;ScriptContent=error = None
 last_err = None
 
 call_map = _gd_['call_map'] # chan =&gt; call_info
@@ -89,28 +89,26 @@ begin_time = now()
           <type>6</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1614</target>
         </ExitPort>
         <ExitPort>
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1616</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1539</target>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1615</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -122,17 +120,13 @@ begin_time = now()
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['answer_time'] = now()
-	if ok:
-		error = None
-	else:
-		error = 'error'
 	params={
 		'res_id': res_id,
 		'begin_time': begin_time,
 		'end_time': now(),
 		'error': error
 	}
-	jsonrpc.send_method(method='ivr.call.on_dial_completed', params=params)
+	jsonrpc.send_method(method='call.on_dial_completed', params=params)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err</ExtendedProperty>
@@ -198,13 +192,13 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1480</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 ok</NodeName>
+    <NodeName>判断 not error</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <switch>
         <case>
-          <expression>ok</expression>
+          <expression>not bool(error)</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>
@@ -233,17 +227,81 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1539</NodeID>
+    <NodeID>1614</NodeID>
     <NodeType>LET</NodeType>
-    <NodeName>赋值 ok</NodeName>
+    <NodeName>赋值 error</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <letlist>
         <let>
-          <VarName>ok</VarName>
+          <VarName>error</VarName>
           <ZoneType>0</ZoneType>
-          <Value>True</Value>
+          <Value>'dial failed'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1615</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial error'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1616</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial timeout'</Value>
         </let>
       </letlist>
       <Exit>

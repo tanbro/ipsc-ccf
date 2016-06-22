@@ -84,39 +84,39 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <PropertySet>
       <switch>
         <case>
-          <expression>method == 'ivr.call.drop'</expression>
+          <expression>method == 'call.drop'</expression>
           <ExitType>104</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.redirect'</expression>
+          <expression>method == 'call.redirect'</expression>
           <ExitType>102</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.answer'</expression>
+          <expression>method == 'call.answer'</expression>
           <ExitType>103</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.play_start'</expression>
+          <expression>method == 'call.play_start'</expression>
           <ExitType>101</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.play_stop'</expression>
+          <expression>method == 'call.play_stop'</expression>
           <ExitType>105</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.record_start'</expression>
+          <expression>method == 'call.record_start'</expression>
           <ExitType>108</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.record_stop'</expression>
+          <expression>method == 'call.record_stop'</expression>
           <ExitType>109</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.conf_enter'</expression>
+          <expression>method == 'call.conf_enter'</expression>
           <ExitType>106</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.call.conf_exit'</expression>
+          <expression>method == 'call.conf_exit'</expression>
           <ExitType>107</ExitType>
         </case>
       </switch>
@@ -356,7 +356,7 @@ elif err != 1:
     <NodeID>1192</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=;RingTimeout=50;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=;RingTimeout=params.get('max_ring_seconds', 50);IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
