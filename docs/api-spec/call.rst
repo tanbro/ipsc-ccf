@@ -86,9 +86,13 @@
 开始录音
 ===============
 
-.. function:: record_start(res_id, record_file: str, finish_key: str)
+.. function:: record_start(res_id, max_seconds, beep, record_file, finish_keys)
 
   :param str res_id: 要操作的呼叫资源 `ID`。
+  :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
+  :param bool beep: 是否在录音之前播放“嘀”的一声。
+  :param str finish_keys: 录音打断按键码串。
+    在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
 
 停止录音
 ===============
@@ -196,6 +200,10 @@
 录音结束
 =============
 
-.. function:: on_record_completed(res_id)
+.. function:: on_record_completed(res_id, error, begin_time, end_time, finish_key)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果录音失败，该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time: 录音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 录音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str finish_key: 中断此次录音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。

@@ -48,8 +48,8 @@
     <NodeID>1551</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=ok = False
-error = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=error = None
+finish_key = None
 
 last_err = None
 
@@ -73,8 +73,7 @@ call_info['async_work_ch'] = GetCurrentCh()
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1643</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -103,47 +102,15 @@ call_info['async_work_ch'] = GetCurrentCh()
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1556</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 ok</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>ok</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>True</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
     <NodeID>1558</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 ok</NodeName>
+    <NodeName>判断 not error</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <switch>
         <case>
-          <expression>ok</expression>
+          <expression>not bool(error)</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>
@@ -203,15 +170,12 @@ call_info['async_work_ch'] = GetCurrentCh()
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['async_work_ch'] = None
-	if ok:
-		error = None
-	else:
-		error = 'error'
 	params = {
 			'res_id': res_id,
+			'error': error,
 			'begin_time': begin_time,
 			'end_time': now(),
-			'error': error
+			'finish_key': finish_key,
 		}
 	jsonrpc.send_method(method='call.on_record_completed', params=params)
 except IvrError as err:
@@ -239,8 +203,52 @@ except IvrError as err:
     <NodeID>1565</NodeID>
     <NodeType>RECORD</NodeType>
     <NodeName>录音</NodeName>
-    <ExtendedProperty>Format=3;ChNo=chan;BreaktDtmfStr=params.get('finish_key', '');OutKey=;Timeout=params['max_seconds'];FileName=params['record_file'];IsPlayBeep=1;TruncateTail=0;RecordVolume=;PlayFile=;MediaType=0;Option=</ExtendedProperty>
+    <ExtendedProperty>Format=3;ChNo=chan;BreaktDtmfStr=params.get('finish_keys', None);OutKey=finish_key;Timeout=params['max_seconds'];FileName=params['record_file'];IsPlayBeep=1;TruncateTail=0;RecordVolume=;PlayFile=;MediaType=0;Option=</ExtendedProperty>
     <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1645</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1649</target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1643</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'unknown'</Value>
+        </let>
+      </letlist>
       <Exit>
         <ExitPort>
           <type>2</type>
@@ -253,17 +261,68 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1556</target>
+          <target>
+          </target>
         </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1645</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>"record error"</Value>
+        </let>
+      </letlist>
+      <Exit>
         <ExitPort>
-          <type>5</type>
+          <type>2</type>
           <targetflow>
           </targetflow>
           <target>
           </target>
         </ExitPort>
         <ExitPort>
-          <type>4</type>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1649</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>"hungup while recording"</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
           <targetflow>
           </targetflow>
           <target>
