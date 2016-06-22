@@ -117,6 +117,21 @@
     应用服务可通过 :func:`answer` 应答，继续呼叫资源的生命周期；
     或者通过 :func:`drop` 挂断呼叫，释放呼叫资源。
 
+拨号结束
+===========
+在外呼拨号失败、超时或者被接听时发生
+
+.. function:: on_dial_completed(res_id, begin_time, answer_time, end_time, error)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param int begin_time: 本次拨号的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int answer_time: 本次拨号的被应答时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+    如果外呼拨号没有被应答，则该参数的值是 ``null``。
+  :param int end_time: 本次拨号的结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+    注意这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
+  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
+
+
 呼叫被应答
 ===========
 

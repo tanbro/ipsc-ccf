@@ -124,7 +124,7 @@ try:
 		call_info['answer_time'] = now()
 	params={
 		'res_id': res_id,
-		'begin_time': call_info['begin_time'],
+		'begin_time': begin_time,
 		'answer_time': call_info['answer_time'],
 		'end_time': now(),
 		'error': error
