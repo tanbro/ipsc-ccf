@@ -140,7 +140,16 @@ html_theme = 'alabaster'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    # 'logo': 'logo.png',
+    # 'show_related': True,
+    'fixed_sidebar': True,
+    # 'font_family': "'Microsoft Yahei UI', 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
+    # 'font_size': '18px',
+    # 'head_font_family': "'Microsoft Yahei UI', Garamond, Georgia, serif",
+    # 'code_font_family': "'Source Code Pro', Consolas, Menlo, 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace",
+    # 'code_font_size': '1em',
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
