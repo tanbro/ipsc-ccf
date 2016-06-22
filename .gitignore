@@ -294,3 +294,4 @@ local.properties
 
 # Code Recommenders
 .recommenders/
+docs/.atom-build.yml

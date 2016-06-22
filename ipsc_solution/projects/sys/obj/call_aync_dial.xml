@@ -58,7 +58,8 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 call_info = call_map_r[res_id]
 chan = call_info['chan']
 
-begin_time = now()
+call_info['begin_time'] = begin_time = now()
+call_info['answer_time'] = None
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -119,17 +120,20 @@ begin_time = now()
     <NodeName>脚本 call dial completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	call_info['answer_time'] = now()
+	if not error:
+		call_info['answer_time'] = now()
 	params={
 		'res_id': res_id,
-		'begin_time': begin_time,
+		'begin_time': call_info['begin_time'],
+		'answer_time': call_info['answer_time'],
 		'end_time': now(),
 		'error': error
 	}
 	jsonrpc.send_method(method='call.on_dial_completed', params=params)
 except IvrError as err:
 	TraceErr(err)
-	last_err = err</ExtendedProperty>
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
