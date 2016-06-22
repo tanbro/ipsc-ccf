@@ -645,7 +645,15 @@ try:
 		'reason': None,
 		'cause': None,
 	}
-	jsonrpc.send_method(method='call.on_incoming', params=params)
+	jsonrpc.send_method(
+		method='call.on_incoming',
+		params=dict(
+			res_id=res_id,
+			from_uri=from_uri,
+			to_uri=to_uri,
+			begin_time=call_info['begin_time'],
+		)
+	)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err

@@ -106,11 +106,12 @@
 新呼入呼叫
 ==========
 
-.. function:: on_incoming(res_id, from_uri, to_uri)
+.. function:: on_incoming(res_id, from_uri, to_uri, begin_time)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param str from_uri: 该呼叫的主叫号码(:term:`SIP URI`)。
   :param str to_uri: 该呼叫的被叫号码(:term:`SIP URI`)。
+  :param int begin_time: 本次入方向呼叫的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
 
   .. important::
     仅适用于 **入方向** 呼叫。
