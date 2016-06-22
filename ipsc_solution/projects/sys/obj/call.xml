@@ -404,7 +404,9 @@ try:
 		'res_id': res_id,
 		'params': params,
 		'chan': chan,
-		'dir': 'outbound',
+		'call_dir': 'outbound',
+		'from_uri': from_uri,
+		'to_uri': to_uri,
 		'begin_time': now(),
 		'answer_time': None,
 		'end_time': None,
@@ -633,7 +635,9 @@ try:
 		'res_id': res_id,
 		'params': params,
 		'chan': chan,
-		'dir': 'inbound',
+		'call_dir': 'inbound',
+		'from_uri': from_uri,
+		'to_uri': to_uri,
 		'begin_time': now(),
 		'answer_time': None,
 		'end_time': None,
@@ -703,31 +707,34 @@ except IvrError as err:
     <NodeID>1129</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call.on_released</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	call_map.pop(chan)
-	call_map_r.pop(res_id)
-
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
 	call_info['end_time'] = now()
 	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
 
-	if call_info['answer_time']:
-		answered_duration = call_info['end_time'] - call_info['answer_time']
-	else:
-		answered_duration = None
+	last_err = None
+	try:
+		jsonrpc.send_method(
+			method='call.on_released',
+			params={
+				'res_id': call_info['res_id'],
+				'call_dir': call_info['call_dir'],
+				'from_uri': call_info['from_uri'],
+				'to_uri': call_info['to_uri'],
+				'begin_time': call_info['begin_time'],
+				'answer_time': call_info['answer_time'],
+				'end_time': call_info['end_time'],
+				'dropped_by': call_info['dropped_by'],
+				'cause': call_info['cause'],
+			}
+		)
+	except IvrError as err:
+		TraceErr(err)
+		last_err = err
 
-	jsonrpc.send_method(
-		method='ivr.call.on_released',
-		params={
-			'res_id': call_info['res_id'],
-			'dropped_by': call_info['dropped_by'],
-			'cause': call_info['cause'],
-			'answered_duration': answered_duration,
-		}
-	)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err</ExtendedProperty>
+finally:
+	call_map.pop(chan)
+	call_map_r.pop(res_id)
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>

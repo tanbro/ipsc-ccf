@@ -109,8 +109,8 @@
 .. function:: on_incoming(res_id, from_uri, to_uri)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
-  :param str from_uri: 主叫号码 :term:`SIP URI`。
-  :param str to_uri: 被叫号码 :term:`SIP URI`。
+  :param str from_uri: 该呼叫的主叫号码(:term:`SIP URI`)。
+  :param str to_uri: 该呼叫的被叫号码(:term:`SIP URI`)。
 
   .. important::
     仅适用于 **入方向** 呼叫。
@@ -123,14 +123,19 @@
 
 .. function:: on_dial_completed(res_id, begin_time, answer_time, end_time, error)
 
+
   :param str res_id: 触发事件的呼叫资源 `ID`。
+
   :param int begin_time: 本次拨号的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+
   :param int answer_time: 本次拨号的被应答时间(:term:`CTI` 服务器的 :term:`Unix time`)。
     如果外呼拨号没有被应答，则该参数的值是 ``null``。
-  :param int end_time: 本次拨号的结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-    注意这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
-  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
 
+  :param int end_time: 本次拨号的结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+
+    .. note:: 这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
+
+  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
 
 呼叫被应答
 ===========
@@ -145,9 +150,36 @@
 呼叫被释放
 ============
 
-.. function:: on_released(res_id)
+.. function:: on_released(res_id, call_dir, from_uri, to_uri, begin_time, answer_time, end_time, dropped_by, cause)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
+
+  :param str call_dir: 呼叫方向
+
+    ============ ============
+    值           说明
+    ============ ============
+    ``inbound``  入方向呼叫
+    ``outbound`` 出方向呼叫
+    ============ ============
+
+  :param str from_uri: 该呼叫的主叫号码(:term:`SIP URI`)。
+  :param str to_uri: 该呼叫的被叫号码(:term:`SIP URI`)。
+  :param int begin_time: 该呼叫的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int answer_time: 该呼叫的应答时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+    如果呼叫没有被接听，该参数的值是 ``null``。
+  :param int end_time: 该呼叫的结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+
+  :param str dropped_by: 结束呼叫的者。
+
+    ============ ============
+    值           说明
+    ============ ============
+    ``sys``      系统一侧挂断呼叫
+    ``usr``      用户一侧挂断呼叫
+    ============ ============
+
+  :param int cause: 呼叫结束的原因码。详见 :term:`SIP` 状态码定义。
 
 文件放音结束
 =============
