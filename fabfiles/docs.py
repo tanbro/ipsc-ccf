@@ -17,6 +17,7 @@ PYTHON_VENV_DIR = '/home/bind/yunhuni-peer-comm-cti-flow/env'
 @task
 def upload():
     run('mkdir -p %s/docs' % SPHINX_PROJECT_ROOT_DIR)
+    filepairs = []
     for root, dirs, files in os.walk('../docs'):
         if '_build' in dirs:
             dirs.remove('_build')
@@ -40,6 +41,12 @@ def build(clean=False, target='html'):
 
 @roles('docs')
 @task
+def rebuild(target='html'):
+    execute(build, clean=True, target=target)
+
+
+@roles('docs')
+@task
 def deploy():
     execute(upload)
-    execute(build)
+    execute(rebuild)
