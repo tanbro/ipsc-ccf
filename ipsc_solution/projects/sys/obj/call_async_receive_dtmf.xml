@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <FlowItem>
-    <FlowID>call_async_send_dtmf</FlowID>
-    <FlowName>call_async_send_dtmf</FlowName>
+    <FlowID>call_async_receive_dtmf</FlowID>
+    <FlowName>call_async_receive_dtmf</FlowName>
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
-    <CreateDate>2016-06-23T11:57:42+08:00</CreateDate>
+    <CreateDate>2016-06-23T13:52:27+08:00</CreateDate>
     <ModifyDate>2016-06-23T05:52:27+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
-    <NodeID>1668</NodeID>
+    <NodeID>1715</NodeID>
     <NodeType>SUBSTART</NodeType>
     <NodeName>子流程开始</NodeName>
     <ExtendedProperty>
@@ -39,16 +39,17 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1669</target>
+          <target>1716</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1669</NodeID>
+    <NodeID>1716</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = None
+keys = None
 
 last_err = None
 
@@ -72,19 +73,198 @@ call_info['async_work_ch'] = GetCurrentCh()
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1672</target>
+          <target>1740</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1673</target>
+          <target>1741</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1672</NodeID>
+    <NodeID>1720</NodeID>
+    <NodeType>AFTERPROC</NodeType>
+    <NodeName>后处理</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1723</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1721</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(error)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1722</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1722</NodeID>
+    <NodeType>SUBEND</NodeType>
+    <NodeName>子流程结束</NodeName>
+    <ExtendedProperty>IsHangup=0</ExtendedProperty>
+    <PropertySet>
+      <EffectList />
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1723</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call on receive dtmf completed</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	call_info['async_work_ch'] = None
+	params = {
+			'res_id': res_id,
+			'error': error,
+			'begin_time': begin_time,
+			'end_time': now(),
+			'keys': keys,
+		}
+	jsonrpc.send_method(method='call.on_receive_dtmf', params=params)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1721</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1721</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1735</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>"receiving dtmf error"</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1737</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>"hungup when receiving demf"</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1740</NodeID>
     <NodeType>LET</NodeType>
     <NodeName>赋值 error</NodeName>
     <ExtendedProperty>
@@ -116,36 +296,57 @@ call_info['async_work_ch'] = GetCurrentCh()
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1673</NodeID>
-    <NodeType>SENDDTMF</NodeType>
-    <NodeName>发码</NodeName>
-    <ExtendedProperty>WorkCh=chan;Mode=;DataType=0;Data=params['keys'];FlushMode=0;RATE=;CheckTone=0;Delay=;SendMode=0;Option=</ExtendedProperty>
+    <NodeID>1741</NodeID>
+    <NodeType>DTMFINPUT</NodeType>
+    <NodeName>数据输入</NodeName>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;Timeout=10;IsBreak=1;ValidDtmfStr=params.get('valid_keys', "0123456789*#");InvalidProcType=0;OutData=keys;DtmfLen=params.get('max_keys', 11);EndExpression=params.get('finish_keys', '#');IsIncludeEnd=;ClearDtmfBufType=1;RepeatNum=params.get('play_repeat', 0);IntervalTimeout=20;SaveEndDtmf=;IsRegex=0;TimeoutIsPlayEnd=1;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsDtmfEcho=0;DtmfEchoFontSize=16;DtmfEchoFontStyle=0;DtmfEchoColor="255:255:255:0";DtmfEchoLeft=0;DtmfEchoTop=120;DtmfEchoDir=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=;LogoAlphaBlending=0;Option=;DtmfEchoMask=</ExtendedProperty>
     <PropertySet>
+      <DynamicVoice>
+        <VarVoice>
+          <content>params.get('play_content')</content>
+          <type>0</type>
+          <option>
+          </option>
+        </VarVoice>
+      </DynamicVoice>
+      <SubTitle />
       <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1678</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
         <ExitPort>
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>1677</target>
+          <target>1737</target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>1743</target>
+        </ExitPort>
+        <ExitPort>
+          <type>9</type>
+          <targetflow>
+          </targetflow>
+          <target>1745</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1735</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1677</NodeID>
+    <NodeID>1743</NodeID>
     <NodeType>LET</NodeType>
     <NodeName>赋值 error</NodeName>
     <ExtendedProperty>
@@ -155,7 +356,7 @@ call_info['async_work_ch'] = GetCurrentCh()
         <let>
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
-          <Value>"hungup when sending dtmf"</Value>
+          <Value>"receiving dtmf timeout"</Value>
         </let>
       </letlist>
       <Exit>
@@ -177,7 +378,7 @@ call_info['async_work_ch'] = GetCurrentCh()
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1678</NodeID>
+    <NodeID>1745</NodeID>
     <NodeType>LET</NodeType>
     <NodeName>赋值 error</NodeName>
     <ExtendedProperty>
@@ -187,7 +388,7 @@ call_info['async_work_ch'] = GetCurrentCh()
         <let>
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
-          <Value>"send dtmf error"</Value>
+          <Value>"receiving demf invalid"</Value>
         </let>
       </letlist>
       <Exit>
@@ -204,120 +405,6 @@ call_info['async_work_ch'] = GetCurrentCh()
           </targetflow>
           <target>
           </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1679</NodeID>
-    <NodeType>AFTERPROC</NodeType>
-    <NodeName>后处理</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1682</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1680</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 not error</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>not bool(error)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1681</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1681</NodeID>
-    <NodeType>SUBEND</NodeType>
-    <NodeName>子流程结束</NodeName>
-    <ExtendedProperty>IsHangup=0</ExtendedProperty>
-    <PropertySet>
-      <EffectList />
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1682</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.on send_dtmf_completed</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	call_info['async_work_ch'] = None
-	params = {
-			'res_id': res_id,
-			'error': error,
-			'begin_time': begin_time,
-			'end_time': now(),
-		}
-	jsonrpc.send_method(method='call.on_send_dtmf_completed', params=params)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
-</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1680</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1680</target>
         </ExitPort>
       </Exit>
     </PropertySet>

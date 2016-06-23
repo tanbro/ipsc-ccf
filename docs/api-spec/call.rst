@@ -79,6 +79,8 @@
 停止放音
 =================
 
+中断正在进行的放音，将放音停止，触发事件 :func:`on_play_completed`。
+
 .. function:: play_stop(res_id)
 
   :param str res_id: 要操作的呼叫资源 `ID`。
@@ -97,6 +99,8 @@
 停止录音
 ===============
 
+中断正在进行的录音，将录音错误，触发事件 :func:`on_record_completed`。
+
 .. function:: record_stop(res_id)
 
   :param str res_id: 要操作的呼叫资源 `ID`。
@@ -104,10 +108,56 @@
 开始发送 :term:`DTMF` 码
 =========================
 
-.. function:: send_dtmf_start(res_id, codes)
+.. function:: send_dtmf_start(res_id, keys)
 
   :param str res_id: 要操作的呼叫资源 `ID`。
-  :param str codes: 要发送的 :term:`DTMF` 码串。
+  :param str keys: 要发送的 :term:`DTMF` 码串。
+
+开始接收 :term:`DTMF` 码
+============================
+
+.. function:: receive_dtmf_start(res_id, valid_keys, max_keys, finish_keys, first_key_timeout, continues_keys_timeout, play_content, play_repeat)
+
+  :param str res_id: 要操作的呼叫资源 `ID`。
+  :param str valid_keys: 有效 :term:`DTMF` 码范围字符串。
+    只有存于这个字符串范围内的 :term:`DTMF` 码才会被接收，否则被忽略。
+
+  :param int max_keys: 接收 :term:`DTMF` 码的最大长度。
+    一旦达到最大长度，此次接收过程即宣告结束。
+
+    .. note::
+      只要收到的 :term:`DTMF` 码达到最大长度，即使没有收到结束码，接收过程也会结束。
+
+  :param str finish_keys: 结束码串。
+    在接收 :term:`DTMF` 码的过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则此次接收过程即宣告结束。
+
+    .. important::
+      结束码串中的字符如果不属于有效 :term:`DTMF` 码范围字符串(``valid_keys``)，
+      就会被接收过程忽略，无法结束接收过程。
+
+    .. attention::
+      结束码字符 **不会** 被包含在 :func:`on_receive_dtmf_completed` 的 ``keys`` 参数中。
+
+  :param int first_key_timeout: 等待接收第一个 :term:`DTMF` 码的超时时间（秒）。
+    如果在这段时间内，没有收到第一个 :term:`DTMF` 码，则进行超时处理。
+  :param int continues_keys_timeout: 等待接收后续 :term:`DTMF` 码的超时时间（秒）。
+    如果在这段时间内，没有收到后续 :term:`DTMF` 码，则进行超时处理。
+
+  :param int play_content: 提示音。在接收过程开始时，要播放的声音内容。
+    一旦接收到第一个 :term:`DTMF` 码，就停止放音。
+    目前，该参数只能是声音文件名。
+  :type play_content: str, list
+
+  :param int play_repeat: 如果出现等待超时，按照该参数重复播放提示音。
+
+结束接收 :term:`DTMF` 码
+============================
+
+.. function:: stop_receive_dtmf_start(res_id)
+
+  :param str res_id: 要操作的呼叫资源 `ID`。
+
+  该操作将导致接收 :term:`DTMF` 码的过程结束，并触发 :func:`on_receive_dtmf_completed` 事件。
 
 进入会议
 ==========
@@ -222,5 +272,16 @@
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。如果 :term:`DTMF` 码发送失败，该参数记录错误信息；否则该参数的值是 ``null``。
-  :param int begin_time:  :term:`DTMF` 码发送开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param int end_time:  :term:`DTMF` 码发送结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int begin_time: :term:`DTMF` 码发送开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: :term:`DTMF` 码发送结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+
+接收 :term:`DTMF` 码结束
+==========================
+
+.. function:: on_send_dtmf_completed(res_id, error, begin_time, end_time, keys)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果 :term:`DTMF` 码接收失败，该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time: :term:`DTMF` 码接收开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: :term:`DTMF` 码接收结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str keys: 接收到的 :term:`DTMF` 码字符串。

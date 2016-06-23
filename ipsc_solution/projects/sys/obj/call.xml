@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-06-23T03:57:42+08:00</ModifyDate>
+    <ModifyDate>2016-06-23T05:52:27+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -124,6 +124,14 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <ExitType>106</ExitType>
         </case>
         <case>
+          <expression>method == 'receive_dtmf_start'</expression>
+          <ExitType>112</ExitType>
+        </case>
+        <case>
+          <expression>method == 'receive_dtmf_stop'</expression>
+          <ExitType>113</ExitType>
+        </case>
+        <case>
           <expression>method == 'call.conf_exit'</expression>
           <ExitType>107</ExitType>
         </case>
@@ -195,6 +203,18 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <targetflow>
           </targetflow>
           <target>1353</target>
+        </ExitPort>
+        <ExitPort>
+          <type>112</type>
+          <targetflow>
+          </targetflow>
+          <target>1711</target>
+        </ExitPort>
+        <ExitPort>
+          <type>113</type>
+          <targetflow>
+          </targetflow>
+          <target>1747</target>
         </ExitPort>
         <ExitPort>
           <type>107</type>
@@ -1263,7 +1283,7 @@ except IvrError as err:
     <NodeID>1663</NodeID>
     <NodeType>INVOKESUB</NodeType>
     <NodeName>调子流程 async send_dtmf</NodeName>
-    <ExtendedProperty>SubFlowName=call_async_record;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <ExtendedProperty>SubFlowName=call_async_send_dtmf;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
     <PropertySet>
       <AffectList />
       <EffectList>
@@ -1292,7 +1312,7 @@ except IvrError as err:
         </ExitPort>
         <ExitPort>
           <type>22</type>
-          <targetflow>call_async_record</targetflow>
+          <targetflow>call_async_send_dtmf</targetflow>
           <target>1000</target>
         </ExitPort>
       </Exit>
@@ -1332,6 +1352,165 @@ except IvrError as err:
     <NodeID>1690</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 send_dtmf stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		BreakPlayRec(call_info['async_work_ch'])
+		call_info['async_work_ch'] = None
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1704</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.receive_dtmf_start ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_result(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1705</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.receive_dtmf_start error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_error(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1710</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async receive_dtmf</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_receive_dtmf;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1705</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1704</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_receive_dtmf</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1711</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 NewVCh</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>vch</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>NewVCh()</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1705</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1710</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1747</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 receive_dtmf_stop</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
