@@ -101,6 +101,14 @@
 
   :param str res_id: 要操作的呼叫资源 `ID`。
 
+开始发送 :term:`DTMF` 码
+=========================
+
+.. function:: send_dtmf_start(res_id, codes)
+
+  :param str res_id: 要操作的呼叫资源 `ID`。
+  :param str codes: 要发送的 :term:`DTMF` 码串。
+
 进入会议
 ==========
 
@@ -196,7 +204,6 @@
   :param int repeated: 放音的实际循环次数。
   :param str finish_key: 中断此次放音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
 
-
 录音结束
 =============
 
@@ -207,3 +214,13 @@
   :param int begin_time: 录音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 录音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str finish_key: 中断此次录音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
+
+发送 :term:`DTMF` 码结束
+==========================
+
+.. function:: on_send_dtmf_completed(res_id, error, begin_time, end_time)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果 :term:`DTMF` 码发送失败，该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time:  :term:`DTMF` 码发送开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time:  :term:`DTMF` 码发送结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
