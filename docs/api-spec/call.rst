@@ -278,6 +278,13 @@
   :param str schedule_play_file: 到达 ``schedule_play_time`` 时间点时播放此声音文件。
   :param int schedule_play_loop: 到达 ``schedule_play_time`` 时间点时，循环播放，0表示不循环，1表示循环。
 
+桥接结束
+----------
+
+.. function:: bridge_stop()
+
+  .. attention:: 只能对桥接的发起呼叫资源进行该操作。
+
 进入会议
 --------------
 
