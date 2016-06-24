@@ -12,20 +12,7 @@
 
 资源的生命周期如下图所示：
 
-.. graphviz::
-
-   digraph ResourceState {
-      Start -> Initiated [ label="启动流程" ];
-      Start -> Released [ label="启动流程失败" ];
-      Initiated -> MidState [ label="资源操作/资源变化" ];
-      Initiated -> Released [ label="资源释放" ];
-      MidState -> MidState [ label="资源操作/资源变化" ];
-      MidState -> Released [ label="资源释放" ];
-      Released -> End;
-
-      Start [shape=point];
-      End [shape=doublecircle];
-   }
+应用服务通过 :doc:`/cti-bus/index` 的客户端 `C API` 控制资源：
 
 #. 应用服务创建资源是通过启动流程（调用函数 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ）实现的。
 #. 应用服务操作资源，包括普通操作和释放资源，是通过向流程发送订阅消息（调用函数 :c:func:`SmartBusNetCli_SendNotify` ）实现的。
