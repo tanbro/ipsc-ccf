@@ -321,7 +321,13 @@ except IvrError as err:
     <NodeID>1142</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, 2, chan, -1, "BusNotifyTitle=%s" % res_id))
+    <ExtendedProperty>ZoneType=0;ScriptContent=answer_time = call_info.get('answer_time')
+if answer_time:
+	if max_answer_seconds &lt;= now() - answer_time:
+		TraceErr('max_answer_seconds(%d) expired' % max_answer_seconds)
+		Hangup(chan, 603)
+#
+ret_val = AsynchInvoke(Delay(15000, 2, chan, -1, "BusNotifyTitle=%s" % res_id))
 err, data = ret_val
 if err == -8:
 	pass
@@ -396,7 +402,7 @@ elif err != 1:
     <NodeID>1192</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=;RingTimeout=params.get('max_ring_seconds', 50);IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=max_ring_seconds;RingTimeout=50;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -559,6 +565,17 @@ try:
 		from_uri = ''
 	user, host, port = utils.parse_sip_uri(params['to_uri'])
 	to_uri = '{0}@{1}:{2}'.format(user, host, port)
+	max_answer_seconds = params.get['max_answer_seconds']
+	max_ring_seconds = params.get('max_ring_seconds', 50)
+	# for SUBCALL
+	parent_call_res_id = params.get(parent_call_res_id)
+	if parent_call_res_id:
+		parent_call_info = call_map_r[parent_call_res_id]
+		dial_chan = parent_call_info['chan']
+		ring_play_file = params.get('ring_play_file')
+	else:
+		dial_chan = GetCurrentCh()
+		ring_play_file = None
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -845,6 +862,7 @@ except IvrError as err:
 try:
 	try:
 		SendAcceptCall()
+		max_answer_seconds = params('max_answer_seconds')
 		SendANS(1)
 		call_info['answer_time'] = now()
 		jsonrpc.send_result(id_)

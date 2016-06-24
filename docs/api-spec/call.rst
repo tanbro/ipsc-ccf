@@ -95,9 +95,10 @@
 应答
 -------
 
-.. function:: answer(res_id, user_data)
+.. function:: answer(res_id, max_answer_seconds, user_data)
 
   :param str res_id: 要操作的呼叫资源 `ID`。
+  :param int max_answer_seconds: 呼叫的通话最大允许时间，单位是秒。
   :param str user_data: 应用服务自定义数据，通常用于 `CDR` 标识。
 
   .. important::
