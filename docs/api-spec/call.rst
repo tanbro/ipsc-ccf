@@ -14,10 +14,10 @@
 
 * 当呼入呼叫没有被应用服务同意接听，或者呼出呼叫没有被对端接听时，该呼叫处于初始状态(``Initiated``)。
 * 当呼叫被接听，而应用服务还没有决定下一步做什么的时候，呼叫处于空闲状态(``Idle``)。
-* 当应用程序控制呼叫进行 :term:`CTI` 动作时（如：放音、录音、收 :term:`DTMF` 码），呼叫处于各个 :term:`CTI` 动作执行状态(``Performing``)。
+* 当应用程序控制呼叫进行 :term:`CTI` 动作时（如：录/放音、收/发 :term:`DTMF` 码），呼叫处于各个 :term:`CTI` 动作的执行状态。
 * 当 :term:`CTI` 动作执行完毕或者被中止，呼叫的状态又回到了空闲。
-* 当呼叫被挂断，如果呼叫资源处于 ``Idle``，它都直接变为终结状态——释放(``Released``)；
-  如果处于动作执行状态，则会先转变为 ``Idle`` ，然后再极短的时间（通常不超过5毫秒）内变为 ``Released`` 状态。
+* 当呼叫被挂断，如果呼叫资源处于 ``Idle``，它将直接变为终结状态——释放(``Released``)；
+  如果处于动作执行状态，则会先转变为 ``Idle`` ，然后在短时间内（通常不超过5毫秒）变为 ``Released`` 状态。
 
 .. graphviz::
 
@@ -38,7 +38,7 @@
     }
 
     Start -> Initiated[label="呼入/呼出", color=blue];
-    Initiated -> Released [label="未应答", color=red];
+    Initiated -> Released [label="未接听", color=red];
     Initiated -> Idle [label="接听", color=green];
     Idle -> Released [label="挂断", color=red];
 
@@ -62,9 +62,11 @@
   }
 
 .. attention::
-  :term:`CTI` 动作发起指令都是异步的。
-  只有处于 ``Idel`` 状态时，才可以执行新的动作发起指令。
-  应用服务需要等待上一个 :term:`CTI` 动作结束（不管是主动结束，抑或仅仅是等待），方可发起下一个动作。
+  :term:`CTI` 动作的开始和停止指令都是异步的。
+
+.. warning::
+  呼叫资源只有当处于 ``Idel`` 状态时，才可以执行新的动作发起指令。
+  应用服务需要等待上一个 :term:`CTI` 动作结束（不管是主动结束，抑或仅仅是被动等待其结束），方可发起下一个动作的开始指令。
 
 呼叫资源的接口
 ***************
@@ -72,16 +74,26 @@
 构造
 ==========
 
-.. function:: construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, user_data)
+.. function::
+  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, ring_play_file, user_data)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
   :param str to_uri: 被叫号码 :term:`SIP URI`。
   :param int max_answer_seconds: 呼叫的通话最大允许时间，单位是秒。
   :param int max_ring_seconds: 外呼时，收到对端振铃后，最大等待时间。振铃超过这个时间，则认为呼叫失败。
+  :param str parent_call_res_id: 父呼叫资源ID。
+    如果该参数不为 `null` ，系统将在此参数指定父呼叫资源上进行拨号。
+    拨号期间，父呼叫可以听到拨号提示音。
+  :param str ring_play_file: 拨号时，在对方振铃期间向父呼叫播放的声音文件。
+    仅在指定 ``parent_call_res_id`` 参数时有意义。
+    如果指定了 ``parent_call_res_id`` 参数，且本参数为 ``null`` 或者空字符串，则在拨号时向父呼叫透传原始的线路拨号提示音。
   :param str user_data: 应用服务自定义数据，通常用于 `CDR` 标识。
 
   .. important::
     仅适用于 **出方向** 呼叫。
+
+  .. warning::
+    如果指定了 ``parent_call_res_id`` 参数，其对应的父呼叫状态 **必须** 为 ``Idle``。
 
 方法
 =========
