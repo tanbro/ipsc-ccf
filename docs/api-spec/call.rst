@@ -3,8 +3,74 @@
 
 .. module:: call
 
+呼叫资源的状态
+***************
+呼叫资源的产生有两个途径：
+
+#. 应用服务调用资源构造方法，用于呼出。
+#. 收到来自外界的呼入请求，资源被自动创建。
+
+在呼叫资源产生后：
+
+* 当呼入呼叫没有被应用服务同意接听，或者呼出呼叫没有被对端接听时，该呼叫处于初始状态(``Initiated``)。
+* 当呼叫被接听，而应用服务还没有决定下一步做什么的时候，呼叫处于空闲状态(``Idle``)。
+* 当应用程序控制呼叫进行 :term:`CTI` 动作时（如：放音、录音、收 :term:`DTMF` 码），呼叫处于各个 :term:`CTI` 动作执行状态(``Performing``)。
+* 当 :term:`CTI` 动作执行完毕或者被中止，呼叫的状态又回到了空闲。
+* 当呼叫被挂断，如果呼叫资源处于 ``Idle``，它都直接变为终结状态——释放(``Released``)；
+  如果处于动作执行状态，则会先转变为 ``Idle`` ，然后再极短的时间（通常不超过5毫秒）内变为 ``Released`` 状态。
+
+.. graphviz::
+
+  digraph ResourceState {
+
+    size="6,6";
+    rankdir="LR";
+
+    Start [shape=point, color=blue, fontcolor=blue];
+    Initiated [color=blue, fontcolor=blue];
+    Idle [color=green, fontcolor=green];
+    Released [shape=doublecircle, color=red, fontcolor=red];
+
+    subgraph Performing {
+      label="Food";
+      graph[style=dotted];
+      Play Record SendDtmf ReceiveDtmf Bridge Conf;
+    }
+
+    Start -> Initiated[label="呼入/呼出", color=blue];
+    Initiated -> Released [label="未应答", color=red];
+    Initiated -> Idle [label="接听", color=green];
+    Idle -> Released [label="挂断", color=red];
+
+    Idle -> Play;
+    Play -> Idle;
+
+    Idle -> Record;
+    Record -> Idle;
+
+    Idle -> SendDtmf;
+    SendDtmf -> Idle;
+
+    Idle -> ReceiveDtmf;
+    ReceiveDtmf -> Idle;
+
+    Idle -> Bridge;
+    Bridge -> Idle;
+
+    Idle -> Conf;
+    Conf -> Idle;
+  }
+
+.. attention::
+  :term:`CTI` 动作发起指令都是异步的。
+  只有处于 ``Idel`` 状态时，才可以执行新的动作发起指令。
+  应用服务需要等待上一个 :term:`CTI` 动作结束（不管是主动结束，抑或仅仅是等待），方可发起下一个动作。
+
+呼叫资源的接口
+***************
+
 构造
-***********
+==========
 
 .. function:: construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, user_data)
 
@@ -18,10 +84,10 @@
     仅适用于 **出方向** 呼叫。
 
 方法
-***********
+=========
 
 应答
-====
+-------
 
 .. function:: answer(res_id, user_data)
 
@@ -34,7 +100,7 @@
     已经应答的呼叫不可再次应答。
 
 挂断
-====
+------
 
 .. function:: drop(res_id, cause)
 
@@ -45,7 +111,7 @@
     调用后，呼叫资源被释放。
 
 重定向
-======
+---------
 
 .. function:: redirect(res_id, redirect_uri)
 
@@ -59,7 +125,7 @@
     调用后，呼叫资源被释放。
 
 开始放音
-=================
+------------
 
 .. function:: play_start(res_id, content, repeat, finish_keys)
 
@@ -77,7 +143,7 @@
     在播放过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止播放。
 
 停止放音
-=================
+-------------
 
 中断正在进行的放音，将放音停止，触发事件 :func:`on_play_completed`。
 
@@ -86,7 +152,7 @@
   :param str res_id: 要操作的呼叫资源 `ID`。
 
 开始录音
-===============
+------------
 
 .. function:: record_start(res_id, max_seconds, beep, record_file, finish_keys)
 
@@ -97,7 +163,7 @@
     在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
 
 停止录音
-===============
+-------------
 
 中断正在进行的录音，将录音错误，触发事件 :func:`on_record_completed`。
 
@@ -106,7 +172,7 @@
   :param str res_id: 要操作的呼叫资源 `ID`。
 
 开始发送 :term:`DTMF` 码
-=========================
+-------------------------
 
 .. function:: send_dtmf_start(res_id, keys)
 
@@ -114,7 +180,7 @@
   :param str keys: 要发送的 :term:`DTMF` 码串。
 
 开始接收 :term:`DTMF` 码
-============================
+-------------------------
 
 .. function:: receive_dtmf_start(res_id, valid_keys, max_keys, finish_keys, first_key_timeout, continues_keys_timeout, play_content, play_repeat)
 
@@ -151,7 +217,7 @@
   :param int play_repeat: 如果出现等待超时，按照该参数重复播放提示音。
 
 结束接收 :term:`DTMF` 码
-============================
+-----------------------------
 
 .. function:: stop_receive_dtmf_start(res_id)
 
@@ -160,24 +226,24 @@
   该操作将导致接收 :term:`DTMF` 码的过程结束，并触发 :func:`on_receive_dtmf_completed` 事件。
 
 进入会议
-==========
+--------------
 
 .. function:: conf_enter(res_id, conf_res_id)
 
   :param str res_id: 要操作的呼叫资源 `ID`。
 
 退出会议
-==========
+-------------
 
 .. function:: conf_exit(res_id, conf_res_id)
 
   :param str res_id: 要操作的呼叫资源 `ID`。
 
 事件
-***********
+============
 
 新呼入呼叫
-==========
+------------
 
 .. function:: on_incoming(res_id, from_uri, to_uri, begin_time)
 
@@ -192,7 +258,7 @@
     或者通过 :func:`drop` 挂断呼叫，释放呼叫资源。
 
 拨号结束
-===========
+-----------
 在外呼拨号失败、超时或者被接听时发生
 
 .. function:: on_dial_completed(res_id, error, begin_time, answer_time, end_time)
@@ -209,7 +275,7 @@
     .. note:: 这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
 
 呼叫被释放
-============
+-------------
 
 .. function:: on_released(res_id, call_dir, from_uri, to_uri, begin_time, answer_time, end_time, dropped_by, cause)
 
@@ -243,7 +309,7 @@
   :param int cause: 呼叫结束的原因码。详见 :term:`SIP` 状态码定义。
 
 放音结束
-=============
+-------------
 
 .. function:: on_play_completed(res_id, error, begin_time, end_time, repeated, finish_key)
 
@@ -255,7 +321,7 @@
   :param str finish_key: 中断此次放音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
 
 录音结束
-=============
+--------------
 
 .. function:: on_record_completed(res_id, error, begin_time, end_time, finish_key)
 
@@ -266,7 +332,7 @@
   :param str finish_key: 中断此次录音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
 
 发送 :term:`DTMF` 码结束
-==========================
+--------------------------
 
 .. function:: on_send_dtmf_completed(res_id, error, begin_time, end_time)
 
@@ -276,7 +342,7 @@
   :param int end_time: :term:`DTMF` 码发送结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
 
 接收 :term:`DTMF` 码结束
-==========================
+----------------------------
 
 .. function:: on_send_dtmf_completed(res_id, error, begin_time, end_time, keys)
 
