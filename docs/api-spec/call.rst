@@ -21,7 +21,7 @@
 
 .. graphviz::
 
-  digraph ResourceState {
+  digraph CallResourceState {
 
     size="6,6";
     rankdir="LR";
@@ -30,12 +30,6 @@
     Initiated [color=blue, fontcolor=blue];
     Idle [color=green, fontcolor=green];
     Released [shape=doublecircle, color=red, fontcolor=red];
-
-    subgraph Performing {
-      label="Food";
-      graph[style=dotted];
-      Play Record SendDtmf ReceiveDtmf Bridge Conf;
-    }
 
     Start -> Initiated[label="呼入/呼出", color=blue];
     Initiated -> Released [label="未接听", color=red];
@@ -107,9 +101,10 @@
   :param str user_data: 应用服务自定义数据，通常用于 `CDR` 标识。
 
   .. important::
-    仅适用于 **入方向** 呼叫。
-    只能在 :func:`on_incoming` 事件触发后调用。
-    已经应答的呼叫不可再次应答。
+
+    * 仅适用于 **入方向** 呼叫。
+    * 只能在 :func:`on_incoming` 事件触发后调用。
+    * 已经应答的呼叫不可再次应答。
 
 挂断
 ------
@@ -120,10 +115,14 @@
   :param int cause: 挂机原因，详见 :term:`SIP` 协议 `status code` 规范
 
   .. important::
-    调用后，呼叫资源被释放。
+
+    * 调用后，呼叫资源被释放。
+    * 调用后，将触发 :func:`on_released` 事件。
 
 重定向
 ---------
+
+通常用于在收到与当前 `IPSC` 进程不匹配的呼入时，将呼入呼叫重指向到正确的 `IPSC` 进程。
 
 .. function:: redirect(res_id, redirect_uri)
 
@@ -131,10 +130,11 @@
   :param str redirect_uri: 重定向的目标 :term:`SIP URI`
 
   .. important::
-    仅适用于 **入方向** 呼叫。
-    只能在 :func:`on_incoming` 事件触发后调用。
-    已经应答的呼叫不可被重定向。
-    调用后，呼叫资源被释放。
+
+    * 仅适用于 **入方向** 呼叫。
+    * 只能在 :func:`on_incoming` 事件触发后调用。
+    * 已经应答的呼叫不可被重定向。
+    * 调用后，呼叫资源被释放，将触发 :func:`on_released` 事件。
 
 开始放音
 ------------
@@ -356,7 +356,7 @@
 接收 :term:`DTMF` 码结束
 ----------------------------
 
-.. function:: on_send_dtmf_completed(res_id, error, begin_time, end_time, keys)
+.. function:: on_receive_dtmf_completed(res_id, error, begin_time, end_time, keys)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。如果 :term:`DTMF` 码接收失败，该参数记录错误信息；否则该参数的值是 ``null``。
