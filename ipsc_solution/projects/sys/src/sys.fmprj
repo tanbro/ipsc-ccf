@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project>
-  <MaxNodeID>1759</MaxNodeID>
+  <MaxNodeID>1807</MaxNodeID>
   <MachineOut>1</MachineOut>
   <ProjectInfo>
     <ProjectID>sys</ProjectID>
@@ -9,7 +9,7 @@
     <ProjectVer>1.0</ProjectVer>
     <ProjectType>0</ProjectType>
     <CreateDate>2016-06-03T16:19:37+08:00</CreateDate>
-    <ModifyDate>2016-06-23T13:52:27+08:00</ModifyDate>
+    <ModifyDate>2016-06-24T17:30:41+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </ProjectInfo>
   <ChannelOrderSet>
@@ -145,5 +145,11 @@
     <FlowID>conf_record_completed</FlowID>
     <FlowFidPath>.\projects\sys\src\conf_record_completed.fid</FlowFidPath>
     <FlowXmaPath>.\projects\sys\src\conf_record_completed.xma</FlowXmaPath>
+  </ProjectFlow>
+  <ProjectFlow>
+    <ProjectID>sys</ProjectID>
+    <FlowID>call_async_bridge</FlowID>
+    <FlowFidPath>.\projects\sys\src\call_async_bridge.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\call_async_bridge.xma</FlowXmaPath>
   </ProjectFlow>
 </Project>

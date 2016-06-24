@@ -143,7 +143,7 @@ html_theme = 'alabaster'
 html_theme_options = {
     # 'logo': 'logo.png',
     # 'show_related': True,
-    'fixed_sidebar': True,
+    # 'fixed_sidebar': True,
     # 'font_family': "'Microsoft Yahei UI', 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
     # 'font_size': '18px',
     # 'head_font_family': "'Microsoft Yahei UI', Garamond, Georgia, serif",
