@@ -71,6 +71,10 @@ bridge_call_info = call_map_r[call_res_id]
 bridge_chan = bridge_call_info['chan']
 
 #
+call_info['state'] = 'Bridge'
+bridge_call_info['state'] = 'Bridge'
+
+#
 try:
 	schedule_play_loop = int(params['schedule_play_loop'])
 except:
@@ -179,6 +183,8 @@ except:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['async_work_ch'] = None
+	call_info['state'] = 'Idle'
+	bridge_call_info['state'] = 'Idle'
 	params = {
 			'res_id': res_id,
 			'error': error,

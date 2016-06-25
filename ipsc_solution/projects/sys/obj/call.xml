@@ -174,7 +174,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1506</target>
+          <target>1824</target>
         </ExitPort>
         <ExitPort>
           <type>105</type>
@@ -186,7 +186,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>108</type>
           <targetflow>
           </targetflow>
-          <target>1576</target>
+          <target>1827</target>
         </ExitPort>
         <ExitPort>
           <type>109</type>
@@ -198,7 +198,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>110</type>
           <targetflow>
           </targetflow>
-          <target>1664</target>
+          <target>1828</target>
         </ExitPort>
         <ExitPort>
           <type>111</type>
@@ -210,7 +210,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>112</type>
           <targetflow>
           </targetflow>
-          <target>1711</target>
+          <target>1829</target>
         </ExitPort>
         <ExitPort>
           <type>113</type>
@@ -222,7 +222,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>114</type>
           <targetflow>
           </targetflow>
-          <target>1773</target>
+          <target>1830</target>
         </ExitPort>
         <ExitPort>
           <type>115</type>
@@ -469,6 +469,7 @@ try:
 		'id': id_,
 		'res_id': res_id,
 		'params': params,
+		'state': 'Initiated',
 		'chan': chan,
 		'call_dir': 'outbound',
 		'from_uri': from_uri,
@@ -711,6 +712,7 @@ try:
 		'id': id_,
 		'res_id': res_id,
 		'params': params,
+		'state': 'Initiated',
 		'chan': chan,
 		'call_dir': 'inbound',
 		'from_uri': from_uri,
@@ -794,6 +796,7 @@ except IvrError as err:
     <NodeName>脚本 call.on_released</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=try:
 	call_info['end_time'] = now()
+	call_info['state'] = 'Released'
 	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
 
 	last_err = None
@@ -846,6 +849,10 @@ finally:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if call_info['call_dir'] == 'outbound':
+			raise RuntimeError('Can not redirect an outbound call.')
+		if call_info['state'] not in ['Initiated']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		redirect_uri = params['redirect_uri']
 		destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
 		ReadySipRedirect(chan, 302, destuser, destip, destport)
@@ -881,10 +888,15 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if call_info['call_dir'] == 'outbound':
+			raise RuntimeError('Can not answer an outbound call.')
+		if call_info['state'] not in ['Initiated']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		SendAcceptCall()
 		max_answer_seconds = params['max_answer_seconds']
 		SendANS(1)
 		call_info['answer_time'] = now()
+		call_info['state'] = 'Idle'
 		jsonrpc.send_result(id_)
 	except Exception as err:
 		Hangup(chan, 500)
@@ -1040,25 +1052,30 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1506</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 NewVCh</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
+    <NodeID>1824</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if call_info['state'] not in ['Idle']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#
+		vch = NewVCh()
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
-      <letlist>
-        <let>
-          <VarName>vch</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>NewVCh()</Value>
-        </let>
-      </letlist>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1300</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -1076,6 +1093,8 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if call_info['state'] not in ['Play']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
 		jsonrpc.send_result(id_)
@@ -1199,25 +1218,30 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1576</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 NewVCh</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
+    <NodeID>1827</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if call_info['state'] not in ['Idle']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#
+		vch = NewVCh()
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
-      <letlist>
-        <let>
-          <VarName>vch</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>NewVCh()</Value>
-        </let>
-      </letlist>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1570</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -1235,6 +1259,8 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if call_info['state'] not in ['Record']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
 		jsonrpc.send_result(id_)
@@ -1358,25 +1384,30 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1664</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 NewVCh</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
+    <NodeID>1828</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if call_info['state'] not in ['Idle']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#
+		vch = NewVCh()
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
-      <letlist>
-        <let>
-          <VarName>vch</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>NewVCh()</Value>
-        </let>
-      </letlist>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1658</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -1394,6 +1425,8 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if call_info['state'] not in ['SendDtmf']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
 		jsonrpc.send_result(id_)
@@ -1517,25 +1550,30 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1711</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 NewVCh</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
+    <NodeID>1829</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if call_info['state'] not in ['Idle']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#
+		vch = NewVCh()
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
-      <letlist>
-        <let>
-          <VarName>vch</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>NewVCh()</Value>
-        </let>
-      </letlist>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1705</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -1553,6 +1591,8 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if call_info['state'] not in ['ReceiveDtmf']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
 		jsonrpc.send_result(id_)
@@ -1676,25 +1716,30 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1773</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 NewVCh</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
+    <NodeID>1830</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if call_info['state'] not in ['Idle']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#
+		vch = NewVCh()
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
-      <letlist>
-        <let>
-          <VarName>vch</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>NewVCh()</Value>
-        </let>
-      </letlist>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1767</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -1712,6 +1757,8 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if call_info['state'] not in ['Bridge']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		ret_val = BreakConnect(chan, None)
 		if ret_val != 1:
 			raise RuntimeError('BreakConnect(chan=%d) returns %d' % (chan, ret_val))

@@ -66,6 +66,7 @@ chan = call_info['chan']
 #
 begin_time = now()
 call_info['async_work_ch'] = GetCurrentCh()
+call_info['state'] = 'Play'
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -208,6 +209,7 @@ call_info['async_work_ch'] = GetCurrentCh()
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['async_work_ch'] = None
+	call_info['state'] = 'Idle'
 	params = {
 			'res_id': res_id,
 			'error': error,

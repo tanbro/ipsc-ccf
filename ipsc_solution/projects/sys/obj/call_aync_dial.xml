@@ -121,6 +121,7 @@ call_info['answer_time'] = None
 try:
 	if not error:
 		call_info['answer_time'] = now()
+		call_info['state'] = 'Idle'
 	params={
 		'res_id': res_id,
 		'begin_time': begin_time,
