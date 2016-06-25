@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-06-23T05:52:27+08:00</ModifyDate>
+    <ModifyDate>2016-06-24T09:30:41+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -120,16 +120,24 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <ExitType>111</ExitType>
         </case>
         <case>
-          <expression>method == 'call.conf_enter'</expression>
-          <ExitType>106</ExitType>
-        </case>
-        <case>
           <expression>method == 'receive_dtmf_start'</expression>
           <ExitType>112</ExitType>
         </case>
         <case>
           <expression>method == 'receive_dtmf_stop'</expression>
           <ExitType>113</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.bridge_start'</expression>
+          <ExitType>114</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.bridge_stop'</expression>
+          <ExitType>115</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.conf_enter'</expression>
+          <ExitType>106</ExitType>
         </case>
         <case>
           <expression>method == 'call.conf_exit'</expression>
@@ -199,12 +207,6 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <target>1690</target>
         </ExitPort>
         <ExitPort>
-          <type>106</type>
-          <targetflow>
-          </targetflow>
-          <target>1353</target>
-        </ExitPort>
-        <ExitPort>
           <type>112</type>
           <targetflow>
           </targetflow>
@@ -215,6 +217,24 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <targetflow>
           </targetflow>
           <target>1747</target>
+        </ExitPort>
+        <ExitPort>
+          <type>114</type>
+          <targetflow>
+          </targetflow>
+          <target>1773</target>
+        </ExitPort>
+        <ExitPort>
+          <type>115</type>
+          <targetflow>
+          </targetflow>
+          <target>1819</target>
+        </ExitPort>
+        <ExitPort>
+          <type>106</type>
+          <targetflow>
+          </targetflow>
+          <target>1353</target>
         </ExitPort>
         <ExitPort>
           <type>107</type>
@@ -1555,6 +1575,216 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1766</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.receive_bridge_start ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_result(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1767</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.receive_bridge_start error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_error(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1772</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async bridge</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_bridge;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1767</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1766</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_bridge</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1773</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 NewVCh</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>vch</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>NewVCh()</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1767</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1772</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1816</NodeID>
+    <NodeType>DISCONNECT</NodeType>
+    <NodeName>断开连接</NodeName>
+    <ExtendedProperty>ChNo1=chan;ChNo2=bridge_chan</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1817</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1817</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 bridge_stop error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_error(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1819</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 bridge_stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		call_res_id = params['call_res_id']
+		bridge_call_info = call_map_r[call_res_id]
+		bridge_chan = bridge_call_info['chan']
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1816</target>
         </ExitPort>
       </Exit>
     </PropertySet>

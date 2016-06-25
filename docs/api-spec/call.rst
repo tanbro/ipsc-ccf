@@ -95,9 +95,8 @@
 应答
 -------
 
-.. function:: answer(res_id, max_answer_seconds, user_data)
+.. function:: answer(max_answer_seconds, user_data)
 
-  :param str res_id: 要操作的呼叫资源 `ID`。
   :param int max_answer_seconds: 呼叫的通话最大允许时间，单位是秒。
   :param str user_data: 应用服务自定义数据，通常用于 `CDR` 标识。
 
@@ -110,9 +109,8 @@
 挂断
 ------
 
-.. function:: drop(res_id, cause)
+.. function:: drop( cause)
 
-  :param str res_id: 要操作的呼叫资源 `ID`。
   :param int cause: 挂机原因，详见 :term:`SIP` 协议 `status code` 规范
 
   .. important::
@@ -125,9 +123,8 @@
 
 通常用于在收到与当前 `IPSC` 进程不匹配的呼入时，将呼入呼叫重指向到正确的 `IPSC` 进程。
 
-.. function:: redirect(res_id, redirect_uri)
+.. function:: redirect(redirect_uri)
 
-  :param str res_id: 要操作的呼叫资源 `ID`。
   :param str redirect_uri: 重定向的目标 :term:`SIP URI`
 
   .. important::
@@ -140,9 +137,7 @@
 开始放音
 ------------
 
-.. function:: play_start(res_id, content, repeat, finish_keys)
-
-  :param str res_id: 要操作的呼叫资源 `ID`。
+.. function:: play_start(content, repeat, finish_keys)
 
   :param content: 待播放内容
 
@@ -171,18 +166,29 @@
 
 中断正在进行的放音，将放音停止，触发事件 :func:`on_play_completed`。
 
-.. function:: play_stop(res_id)
-
-  :param str res_id: 要操作的呼叫资源 `ID`。
+.. function:: play_stop()
 
 开始录音
 ------------
 
-.. function:: record_start(res_id, max_seconds, beep, record_file, finish_keys)
+.. function:: record_start(max_seconds, beep, record_file, record_format, finish_keys)
 
-  :param str res_id: 要操作的呼叫资源 `ID`。
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
   :param bool beep: 是否在录音之前播放“嘀”的一声。
+
+  :param int record_format: 录音文件格式
+
+    ====== ===========
+    值     说明
+    ====== ===========
+    ``1`` PCM liner 8k/8bit
+    ``2`` CCITT a-law 8k/8bit
+    ``3`` CCITT mu-law 8k/8bit
+    ``4`` IMA ADPCM
+    ``5`` GSM
+    ``6`` MP3
+    ====== ===========
+
   :param str finish_keys: 录音打断按键码串。
     在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
 
@@ -191,24 +197,22 @@
 
 中断正在进行的录音，将录音错误，触发事件 :func:`on_record_completed`。
 
-.. function:: record_stop(res_id)
+.. function:: record_stop()
 
   :param str res_id: 要操作的呼叫资源 `ID`。
 
 开始发送 :term:`DTMF` 码
 -------------------------
 
-.. function:: send_dtmf_start(res_id, keys)
+.. function:: send_dtmf_start(keys)
 
-  :param str res_id: 要操作的呼叫资源 `ID`。
   :param str keys: 要发送的 :term:`DTMF` 码串。
 
 开始接收 :term:`DTMF` 码
 -------------------------
 
-.. function:: receive_dtmf_start(res_id, valid_keys, max_keys, finish_keys, first_key_timeout, continues_keys_timeout, play_content, play_repeat)
+.. function:: receive_dtmf_start(valid_keys, max_keys, finish_keys, first_key_timeout, continues_keys_timeout, play_content, play_repeat)
 
-  :param str res_id: 要操作的呼叫资源 `ID`。
   :param str valid_keys: 有效 :term:`DTMF` 码范围字符串。
     只有存于这个字符串范围内的 :term:`DTMF` 码才会被接收，否则被忽略。
 
@@ -243,11 +247,43 @@
 结束接收 :term:`DTMF` 码
 -----------------------------
 
-.. function:: stop_receive_dtmf_start(res_id)
-
-  :param str res_id: 要操作的呼叫资源 `ID`。
+.. function:: stop_receive_dtmf_start()
 
   该操作将导致接收 :term:`DTMF` 码的过程结束，并触发 :func:`on_receive_dtmf_completed` 事件。
+
+桥接开始
+----------
+
+.. function::
+  bridge_start(max_seconds, call_res_id, bridge_mode, record_file, record_format, local_volume, remote_volume, schedule_play_time, schedule_play_file, schedule_play_loop)
+
+  :param int max_seconds: 最大桥接时间长度（秒）。
+  :param str call_res_id: 要和当前呼叫资源桥接的呼叫资源ID。
+
+  :param int bridge_mode: 桥接模式。
+
+    ====== =====================
+    值     说明
+    ====== =====================
+    ``1``  桥接双方均可互相听到
+    ``2``  仅被桥接方可以听到发起方;发起方听不到被桥接方
+    ``3``  仅发起方可以听到被桥接方;被桥接方听不到发起方
+    ====== =====================
+
+  :param str record_file: 录音文件。如果该参数不为 `null` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
+  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。
+  :param int local_volume: 桥接建立后的发起方音量。`null` 表示默认音量。
+  :param int remote_volume: 桥接建立后的发起方音量。`null` 表示默认音量。
+  :param int schedule_play_time: 到达这个 :term:`Unix time` 时间点，触发播放声音。
+  :param str schedule_play_file: 到达 ``schedule_play_time`` 时间点时播放此声音文件。
+  :param int schedule_play_loop: 到达 ``schedule_play_time`` 时间点时，循环播放，0表示不循环，1表示循环。
+
+桥接结束
+----------
+
+.. function:: bridge_stop()
+
+  .. attention:: 只能对桥接的发起呼叫资源进行该操作。
 
 进入会议
 --------------
