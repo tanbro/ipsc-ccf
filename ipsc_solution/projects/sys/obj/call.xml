@@ -1712,7 +1712,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		ret_val = BreakConnect(chan)
+		ret_val = BreakConnect(chan, None)
 		if ret_val != 1:
 			raise RuntimeError('BreakConnect(chan=%d) returns %d' % (chan, ret_val))
 	except Exception as err:
