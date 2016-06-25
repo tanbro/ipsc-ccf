@@ -588,7 +588,7 @@ try:
 	max_answer_seconds = params['max_answer_seconds']
 	max_ring_seconds = params.get('max_ring_seconds', 50)
 	# for SUBCALL
-	parent_call_res_id = params.get(parent_call_res_id)
+	parent_call_res_id = params.get('parent_call_res_id')
 	if parent_call_res_id:
 		parent_call_info = call_map_r[parent_call_res_id]
 		dial_chan = parent_call_info['chan']
