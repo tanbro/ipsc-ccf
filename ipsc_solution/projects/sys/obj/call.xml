@@ -1705,66 +1705,15 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1816</NodeID>
-    <NodeType>DISCONNECT</NodeType>
-    <NodeName>断开连接</NodeName>
-    <ExtendedProperty>ChNo1=chan;ChNo2=bridge_chan</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1817</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1817</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 bridge_stop error</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	jsonrpc.send_error(id_)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
-</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
     <NodeID>1819</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 bridge_stop</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		call_res_id = params['call_res_id']
-		bridge_call_info = call_map_r[call_res_id]
-		bridge_chan = bridge_call_info['chan']
+		ret_val = BreakConnect(chan)
+		if ret_val != 1:
+			raise RuntimeError('BreakConnect(chan=%d) returns %d' % (chan, ret_val))
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
 		raise
@@ -1784,7 +1733,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1816</target>
+          <target>1142</target>
         </ExitPort>
       </Exit>
     </PropertySet>
