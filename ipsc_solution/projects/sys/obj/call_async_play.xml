@@ -51,7 +51,7 @@
     <ExtendedProperty>ZoneType=0;ScriptContent=error = None
 finish_key = None
 repeated = 0
-repeate = int(params.get('repeat', 0))
+repeat = int(params.get('repeat', 0))
 
 last_err = None
 

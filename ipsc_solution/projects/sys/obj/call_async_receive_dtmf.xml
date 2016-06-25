@@ -177,7 +177,7 @@ try:
 			'end_time': now(),
 			'keys': keys,
 		}
-	jsonrpc.send_method(method='call.on_receive_dtmf', params=params)
+	jsonrpc.send_method(method='call.on_receive_dtmf_completed', params=params)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -299,7 +299,7 @@ except IvrError as err:
     <NodeID>1741</NodeID>
     <NodeType>DTMFINPUT</NodeType>
     <NodeName>数据输入</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=chan;Timeout=10;IsBreak=1;ValidDtmfStr=params.get('valid_keys', "0123456789*#");InvalidProcType=0;OutData=keys;DtmfLen=params.get('max_keys', 11);EndExpression=params.get('finish_keys', '#');IsIncludeEnd=;ClearDtmfBufType=1;RepeatNum=params.get('play_repeat', 0);IntervalTimeout=20;SaveEndDtmf=;IsRegex=0;TimeoutIsPlayEnd=1;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsDtmfEcho=0;DtmfEchoFontSize=16;DtmfEchoFontStyle=0;DtmfEchoColor="255:255:255:0";DtmfEchoLeft=0;DtmfEchoTop=120;DtmfEchoDir=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=;LogoAlphaBlending=0;Option=;DtmfEchoMask=</ExtendedProperty>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;Timeout=params.get('first_key_timeout', 45);IsBreak=1;ValidDtmfStr=params.get('valid_keys', "0123456789*#");InvalidProcType=0;OutData=keys;DtmfLen=params.get('max_keys', 11);EndExpression=params.get('finish_keys', '#');IsIncludeEnd=;ClearDtmfBufType=1;RepeatNum=params.get('play_repeat', 0);IntervalTimeout=params.get('continues_keys_timeout', 30);SaveEndDtmf=params.get('include_finish_key');IsRegex=0;TimeoutIsPlayEnd=1;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsDtmfEcho=0;DtmfEchoFontSize=16;DtmfEchoFontStyle=0;DtmfEchoColor="255:255:255:0";DtmfEchoLeft=0;DtmfEchoTop=120;DtmfEchoDir=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=;LogoAlphaBlending=0;Option=;DtmfEchoMask=</ExtendedProperty>
     <PropertySet>
       <DynamicVoice>
         <VarVoice>

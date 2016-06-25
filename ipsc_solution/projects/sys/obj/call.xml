@@ -116,15 +116,15 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <ExitType>110</ExitType>
         </case>
         <case>
-          <expression>method == 'send_dtmf_stop'</expression>
+          <expression>method == 'call.send_dtmf_stop'</expression>
           <ExitType>111</ExitType>
         </case>
         <case>
-          <expression>method == 'receive_dtmf_start'</expression>
+          <expression>method == 'call.receive_dtmf_start'</expression>
           <ExitType>112</ExitType>
         </case>
         <case>
-          <expression>method == 'receive_dtmf_stop'</expression>
+          <expression>method == 'call.receive_dtmf_stop'</expression>
           <ExitType>113</ExitType>
         </case>
         <case>
@@ -422,7 +422,7 @@ elif err != 1:
     <NodeID>1192</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
