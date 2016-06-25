@@ -1021,6 +1021,8 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if call_info['state'] in ['Answer']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		Hangup(chan, params.get('cause'))
 		jsonrpc.send_result(id_)
 	except Exception as err:
