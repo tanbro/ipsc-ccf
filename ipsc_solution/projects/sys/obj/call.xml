@@ -882,11 +882,12 @@ except IvrError as err:
 try:
 	try:
 		SendAcceptCall()
-		max_answer_seconds = params('max_answer_seconds')
+		max_answer_seconds = params['max_answer_seconds']
 		SendANS(1)
 		call_info['answer_time'] = now()
 		jsonrpc.send_result(id_)
 	except Exception as err:
+		Hangup(chan, 500)
 		jsonrpc.send_error(id_, message='{}'.format(err))
 		raise
 except IvrError as err:
