@@ -988,6 +988,7 @@ try:
 		if call_info['state'] not in ['Initiated']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
+		max_answer_seconds = params['max_answer_seconds']
 		vch = NewVCh()
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
