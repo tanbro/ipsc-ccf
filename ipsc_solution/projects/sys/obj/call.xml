@@ -585,7 +585,7 @@ try:
 		from_uri = ''
 	user, host, port = utils.parse_sip_uri(params['to_uri'])
 	to_uri = '{0}@{1}:{2}'.format(user, host, port)
-	max_answer_seconds = params.get['max_answer_seconds']
+	max_answer_seconds = params['max_answer_seconds']
 	max_ring_seconds = params.get('max_ring_seconds', 50)
 	# for SUBCALL
 	parent_call_res_id = params.get(parent_call_res_id)
