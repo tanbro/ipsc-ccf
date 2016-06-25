@@ -50,8 +50,6 @@
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = None
 finish_key = None
-repeated = 0
-repeat = int(params.get('repeat', 0))
 
 last_err = None
 
@@ -112,7 +110,8 @@ call_info['async_work_ch'] = GetCurrentCh()
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1632</target>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>5</type>
@@ -214,7 +213,6 @@ try:
 			'error': error,
 			'begin_time': begin_time,
 			'end_time': now(),
-			'repeated': repeated,
 			'finish_key': finish_key,
 		}
 	jsonrpc.send_method(method='call.on_play_completed', params=params)
@@ -235,111 +233,6 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1498</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1625</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 repeat</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>repeated &lt;= repeat</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1627</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1627</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 repeated</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>repeated</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>repeated + 1</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1492</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1632</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 not finish_key</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>not bool(finish_key)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1625</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
