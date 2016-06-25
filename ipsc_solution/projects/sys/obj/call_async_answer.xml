@@ -64,16 +64,16 @@ call_info['state'] = 'Answer'
 #    
 SendAcceptCall(chan)
 ret_val = AsynchInvoke(WaitCallStatus(chan, 5000, 0, [2]))
-if ret_val &lt; 1:
-    error = RuntimeError('WaitCallStatus(status=1xx) returns error code %s' % ret_val)
+if ret_val[0] &lt; 1:
+    error = RuntimeError('WaitCallStatus(status=1xx) returns error value %s' % ret_val)
     raise error
 SendANS(chan, 1)
 ret_val = AsynchInvoke(WaitCallStatus(chan, 5000, 0, [3,4]))
-if ret_val &lt; 1:
-    error = RuntimeError('WaitCallStatus(states=2xx) returns error code %s' % ret_val)
+if ret_val[0] &lt; 1:
+    error = RuntimeError('WaitCallStatus(states=2xx) returns error value %s' % ret_val)
     raise error
 # Answer OK!!!
-call_info['status'] = 'Idle'
+call_info['state'] = 'Idle'
 # return !
 try:
 	jsonrpc.send_method(
