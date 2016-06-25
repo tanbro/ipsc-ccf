@@ -28,12 +28,16 @@
 
     Start [shape=point, color=blue, fontcolor=blue];
     Initiated [color=blue, fontcolor=blue];
+    Answer [color=olive, fontcolor=olive];
     Idle [color=green, fontcolor=green];
     Released [shape=doublecircle, color=red, fontcolor=red];
 
     Start -> Initiated[label="呼入/呼出", color=blue];
     Initiated -> Released [label="未接听", color=red];
-    Initiated -> Idle [label="接听", color=green];
+    Initiated -> Answer[label="呼入接听", fontcolor=blue];
+    Initiated -> Idle [label="呼出被接听", color=green];
+    Answer -> Idle [label="接听成功", color=green];
+    Answer -> Released [label="接听失败/挂断", color=red];
     Idle -> Released [label="挂断", color=red];
 
     Idle -> Play;

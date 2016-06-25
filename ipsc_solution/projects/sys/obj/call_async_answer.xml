@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <FlowItem>
+    <FlowID>call_async_answer</FlowID>
+    <FlowName>call_async_answer</FlowName>
+    <FlowDesc />
+    <FlowVer>1.0</FlowVer>
+    <CreateDate>2016-06-25T15:33:37+08:00</CreateDate>
+    <ModifyDate>2016-06-25T07:33:38+08:00</ModifyDate>
+    <DesignVer>2.0</DesignVer>
+  </FlowItem>
+  <FlowNode>
+    <NodeID>1831</NodeID>
+    <NodeType>SUBSTART</NodeType>
+    <NodeName>子流程开始</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <AffectList>
+        <varlist>
+          <var>id_</var>
+        </varlist>
+        <varlist>
+          <var>res_id</var>
+        </varlist>
+        <varlist>
+          <var>params</var>
+        </varlist>
+      </AffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1832</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1832</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	error = None
+
+	call_map = _gd_['call_map'] # chan =&gt; call_info
+	conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+
+	call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
+	conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+
+	#
+	call_info = call_map_r[res_id]
+	chan = call_info['chan']
+
+	#
+	begin_time = now()
+	#
+	org_state = call_info['state']
+	call_info['state'] = 'Answer'
+	#
+	SendAcceptCall(chan)
+	ret_val = AsynchInvoke(WaitCallStatus(chan, 10000, 0, (2,)))
+	if ret_val != 1:
+		raise RuntimeError('WaitCallStatus(status=1xx) returns error code %d' % ret_val)
+	SendANS(chan, 1)
+	ret = AsynchInvoke(WaitCallStatus(chan(),10000, 0, (3,4)))
+	if ret_val != 1:
+		raise RuntimeError('WaitCallStatus(states=2xx) returns error code %d' % ret_val)
+	# Answer OK!!!
+	call_info['status'] = 'Idle'
+except Exception as excp:
+	call_info['state'] = org_state
+	error = 'answer error: %s' % excp
+	raise
+finally:
+	try:
+		jsonrpc.send_method(
+			method='call.on_answer_completed',
+			params={
+				'res_id': res_id,
+				'error': str(error),
+				'begin_time': begin_time,
+				'end_time': now(),
+			}
+		)
+	except IvrError as excp:
+		TraceErr(err)
+
+	</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1848</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1848</NodeID>
+    <NodeType>SUBEND</NodeType>
+    <NodeName>子流程结束</NodeName>
+    <ExtendedProperty>IsHangup=0</ExtendedProperty>
+    <PropertySet>
+      <EffectList />
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+</root>
