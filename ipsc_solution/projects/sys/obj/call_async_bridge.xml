@@ -69,6 +69,12 @@ begin_time = now()
 call_res_id = params['call_res_id']
 bridge_call_info = call_map_r[call_res_id]
 bridge_chan = bridge_call_info['chan']
+
+#
+try:
+	schedule_play_loop = int(params['schedule_play_loop'])
+except:
+	schedule_play_loop = 0
 </ExtendedProperty>
     <PropertySet>
       <Exit>
