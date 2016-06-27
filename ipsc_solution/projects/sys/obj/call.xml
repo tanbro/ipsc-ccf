@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-06-25T07:33:37+08:00</ModifyDate>
+    <ModifyDate>2016-06-27T02:19:05+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -234,7 +234,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>106</type>
           <targetflow>
           </targetflow>
-          <target>1353</target>
+          <target>1898</target>
         </ExitPort>
         <ExitPort>
           <type>107</type>
@@ -1857,7 +1857,9 @@ try:
 		if call_info['state'] not in ['Bridge']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		ret_val = BreakConnect(chan, None)
-		if ret_val != 1:
+		if ret_val == 1:
+			jsonrpc.send_result(id_)
+		else:
 			raise RuntimeError('BreakConnect(chan=%d) returns %d' % (chan, ret_val))
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
@@ -1884,9 +1886,9 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1330</NodeID>
+    <NodeID>1889</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.start_play ok return</NodeName>
+    <NodeName>脚本 call.conf_enter ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_result(id_)
@@ -1912,9 +1914,9 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1331</NodeID>
+    <NodeID>1890</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.start_play error</NodeName>
+    <NodeName>脚本 call.conf_enter error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_error(id_)
@@ -1940,56 +1942,59 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1336</NodeID>
-    <NodeType>JOINCONFEX</NodeType>
-    <NodeName>加入会议组</NodeName>
-    <ExtendedProperty>ConfID=conf_id;InitVolume=;WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=65536;AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
+    <NodeID>1895</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async conf</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_conf;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
     <PropertySet>
-      <Actions />
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
       <Exit>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
-        <ExitPort>
-          <type>4</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
-        </ExitPort>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1331</target>
+          <target>1890</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1330</target>
+          <target>1889</target>
         </ExitPort>
         <ExitPort>
-          <type>8</type>
-          <targetflow>
-          </targetflow>
-          <target>1142</target>
+          <type>22</type>
+          <targetflow>call_async_conf</targetflow>
+          <target>1000</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1353</NodeID>
+    <NodeID>1898</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.enter_conf prepare</NodeName>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
 		conf_res_id = params['conf_res_id']
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
+		#
+		if call_info['state'] not in ['Idle']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#
+		vch = NewVCh()
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
 		raise
@@ -2009,7 +2014,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1336</target>
+          <target>1895</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -2024,11 +2029,13 @@ try:
 		conf_res_id = params['conf_res_id']
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
+		if call_info['state'] not in ['Conf']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		ret_val = RemoveConfer(conf_id, chan)
 		if ret_val == 1:
 			jsonrpc.send_result(id_)
 		else:
-			jsonrpc.send_error(id_)
+			raise RuntimeError('RemoveConfer(conf_id=%d, chan=%d) returns %d' % (conf_id, chan, ret_val))
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
 		raise

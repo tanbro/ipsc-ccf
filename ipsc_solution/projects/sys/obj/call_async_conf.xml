@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <FlowItem>
-    <FlowID>call_async_bridge</FlowID>
-    <FlowName>call_async_bridge</FlowName>
+    <FlowID>call_async_conf</FlowID>
+    <FlowName>call_async_conf</FlowName>
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
-    <CreateDate>2016-06-24T17:30:41+08:00</CreateDate>
+    <CreateDate>2016-06-27T10:19:05+08:00</CreateDate>
     <ModifyDate>2016-06-27T02:19:05+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
-    <NodeID>1778</NodeID>
+    <NodeID>1862</NodeID>
     <NodeType>SUBSTART</NodeType>
     <NodeName>子流程开始</NodeName>
     <ExtendedProperty>
@@ -39,13 +39,13 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1779</target>
+          <target>1863</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1779</NodeID>
+    <NodeID>1863</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = None
@@ -66,19 +66,11 @@ chan = call_info['chan']
 begin_time = now()
 
 #
-call_res_id = params['call_res_id']
-bridge_call_info = call_map_r[call_res_id]
-bridge_chan = bridge_call_info['chan']
-
+conf_res_id = params['conf_res_id']
+conf_info = conf_map_r[conf_res_id]
+conf_id = conf_info['conf_id']
 #
-call_info['state'] = 'Bridge'
-bridge_call_info['state'] = 'Bridge'
-
-#
-try:
-	schedule_play_loop = int(params['schedule_play_loop'])
-except:
-	schedule_play_loop = 0
+call_info['state'] = 'Conf'
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -86,19 +78,19 @@ except:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1803</target>
+          <target>1879</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1804</target>
+          <target>1883</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1783</NodeID>
+    <NodeID>1866</NodeID>
     <NodeType>AFTERPROC</NodeType>
     <NodeName>后处理</NodeName>
     <ExtendedProperty>
@@ -109,13 +101,13 @@ except:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1786</target>
+          <target>1869</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1784</NodeID>
+    <NodeID>1867</NodeID>
     <NodeType>JUDGE</NodeType>
     <NodeName>判断 not error</NodeName>
     <ExtendedProperty>
@@ -139,7 +131,7 @@ except:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1785</target>
+          <target>1868</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -152,7 +144,7 @@ except:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1785</NodeID>
+    <NodeID>1868</NodeID>
     <NodeType>SUBEND</NodeType>
     <NodeName>子流程结束</NodeName>
     <ExtendedProperty>IsHangup=0</ExtendedProperty>
@@ -177,9 +169,9 @@ except:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1786</NodeID>
+    <NodeID>1869</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call on bridge completed</NodeName>
+    <NodeName>脚本 call on conf completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['async_work_ch'] = None
@@ -191,7 +183,7 @@ try:
 			'begin_time': begin_time,
 			'end_time': now(),
 		}
-	jsonrpc.send_method(method='call.on_bridge_completed', params=params)
+	jsonrpc.send_method(method='call.on_conf_completed', params=params)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -202,19 +194,19 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1784</target>
+          <target>1867</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1784</target>
+          <target>1867</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1798</NodeID>
+    <NodeID>1874</NodeID>
     <NodeType>LET</NodeType>
     <NodeName>赋值 error</NodeName>
     <ExtendedProperty>
@@ -246,7 +238,7 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1800</NodeID>
+    <NodeID>1876</NodeID>
     <NodeType>LET</NodeType>
     <NodeName>赋值 error</NodeName>
     <ExtendedProperty>
@@ -256,7 +248,7 @@ except IvrError as err:
         <let>
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
-          <Value>"hungup when bridge"</Value>
+          <Value>"hungup when conf"</Value>
         </let>
       </letlist>
       <Exit>
@@ -278,7 +270,7 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1803</NodeID>
+    <NodeID>1879</NodeID>
     <NodeType>LET</NodeType>
     <NodeName>赋值 error</NodeName>
     <ExtendedProperty>
@@ -310,42 +302,7 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1804</NodeID>
-    <NodeType>CONNECT</NodeType>
-    <NodeName>连接</NodeName>
-    <ExtendedProperty>ChNo1=chan;Volum1=params.get('local_volume');ChNo2=bridge_chan;Volum2=params.get('remote_volume');ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=params['max_seconds'];OutExitCh=;IsRecord=1;RecordFile=params.get('schedule_play_file');RecordFormat=6;EndCloseCh=0;EndBeepTime=params.get('schedule_play_time');Option='IsPlayLoop=%d' % schedule_play_loop</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1800</target>
-        </ExitPort>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1798</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>4</type>
-          <targetflow>
-          </targetflow>
-          <target>1805</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1805</NodeID>
+    <NodeID>1881</NodeID>
     <NodeType>LET</NodeType>
     <NodeName>赋值 error</NodeName>
     <ExtendedProperty>
@@ -355,7 +312,81 @@ except IvrError as err:
         <let>
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
-          <Value>"bridge timeout"</Value>
+          <Value>"conf timeout"</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1883</NodeID>
+    <NodeType>JOINCONFEX</NodeType>
+    <NodeName>加入会议组</NodeName>
+    <ExtendedProperty>ConfID=conf_id;InitVolume=params.get('volume');WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=params['max_seconds'];AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=params.get('play_file');IsClampTone=0;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
+    <PropertySet>
+      <Actions />
+      <Exit>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1876</target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>1881</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1874</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>8</type>
+          <targetflow>
+          </targetflow>
+          <target>1884</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1884</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>"kicked from conf"</Value>
         </let>
       </letlist>
       <Exit>
