@@ -429,3 +429,26 @@
   :param int begin_time: :term:`DTMF` 码接收开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: :term:`DTMF` 码接收结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str keys: 接收到的 :term:`DTMF` 码字符串。
+
+
+桥接结束
+----------------------------
+
+.. function:: on_bridge_completed(res_id, error, begin_time, end_time)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。桥接启动失败或者桥接期间出现错误，该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time: 桥接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 桥接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+
+会议加入结束
+----------------------------
+
+.. function:: on_conf_completed(res_id, error, begin_time, end_time)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。加入会议失败或者会议期间出现错误。该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time: 桥接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 桥接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+
+.. attention:: 这是呼叫从会议退出的事件，不是整个会议结束的事件！

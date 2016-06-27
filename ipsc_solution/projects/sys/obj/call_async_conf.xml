@@ -171,7 +171,7 @@ call_info['state'] = 'Conf'
   <FlowNode>
     <NodeID>1869</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call on bridge completed</NodeName>
+    <NodeName>脚本 call on conf completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['async_work_ch'] = None
@@ -183,7 +183,7 @@ try:
 			'begin_time': begin_time,
 			'end_time': now(),
 		}
-	jsonrpc.send_method(method='call.on_bridge_completed', params=params)
+	jsonrpc.send_method(method='call.on_conf_completed', params=params)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
