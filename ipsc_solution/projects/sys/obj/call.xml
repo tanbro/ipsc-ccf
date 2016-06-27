@@ -1817,6 +1817,10 @@ try:
 	try:
 		if call_info['state'] not in ['Idle']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		call_res_id = params['call_res_id']
+		bridge_call_info = call_map_r[call_res_id]
+		if bridge_call_info['state'] not in ['Idle']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
 		vch = NewVCh()
 	except Exception as err:
