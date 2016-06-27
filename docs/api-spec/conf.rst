@@ -20,37 +20,27 @@
 删除会议
 ===============
 
-.. function:: release(res_id)
-
-  :param str res_id: 要操作的会议资源 `ID`。
+.. function:: release()
 
 开始播放声音文件
 =================
 
-.. function:: play_start(res_id, play_file: str)
-
-  :param str res_id: 要操作的会议资源 `ID`。
+.. function:: play_start(play_file: str)
 
 停止播放声音文件
 =================
 
-.. function:: play_stop(res_id)
-
-  :param str res_id: 要操作的会议资源 `ID`。
+.. function:: play_stop()
 
 开始录音
 ===============
 
-.. function:: record_start(res_id, record_file: str, finish_key: str)
-
-  :param str res_id: 要操作的会议资源 `ID`。
+.. function:: record_start(record_file: str, finish_key: str)
 
 停止录音
 ===============
 
-.. function:: record_stop(res_id)
-
-  :param str res_id: 要操作的会议资源 `ID`。
+.. function:: record_stop()
 
 事件
 **************
@@ -75,13 +65,3 @@
 .. function:: on_record_completed(res_id)
 
   :param str res_id: 触发事件的会议资源 `ID`。
-
-与会方加入
-=============
-
-.. function:: on_entered(res_id, call_res_id)
-
-与会方退出
-============
-
-.. function:: on_exited(res_id, call_res_id)
