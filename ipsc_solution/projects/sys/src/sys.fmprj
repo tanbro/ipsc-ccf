@@ -124,6 +124,12 @@
   </ProjectFlow>
   <ProjectFlow>
     <ProjectID>sys</ProjectID>
+    <FlowID>call_async_conf</FlowID>
+    <FlowFidPath>.\projects\sys\src\call_async_conf.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\call_async_conf.xma</FlowXmaPath>
+  </ProjectFlow>
+  <ProjectFlow>
+    <ProjectID>sys</ProjectID>
     <FlowID>conf</FlowID>
     <FlowFidPath>.\projects\sys\src\conf.fid</FlowFidPath>
     <FlowXmaPath>.\projects\sys\src\conf.xma</FlowXmaPath>
@@ -157,11 +163,5 @@
     <FlowID>conf_record_completed</FlowID>
     <FlowFidPath>.\projects\sys\src\conf_record_completed.fid</FlowFidPath>
     <FlowXmaPath>.\projects\sys\src\conf_record_completed.xma</FlowXmaPath>
-  </ProjectFlow>
-  <ProjectFlow>
-    <ProjectID>sys</ProjectID>
-    <FlowID>call_async_conf</FlowID>
-    <FlowFidPath>.\projects\sys\src\call_async_conf.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\call_async_conf.xma</FlowXmaPath>
   </ProjectFlow>
 </Project>
