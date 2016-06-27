@@ -63,6 +63,10 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <expression>method == 'conf.play_stop'</expression>
           <ExitType>103</ExitType>
         </case>
+        <case>
+          <expression>method == 'conf.set_part_voice_mode'</expression>
+          <ExitType>104</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -89,6 +93,12 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <targetflow>
           </targetflow>
           <target>1440</target>
+        </ExitPort>
+        <ExitPort>
+          <type>104</type>
+          <targetflow>
+          </targetflow>
+          <target>1902</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -479,6 +489,42 @@ except IvrError as err:
 try:
 	try:
 		StopConfPlay(conf_id)
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1902</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>set_part_voice_mode</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		call_info = call_map_r[params['call_res_id']]
+		chan = call_info['chan']
+		voice_mode = params['mode']
+		ChangeConfer(conf_id, chan, voice_mode)
 		jsonrpc.send_result(id_)
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
