@@ -290,13 +290,13 @@
 进入会议
 --------------
 
-.. function:: conf_enter(conf_res_id, max_seconds, mode, volume, play_file)
+.. function:: conf_enter(conf_res_id, max_seconds, voice_mode, volume, play_file)
 
   :param str conf_res_id: 要加入的会议资源 `ID`。
 
   :param int max_seconds: 该呼叫加入会议的最大允许时间
 
-  :param int mode: 加入之后的放音模式
+  :param int voice_mode: 加入之后的放音模式
 
     ====== ========
     值     说明
