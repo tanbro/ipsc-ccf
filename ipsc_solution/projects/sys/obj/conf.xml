@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-12T14:00:57+08:00</CreateDate>
-    <ModifyDate>2016-06-25T07:33:38+08:00</ModifyDate>
+    <ModifyDate>2016-06-27T02:19:05+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -52,15 +52,15 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <PropertySet>
       <switch>
         <case>
-          <expression>method == 'ivr.conf.release'</expression>
+          <expression>method == 'conf.release'</expression>
           <ExitType>101</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.conf.play_start'</expression>
+          <expression>method == 'conf.play_start'</expression>
           <ExitType>102</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.conf.play_stop'</expression>
+          <expression>method == 'conf.play_stop'</expression>
           <ExitType>103</ExitType>
         </case>
       </switch>
@@ -165,16 +165,8 @@ except IvrError as err:
     <NodeName>脚本 Delay</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, False, 0, -1, "BusNotifyTitle=%s" % res_id))
 err, data = ret_val
-if err == -4:
-    TraceErr('Delay arguments error')
-elif err == -8:
-	Trace('Delay Timeout')
-elif err == -61:
-	TraceErr('Channel close when Delay')
-elif err == -200:
-	TraceErr('Delay internal error')
 elif err != 1:
-	TraceErr('Delay error: %s', err)
+	TraceErr('Delay error %s: %s' % (err, data))
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -294,7 +286,7 @@ elif err != 1:
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params['max_seconds'];ReallocResNum=0;PlayFile=params.get('background_play_file', '');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('release_threshold', 1)</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params['max_seconds'];ReallocResNum=0;PlayFile=params.get('bg_file');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('parts_threshold', 1)</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
