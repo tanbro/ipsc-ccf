@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-27T10:19:05+08:00</CreateDate>
-    <ModifyDate>2016-06-27T02:19:05+08:00</ModifyDate>
+    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -216,7 +216,7 @@ except IvrError as err:
         <let>
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
-          <Value>"bridge error"</Value>
+          <Value>"join conf error"</Value>
         </let>
       </letlist>
       <Exit>
@@ -248,7 +248,7 @@ except IvrError as err:
         <let>
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
-          <Value>"hungup when conf"</Value>
+          <Value>"hungup when join conf"</Value>
         </let>
       </letlist>
       <Exit>
