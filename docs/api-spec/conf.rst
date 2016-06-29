@@ -25,7 +25,7 @@
 开始播放声音文件
 =================
 
-.. function:: play_start(play_file: str)
+.. function:: play_start(file: str)
 
 停止播放声音文件
 =================

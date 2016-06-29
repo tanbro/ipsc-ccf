@@ -455,7 +455,7 @@ try:
 	try:
 		StartConfPlay(
 			conf_id,
-			params['file_path'],
+			params['file'],
 			mode=int(params.get('is_loop', False))
 		)
 		jsonrpc.send_result(id_)
