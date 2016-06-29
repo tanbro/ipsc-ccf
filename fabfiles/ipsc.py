@@ -70,5 +70,5 @@ def pull(branch='master'):
         version_file.write('date=%s\n' % commit_date)
         version_file.write('tag=%s\n' % commit_tag)
         version_file.write('branch=%s\n' % branch)
-        run('/bin/cp -arf ipsc_solution/projects/sys %s' % IPSC_SOL_DIR)
+        run('/bin/cp -arf ipsc_solution/projects/sys %s/ipsc_solution/projects' % IPSC_SOL_DIR)
         put(version_file, '%s/ipsc_solution/projects/sys/version.txt' % IPSC_SOL_DIR)

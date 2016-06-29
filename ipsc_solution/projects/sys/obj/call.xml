@@ -1078,7 +1078,7 @@ try:
 	try:
 		if call_info['state'] in ['Answer']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
-		Hangup(chan, params.get('cause'))
+		Hangup(chan, params.get('cause', 603))
 		jsonrpc.send_result(id_)
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
