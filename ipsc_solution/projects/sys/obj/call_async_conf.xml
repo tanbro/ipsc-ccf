@@ -176,10 +176,10 @@ call_info['state'] = 'Conf'
 try:
 	call_info['async_work_ch'] = None
 	call_info['state'] = 'Idle'
-	bridge_call_info['state'] = 'Idle'
 	params = {
 			'res_id': res_id,
 			'error': error,
+			'conf_res_id': conf_res_id,
 			'begin_time': begin_time,
 			'end_time': now(),
 		}
