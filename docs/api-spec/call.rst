@@ -23,7 +23,7 @@
 
   digraph CallResourceState {
 
-    size="6,6";
+    size="8,8";
     rankdir="LR";
 
     Start [shape=point, color=blue, fontcolor=blue];
@@ -52,8 +52,12 @@
     Idle -> ReceiveDtmf;
     ReceiveDtmf -> Idle;
 
+    Idle -> Dial [label="外呼拨号", color=orange];
+    Dial -> Idle [color=orange];
+    Dial -> Bridge [color=orange];
+    Bridge -> Dial [color=orange];
+    Bridge -> Idle [color=orange];
     Idle -> Bridge;
-    Bridge -> Idle;
 
     Idle -> Conf;
     Conf -> Idle;
