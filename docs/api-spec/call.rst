@@ -23,7 +23,7 @@
 
   digraph CallResourceState {
 
-    size="6,6";
+    size="8,8";
     rankdir="LR";
 
     Start [shape=point, color=blue, fontcolor=blue];
@@ -52,8 +52,12 @@
     Idle -> ReceiveDtmf;
     ReceiveDtmf -> Idle;
 
+    Idle -> Dial [label="外呼拨号", color=orange];
+    Dial -> Idle [color=orange];
+    Dial -> Bridge [color=orange];
+    Bridge -> Dial [color=orange];
+    Bridge -> Idle [color=orange];
     Idle -> Bridge;
-    Bridge -> Idle;
 
     Idle -> Conf;
     Conf -> Idle;
@@ -290,16 +294,33 @@
 进入会议
 --------------
 
-.. function:: conf_enter(res_id, conf_res_id)
+.. function:: conf_enter(conf_res_id, max_seconds, voice_mode, volume, play_file)
 
-  :param str res_id: 要操作的呼叫资源 `ID`。
+  :param str conf_res_id: 要加入的会议资源 `ID`。
+
+  :param int max_seconds: 该呼叫加入会议的最大允许时间
+
+  :param int voice_mode: 加入之后的放音模式
+
+    ====== ========
+    值     说明
+    ====== ========
+    ``1``  放音+收音
+    ``2``  收音
+    ``3``  放音
+    ``4``  无
+    ====== ========
+
+  :param int volume: 加入会议后的初始音量
+
+  :param str play_file: 该呼叫加入后，对会议播放的声音文件
 
 退出会议
 -------------
 
-.. function:: conf_exit(res_id, conf_res_id)
+.. function:: conf_exit(conf_res_id)
 
-  :param str res_id: 要操作的呼叫资源 `ID`。
+  :param str conf_res_id: 要退出的会议资源 `ID`。
 
 事件
 ============
@@ -412,3 +433,26 @@
   :param int begin_time: :term:`DTMF` 码接收开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: :term:`DTMF` 码接收结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str keys: 接收到的 :term:`DTMF` 码字符串。
+
+
+桥接结束
+----------------------------
+
+.. function:: on_bridge_completed(res_id, error, begin_time, end_time)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。桥接启动失败或者桥接期间出现错误，该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time: 桥接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 桥接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+
+会议加入结束
+----------------------------
+
+.. function:: on_conf_completed(res_id, error, begin_time, end_time)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。加入会议失败或者会议期间出现错误。该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time: 桥接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 桥接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+
+.. attention:: 这是呼叫从会议退出的事件，不是整个会议结束的事件！

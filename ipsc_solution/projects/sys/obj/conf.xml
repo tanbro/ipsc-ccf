@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-12T14:00:57+08:00</CreateDate>
-    <ModifyDate>2016-06-25T07:33:38+08:00</ModifyDate>
+    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -52,16 +52,20 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <PropertySet>
       <switch>
         <case>
-          <expression>method == 'ivr.conf.release'</expression>
+          <expression>method == 'conf.release'</expression>
           <ExitType>101</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.conf.play_start'</expression>
+          <expression>method == 'conf.play_start'</expression>
           <ExitType>102</ExitType>
         </case>
         <case>
-          <expression>method == 'ivr.conf.play_stop'</expression>
+          <expression>method == 'conf.play_stop'</expression>
           <ExitType>103</ExitType>
+        </case>
+        <case>
+          <expression>method == 'conf.set_part_voice_mode'</expression>
+          <ExitType>104</ExitType>
         </case>
       </switch>
       <Exit>
@@ -89,6 +93,12 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <targetflow>
           </targetflow>
           <target>1440</target>
+        </ExitPort>
+        <ExitPort>
+          <type>104</type>
+          <targetflow>
+          </targetflow>
+          <target>1902</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -165,16 +175,10 @@ except IvrError as err:
     <NodeName>脚本 Delay</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, False, 0, -1, "BusNotifyTitle=%s" % res_id))
 err, data = ret_val
-if err == -4:
-    TraceErr('Delay arguments error')
-elif err == -8:
-	Trace('Delay Timeout')
-elif err == -61:
-	TraceErr('Channel close when Delay')
-elif err == -200:
-	TraceErr('Delay internal error')
+if err == -8:
+	pass
 elif err != 1:
-	TraceErr('Delay error: %s', err)
+	TraceErr('Delay error %s: %s' % (err, data))
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -294,7 +298,7 @@ elif err != 1:
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params['max_seconds'];ReallocResNum=0;PlayFile=params.get('background_play_file', '');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('release_threshold', 1)</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params['max_seconds'];ReallocResNum=0;PlayFile=params.get('bg_file');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('parts_threshold', 1)</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
@@ -304,26 +308,6 @@ elif err != 1:
           </Value>
           <Mode>0</Mode>
           <SubFlowID>"conf_released"</SubFlowID>
-          <Param>
-          </Param>
-        </EventList>
-        <EventList>
-          <EventID>2</EventID>
-          <EventType>24</EventType>
-          <Value>
-          </Value>
-          <Mode>0</Mode>
-          <SubFlowID>"conf_entered"</SubFlowID>
-          <Param>
-          </Param>
-        </EventList>
-        <EventList>
-          <EventID>3</EventID>
-          <EventType>25</EventType>
-          <Value>
-          </Value>
-          <Mode>0</Mode>
-          <SubFlowID>'conf_exited'</SubFlowID>
           <Param>
           </Param>
         </EventList>
@@ -471,7 +455,7 @@ try:
 	try:
 		StartConfPlay(
 			conf_id,
-			params['file_path'],
+			params['file'],
 			mode=int(params.get('is_loop', False))
 		)
 		jsonrpc.send_result(id_)
@@ -507,6 +491,42 @@ except IvrError as err:
 try:
 	try:
 		StopConfPlay(conf_id)
+		jsonrpc.send_result(id_)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1902</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>set_part_voice_mode</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		call_info = call_map_r[params['call_res_id']]
+		chan = call_info['chan']
+		voice_mode = params['mode']
+		ChangeConfer(conf_id, chan, voice_mode)
 		jsonrpc.send_result(id_)
 	except Exception as err:
 		jsonrpc.send_error(id_, message='{}'.format(err))
