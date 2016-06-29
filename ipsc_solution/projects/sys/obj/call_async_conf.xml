@@ -337,7 +337,7 @@ except IvrError as err:
     <NodeID>1883</NodeID>
     <NodeType>JOINCONFEX</NodeType>
     <NodeName>加入会议组</NodeName>
-    <ExtendedProperty>ConfID=conf_id;InitVolume=params.get('volume');WaitMode=1;MainCh=chan;MainJoinMode=1;MainTimeOut=params['max_seconds'];AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=params.get('play_file');IsClampTone=0;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
+    <ExtendedProperty>ConfID=conf_id;InitVolume=params.get('volume');WaitMode=0;MainCh=chan;MainJoinMode=1;MainTimeOut=params['max_seconds'];AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=params.get('play_file') or '';IsClampTone=0;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
     <PropertySet>
       <Actions />
       <Exit>

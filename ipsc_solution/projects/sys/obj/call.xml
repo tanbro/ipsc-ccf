@@ -143,6 +143,10 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <expression>method == 'call.conf_exit'</expression>
           <ExitType>107</ExitType>
         </case>
+        <case>
+          <expression>method == 'call.get'</expression>
+          <ExitType>116</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -243,6 +247,12 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <target>1348</target>
         </ExitPort>
         <ExitPort>
+          <type>116</type>
+          <targetflow>
+          </targetflow>
+          <target>1907</target>
+        </ExitPort>
+        <ExitPort>
           <type>100</type>
           <targetflow>
           </targetflow>
@@ -294,6 +304,38 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_error(id_)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1907</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 get</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		jsonrpc.send_result(id_, call_info)
+	except Exception as err:
+		jsonrpc.send_error(id_, message='{}'.format(err))
+		raise
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
