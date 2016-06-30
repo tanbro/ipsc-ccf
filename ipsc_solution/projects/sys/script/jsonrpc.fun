@@ -38,14 +38,13 @@ def send_method(method, id_=None, params=None):
     SmartbusSendData(unit_id, client_id, client_type, 0, 3, json.dumps(data, ensure_ascii=False))
 
 
-def send_result(id_, result=None):
-    unit_id, client_id, client_type = jsonrpc.get_client()
+def send_result(to, id_, result=None):
     data = dict(id=id_, result=result)
-    SmartbusSendData(unit_id, client_id, client_type, 0, 3, json.dumps(data, ensure_ascii=False))
+    SmartbusSendData(to[0], to[1], client_type, 0, 3, json.dumps(data, ensure_ascii=False))
 
 
-def send_error(id_, code=0, message='', data=None):
+def send_error(to, id_, code=0, message='', data=None):
     unit_id, client_id, client_type = jsonrpc.get_client()
     error = dict(code=code, message=message, data=data)
     data = dict(id=id_, error=error)
-    SmartbusSendData(unit_id, client_id, client_type, 0, 3, json.dumps(data, ensure_ascii=False))
+    SmartbusSendData(to[0], to[1], client_type, 0, 3, json.dumps(data, ensure_ascii=False))

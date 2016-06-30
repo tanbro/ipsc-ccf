@@ -18,6 +18,9 @@
     <PropertySet>
       <AffectList>
         <varlist>
+          <var>sender</var>
+        </varlist>
+        <varlist>
           <var>id_</var>
         </varlist>
         <varlist>
@@ -303,7 +306,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <NodeName>脚本 invalid method</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_, message='invalid method')
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -332,9 +335,9 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		jsonrpc.send_result(id_, call_info)
+		jsonrpc.send_result(sender, id_, call_info)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -361,7 +364,7 @@ except IvrError as err:
     <NodeID>1139</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 parse data</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=id_, method, params = json.loads(data)</ExtendedProperty>
+    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -524,7 +527,7 @@ try:
 		'cause': None,
 	}
 	virt_chan = NewVCh()
-	jsonrpc.send_result(id_, res_id)
+	jsonrpc.send_result(sender, id_, res_id)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -554,7 +557,7 @@ except IvrError as err:
 try:
 	call_map.pop(chan, None)
 	call_map_r.pop(res_id, None)
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -714,6 +717,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList />
       <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
         <valuelist>
           <value>id_</value>
         </valuelist>
@@ -911,9 +917,9 @@ try:
 		redirect_uri = params['redirect_uri']
 		destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
 		ReadySipRedirect(chan, 302, destuser, destip, destport)
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -942,7 +948,7 @@ except IvrError as err:
     <NodeName>脚本 call.answer ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(id_)
+	jsonrpc.send_result(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -970,7 +976,7 @@ except IvrError as err:
     <NodeName>脚本 call.answer error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1000,6 +1006,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList />
       <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
         <valuelist>
           <value>id_</value>
         </valuelist>
@@ -1046,7 +1055,7 @@ try:
 		max_answer_seconds = params['max_answer_seconds']
 		vch = NewVCh()
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1079,9 +1088,9 @@ try:
 		if call_info['state'] in ['Answer']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		Hangup(chan, params.get('cause', 603))
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1110,7 +1119,7 @@ except IvrError as err:
     <NodeName>脚本 call.play_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(id_)
+	jsonrpc.send_result(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1138,7 +1147,7 @@ except IvrError as err:
     <NodeName>脚本 call.play_start error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1168,6 +1177,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList />
       <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
         <valuelist>
           <value>id_</value>
         </valuelist>
@@ -1211,7 +1223,7 @@ try:
 		#
 		vch = NewVCh()
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1245,9 +1257,9 @@ try:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1276,7 +1288,7 @@ except IvrError as err:
     <NodeName>脚本 call.record_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(id_)
+	jsonrpc.send_result(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1304,7 +1316,7 @@ except IvrError as err:
     <NodeName>脚本 call.record_start error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1334,6 +1346,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList />
       <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
         <valuelist>
           <value>id_</value>
         </valuelist>
@@ -1377,7 +1392,7 @@ try:
 		#
 		vch = NewVCh()
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1411,9 +1426,9 @@ try:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1442,7 +1457,7 @@ except IvrError as err:
     <NodeName>脚本 call.send_dtmf_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(id_)
+	jsonrpc.send_result(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1470,7 +1485,7 @@ except IvrError as err:
     <NodeName>脚本 call.send_dtmf_start error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1500,6 +1515,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList />
       <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
         <valuelist>
           <value>id_</value>
         </valuelist>
@@ -1543,7 +1561,7 @@ try:
 		#
 		vch = NewVCh()
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1577,9 +1595,9 @@ try:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1608,7 +1626,7 @@ except IvrError as err:
     <NodeName>脚本 call.receive_dtmf_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(id_)
+	jsonrpc.send_result(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1636,7 +1654,7 @@ except IvrError as err:
     <NodeName>脚本 call.receive_dtmf_start error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1666,6 +1684,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList />
       <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
         <valuelist>
           <value>id_</value>
         </valuelist>
@@ -1709,7 +1730,7 @@ try:
 		#
 		vch = NewVCh()
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1743,9 +1764,9 @@ try:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1774,7 +1795,7 @@ except IvrError as err:
     <NodeName>脚本 call.receive_bridge_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(id_)
+	jsonrpc.send_result(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1802,7 +1823,7 @@ except IvrError as err:
     <NodeName>脚本 call.receive_bridge_start error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1832,6 +1853,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList />
       <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
         <valuelist>
           <value>id_</value>
         </valuelist>
@@ -1879,7 +1903,7 @@ try:
 		#
 		vch = NewVCh()
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1913,11 +1937,11 @@ try:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		ret_val = BreakConnect(chan, None)
 		if ret_val == 1:
-			jsonrpc.send_result(id_)
+			jsonrpc.send_result(sender, id_)
 		else:
 			raise RuntimeError('BreakConnect(chan=%d) returns %d' % (chan, ret_val))
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -1946,7 +1970,7 @@ except IvrError as err:
     <NodeName>脚本 call.conf_enter ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(id_)
+	jsonrpc.send_result(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -1974,7 +1998,7 @@ except IvrError as err:
     <NodeName>脚本 call.conf_enter error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -2004,6 +2028,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList />
       <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
         <valuelist>
           <value>id_</value>
         </valuelist>
@@ -2051,7 +2078,7 @@ try:
 		#
 		vch = NewVCh()
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -2088,11 +2115,11 @@ try:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		ret_val = RemoveConfer(conf_id, chan)
 		if ret_val == 1:
-			jsonrpc.send_result(id_)
+			jsonrpc.send_result(sender, id_)
 		else:
 			raise RuntimeError('RemoveConfer(conf_id=%d, chan=%d) returns %d' % (conf_id, chan, ret_val))
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)

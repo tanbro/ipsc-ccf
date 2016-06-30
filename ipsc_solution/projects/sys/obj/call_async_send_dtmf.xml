@@ -18,6 +18,9 @@
     <PropertySet>
       <AffectList>
         <varlist>
+          <var>sender</var>
+        </varlist>
+        <varlist>
           <var>id_</var>
         </varlist>
         <varlist>
