@@ -146,6 +146,9 @@ except IvrError as err:
     <PropertySet>
       <AffectList>
         <varlist>
+          <var>sender</var>
+        </varlist>
+        <varlist>
           <var>id_</var>
         </varlist>
         <varlist>
@@ -238,7 +241,7 @@ elif err != 1:
     <NodeID>1416</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 parse data</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=id_, method, params = json.loads(data)</ExtendedProperty>
+    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -362,7 +365,7 @@ try:
 		'begin_time': now(),
 		'end_time': None,
 	}
-	jsonrpc.send_result(id_, res_id)
+	jsonrpc.send_result(sender, id_, res_id)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -390,7 +393,7 @@ except IvrError as err:
     <NodeName>脚本 conf.create error result</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -420,9 +423,9 @@ except IvrError as err:
 try:
 	try:
 		DeleConf(conf_id)
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -458,9 +461,9 @@ try:
 			params['file'],
 			mode=int(params.get('is_loop', False))
 		)
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -491,9 +494,9 @@ except IvrError as err:
 try:
 	try:
 		StopConfPlay(conf_id)
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
@@ -527,9 +530,9 @@ try:
 		chan = call_info['chan']
 		voice_mode = params['mode']
 		ChangeConfer(conf_id, chan, voice_mode)
-		jsonrpc.send_result(id_)
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
-		jsonrpc.send_error(id_, message='{}'.format(err))
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
 except IvrError as err:
 	TraceErr(err)
