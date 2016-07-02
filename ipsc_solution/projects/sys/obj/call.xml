@@ -59,7 +59,8 @@ conf_map = _gd_['conf_map'] # res_id =&gt; call_info
 
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
-</ExtendedProperty>
+
+parent_call_info = None</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
