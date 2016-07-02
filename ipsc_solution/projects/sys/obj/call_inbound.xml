@@ -48,6 +48,9 @@
       <AffectList />
       <EffectList>
         <valuelist>
+          <value>None</value>
+        </valuelist>
+        <valuelist>
           <value>id_</value>
         </valuelist>
         <valuelist>
