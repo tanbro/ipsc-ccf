@@ -60,7 +60,9 @@ conf_map = _gd_['conf_map'] # res_id =&gt; call_info
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
-parent_call_info = None</ExtendedProperty>
+parent_call_info = None
+release_delay = None
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -638,6 +640,7 @@ try:
 		to_uri = '{0}@{1}:{2}'.format(user, host, port)
 	else:
 		to_uri = '{1}:{2}'.format(user, host, port)
+	release_delay = params.get('release_delay', 1)
 	max_answer_seconds = params['max_answer_seconds']
 	max_ring_seconds = params.get('max_ring_seconds', 50)
 	# for SUBCALL
@@ -871,13 +874,13 @@ finally:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1912</target>
+          <target>1918</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1912</target>
+          <target>1918</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -930,7 +933,7 @@ except IvrError as err:
     <NodeID>1912</NodeID>
     <NodeType>DELAY</NodeType>
     <NodeName>延时</NodeName>
-    <ExtendedProperty>IsCheckHangup=0;Delay=1000;Contect=;WorkCh=;OutData=;Option=</ExtendedProperty>
+    <ExtendedProperty>IsCheckHangup=0;Delay=release_delay * 1000;Contect=;WorkCh=;OutData=;Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -947,6 +950,41 @@ except IvrError as err:
         </ExitPort>
         <ExitPort>
           <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1911</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1918</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 release_delay</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>release_delay</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1911</target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1912</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
           <targetflow>
           </targetflow>
           <target>1911</target>
@@ -1104,6 +1142,7 @@ try:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
 		max_answer_seconds = params['max_answer_seconds']
+		release_delay = params.get('release_delay', 1)
 		vch = NewVCh()
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
