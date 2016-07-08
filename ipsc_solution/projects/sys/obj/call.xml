@@ -530,7 +530,6 @@ try:
 		'reason': None,
 		'cause': None,
 	}
-	virt_chan = NewVCh()
 	jsonrpc.send_result(sender, id_, res_id)
 except IvrError as err:
 	TraceErr(err)
