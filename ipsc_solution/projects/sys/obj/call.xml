@@ -967,7 +967,7 @@ except IvrError as err:
     <PropertySet>
       <switch>
         <case>
-          <expression>release_delay</expression>
+          <expression>bool(release_delay)</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>
