@@ -83,16 +83,11 @@
   <FlowNode>
     <NodeID>1487</NodeID>
     <NodeType>LET</NodeType>
-    <NodeName>赋值 NewVCh</NodeName>
+    <NodeName>赋值</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <letlist>
-        <let>
-          <VarName>vch</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>NewVCh()</Value>
-        </let>
         <let>
           <VarName>id_</VarName>
           <ZoneType>0</ZoneType>
