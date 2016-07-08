@@ -184,7 +184,7 @@ call_info['state'] = 'Play'
     <NodeID>1499</NodeID>
     <NodeType>SUBEND</NodeType>
     <NodeName>子流程结束</NodeName>
-    <ExtendedProperty>IsHangup=0</ExtendedProperty>
+    <ExtendedProperty>IsHangup=1</ExtendedProperty>
     <PropertySet>
       <EffectList />
       <Exit>

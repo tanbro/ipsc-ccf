@@ -270,7 +270,7 @@ call_info['state'] = 'SendDtmf'
     <NodeID>1681</NodeID>
     <NodeType>SUBEND</NodeType>
     <NodeName>子流程结束</NodeName>
-    <ExtendedProperty>IsHangup=0</ExtendedProperty>
+    <ExtendedProperty>IsHangup=1</ExtendedProperty>
     <PropertySet>
       <EffectList />
       <Exit>
