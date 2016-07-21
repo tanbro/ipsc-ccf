@@ -30,14 +30,6 @@ def get_client(local_only=False, raise_if_empty=True):
         return None
 
 
-def send_method(method, id_=None, params=None):
-    unit_id, client_id, client_type = jsonrpc.get_client()
-    data = dict(method=method, params=params or [])
-    if id_:
-        data['id'] = id_
-    SmartbusSendData(unit_id, client_id, client_type, 0, 3, json.dumps(data, ensure_ascii=False))
-
-
 def send_event(to, method, params=None):
     unit_id, client_id, client_type = jsonrpc.get_client()
     data = dict(method=method, params=params or {})
