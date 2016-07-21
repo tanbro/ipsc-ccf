@@ -519,6 +519,7 @@ try:
 		'res_id': res_id,
 		'params': params,
 		'state': 'Initiated',
+		'bus_addr': sender,
 		'chan': chan,
 		'call_dir': 'outbound',
 		'from_uri': from_uri,
@@ -778,6 +779,7 @@ try:
 		'state': 'Initiated',
 		'chan': chan,
 		'call_dir': 'inbound',
+		'bus_addr': sender,
 		'from_uri': from_uri,
 		'to_uri': to_uri,
 		'begin_time': now(),
@@ -787,7 +789,8 @@ try:
 		'reason': None,
 		'cause': None,
 	}
-	jsonrpc.send_method(
+	call_info['bus_addr'] = sender = jsonrpc.send_event(
+		to = None,
 		method='call.on_incoming',
 		params=dict(
 			res_id=res_id,
@@ -892,7 +895,8 @@ finally:
     <NodeName>脚本 call.on_released</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_method(
+	jsonrpc.send_event(
+		to=sender,
 		method='call.on_released',
 		params={
 			'res_id': call_info['res_id'],
