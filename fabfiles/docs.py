@@ -6,7 +6,7 @@ import os.path
 
 from fabric.api import *
 from fabric.contrib.project import rsync_project
-from fabvenv import virtualenv
+from fabvenv import Venv
 
 
 SPHINX_PROJECT_ROOT_DIR = '/home/bind/yunhuni-peer-comm-cti-flow'
@@ -31,7 +31,7 @@ def upload():
 @roles('docs')
 @task
 def build(clean=False, target='html'):
-    with virtualenv(PYTHON_VENV_DIR):
+    with Venv(PYTHON_VENV_DIR):
         with cd('%s/docs' % SPHINX_PROJECT_ROOT_DIR):
             if clean:
                 run("make clean")
