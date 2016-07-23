@@ -367,7 +367,10 @@ except IvrError as err:
     <NodeID>1139</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 parse data</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)</ExtendedProperty>
+    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)
+if method.startswith('sys.'):
+	method = method[4:]
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
