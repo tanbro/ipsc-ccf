@@ -905,6 +905,7 @@ try:
 		method='call.on_released',
 		params={
 			'res_id': call_info['res_id'],
+			'error': None,
 			'call_dir': call_info['call_dir'],
 			'from_uri': call_info['from_uri'],
 			'to_uri': call_info['to_uri'],
