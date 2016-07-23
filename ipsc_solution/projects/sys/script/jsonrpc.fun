@@ -38,7 +38,7 @@ def send_event(to, method, params=None):
     if to:
         unit_id, client_id = to
     else:
-        unit_id, client_id, _ = get_client()
+        unit_id, client_id, _ = jsonrpc.get_client()
     SmartbusSendData(unit_id, client_id, 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
     return unit_id, client_id
 
