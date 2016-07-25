@@ -30,21 +30,27 @@ def get_client(local_only=False, raise_if_empty=True):
         return None
 
 
-def send_method(method, id_=None, params=None):
-    unit_id, client_id, client_type = jsonrpc.get_client()
-    data = dict(method=method, params=params or [])
-    if id_:
-        data['id'] = id_
-    SmartbusSendData(unit_id, client_id, client_type, 0, 3, json.dumps(data, ensure_ascii=False))
+## 事件通知
+def send_event(to, method, params=None):
+    if not method.startswith('sys.'):
+        method = 'sys.' + method
+    data = dict(method=method, params=params or {})
+    if to:
+        unit_id, client_id = to
+    else:
+        unit_id, client_id, _ = jsonrpc.get_client()
+    SmartbusSendData(unit_id, client_id, 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
+    return unit_id, client_id
 
 
+## 正常结果回复
 def send_result(to, id_, result=None):
     data = dict(id=id_, result=result)
     SmartbusSendData(to[0], to[1], 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
 
 
+## Error 回复
 def send_error(to, id_, code=0, message='', data=None):
-    unit_id, client_id, client_type = jsonrpc.get_client()
     error = dict(code=code, message=message, data=data)
     data = dict(id=id_, error=error)
     SmartbusSendData(to[0], to[1], 0xff, 0, 3, json.dumps(data, ensure_ascii=False))

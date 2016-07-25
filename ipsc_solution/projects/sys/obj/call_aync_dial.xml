@@ -132,7 +132,11 @@ try:
 		'end_time': now(),
 		'error': error
 	}
-	jsonrpc.send_method(method='call.on_dial_completed', params=params)
+	jsonrpc.send_event(
+		to=call_info['bus_addr'],
+		method='call.on_dial_completed',
+		params=params
+	)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
