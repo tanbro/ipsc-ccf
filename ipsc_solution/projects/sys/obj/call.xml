@@ -403,7 +403,7 @@ err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
 if err == -61:
-	Trace('DELAY: channle closed')
+	TraceErr('DELAY: channle closed')
 elif err != 1:
 	TraceErr('Delay: error %s: %s' % (err, data))
 </ExtendedProperty>
