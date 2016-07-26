@@ -505,7 +505,6 @@
   :param int end_time: :term:`DTMF` 码接收结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str keys: 接收到的 :term:`DTMF` 码字符串。
 
-
 桥接结束
 ----------------------------
 
