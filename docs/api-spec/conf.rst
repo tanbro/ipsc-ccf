@@ -1,7 +1,7 @@
 会议 API
 ###########
 
-.. module:: conf
+.. module:: sys.conf
 
 构造
 ***********
@@ -20,12 +20,17 @@
 删除会议
 ===============
 
-.. function:: release()
+.. function:: release(res_id)
+
+  :param str res_id: 要删除的会议
 
 开始播放声音文件
 =================
 
-.. function:: play_start(file: str)
+.. function:: play_start(res_id, file: str)
+
+  :param res_id: 在该会议上放音
+  :param file: 要播放的文件名
 
 停止播放声音文件
 =================

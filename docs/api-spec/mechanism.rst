@@ -20,8 +20,8 @@
 
 :term:`RPC` 形态
 *******************
-我们采用 :term:`RPC` 的形式实现 :term:`CTI` 部分的 API：
-资源的创建、操作、释放、变化都被抽象为 **远程方法**。
+我们采用 **远程方法** (:term:`RPC`)的形式实现 :term:`CTI` 部分的 API：
+资源的创建、操作、释放、变化都被抽象为 :term:`RPC`。
 
 在本系统中，这些 :term:`RPC` 基本上采用 :term:`JSON` 格式
 
@@ -90,6 +90,8 @@ in_valuelist    该参数格式是 :term:`JSON` `Array` ，字符串内容最大
   #. 回复的消息包含错误信息
 
 应用服务通过 :doc:`/cti-bus/index` API 的回调函数 :c:type:`smartbus_cli_recvdata_cb` 接收该 :term:`RPC` 回复。
+
+.. note:: 该回复消息将发送给发起此次“创建资源”请求的 :doc:`/cti-bus/index` 节点。
 
 此时，该回调函数相关参数的含义是：
 
@@ -200,9 +202,6 @@ size            包体字节长度
   其中， ``id`` 属性对应于创建请求的 ``id`` ；
   ``error`` 是错误描述对象。
 
-
-
-
 操作资源
 ==========
 当资源被成功创建后，应用服务获得了资源 `ID` ，通过向 `IPSC` 的流程项目发送资源控制命令，操作资源。
@@ -258,6 +257,8 @@ param           该参数格式是 :term:`JSON` `Array` ，字符串内容最大
   #. 回复的消息包含错误信息
 
 应用服务通过 :doc:`/cti-bus/index` API 的回调函数 :c:type:`smartbus_cli_recvdata_cb` 接收该 :term:`RPC` 回复。
+
+.. note:: 该回复消息将发送给发起此次“操作资源”请求的 :doc:`/cti-bus/index` 节点。
 
 此时，该回调函数相关参数的含义是：
 
@@ -346,6 +347,9 @@ data            数据包体。我们使用这个参数，以 :term:`JSON` `obje
 
 应用服务通过 CTI 总线 API 的回调函数 :c:type:`smartbus_cli_recvdata_cb` 接收该资源事件。
 
+.. note::
+  除了“新的呼入呼叫”事件，有关于某个资源的所有事件通知，都将被发送到“创建”这资源的 :doc:`/cti-bus/index` 节点。
+
 此时，该回调函数相关参数的含义是：
 
 =============== ===========================================================================================
@@ -395,11 +399,15 @@ size            包体字节长度
 ====================
 资源创建 :term:`RPC` 被书写成以下形式::
 
-  <resource>.construct([params])
+  <namespace>.<resource>.construct([params])
 
 如::
 
-  call.construct(to_uri: str, from_uri: str) -> int
+  sys.call.construct(to_uri: str, from_uri: str) -> str
+
+或::
+
+  sys.call.construct(to_uri, from_uri)
 
 表示新建一个 ``call`` 资源。
 它对应于调用 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ，启动 `ID` 为 ``call`` 的流程。
@@ -412,11 +420,15 @@ size            包体字节长度
 ====================
 资源操作 :term:`RPC` 被书写成以下形式::
 
-  <resource>.<method>([params])
+  <namespace>.<resource>.<method>([params])
 
 如::
 
-  call.drop(reason: int)
+  sys.call.drop(res_id: str, reason: int)
+
+或::
+
+  sys.call.drop(res_id, reason)
 
 表示对指定的 ``call`` 资源进行挂断操作。
 它对应于调用 :c:func:`SmartBusNetCli_SendNotify` ，向指定的资源发送命令。
@@ -424,17 +436,21 @@ size            包体字节长度
 .. attention::
   所有的资源操作 :term:`RPC` 在调用 :c:func:`SmartBusNetCli_SendNotify` 时，
   **必须** 使用 ``title`` 参数传入要操作的资源的 `ID` 。
-  在 `CTI API` 定义文档中，该参数被认为是一个隐含的、必须的因素， **不做说明**。
+  在 `CTI API` 定义文档中，该参数是资源操作方法的 ``res_id`` 参数。
 
 资源事件 :term:`RPC`
 ====================
 资源操作 :term:`RPC` 被书写成以下形式::
 
-  <resource>.<event>([params])
+  <namespace>.<resource>.<event>([params])
 
 如::
 
-  call.on_answered(res_id: str)
+  sys.call.on_answered(res_id: str)
+
+或::
+
+  sys.call.on_answered(res_id)
 
 .. note::
   事件 :term:`RPC` 通常将资源 `ID` 写在第一个参数 ``res_id`` 中，
