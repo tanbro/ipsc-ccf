@@ -301,7 +301,7 @@ elif err != 1:
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params['max_seconds'];ReallocResNum=0;PlayFile=params.get('bg_file') or '';PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=params.get('parts_threshold', 1)</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=int(params['max_seconds']);ReallocResNum=0;PlayFile=str(params.get('bg_file') or '');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=int(params.get('parts_threshold', 1))</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>

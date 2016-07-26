@@ -647,8 +647,8 @@ try:
 	else:
 		to_uri = '{1}:{2}'.format(user, host, port)
 	release_delay = params.get('release_delay', 1)
-	max_answer_seconds = params['max_answer_seconds']
-	max_ring_seconds = params.get('max_ring_seconds', 50)
+	max_answer_seconds = float(params['max_answer_seconds'])
+	max_ring_seconds = int(params.get('max_ring_seconds', 50))
 	# for SUBCALL
 	parent_call_res_id = params.get('parent_call_res_id')
 	if parent_call_res_id:
