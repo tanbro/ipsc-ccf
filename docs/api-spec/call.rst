@@ -54,10 +54,10 @@
 
     Idle -> Dial [label="外呼拨号", color=orange];
     Dial -> Idle [color=orange];
-    Dial -> Bridge [color=orange];
-    Bridge -> Dial [color=orange];
-    Bridge -> Idle [color=orange];
-    Idle -> Bridge;
+    Dial -> Connect [color=orange];
+    Connect -> Dial [color=orange];
+    Connect -> Idle [color=orange];
+    Idle -> Connect;
 
     Idle -> Conf;
     Conf -> Idle;
@@ -337,42 +337,42 @@
 
   该操作将导致接收 :term:`DTMF` 码的过程结束，并触发 :func:`on_receive_dtmf_completed` 事件。
 
-开始桥接
-----------
+开始双通道连接
+---------------
 
 .. function::
-  bridge_start(res_id, max_seconds, call_res_id, bridge_mode, record_file, record_format, local_volume, remote_volume, schedule_play_time, schedule_play_file, schedule_play_loop)
+  connect_start(res_id, max_seconds, call_res_id, connect_mode, record_file, record_format, local_volume, remote_volume, schedule_play_time, schedule_play_file, schedule_play_loop)
 
-  :param str res_id: 要操作的呼叫资源的ID
-  :param int max_seconds: 最大桥接时间长度（秒）。
-  :param str call_res_id: 要和当前呼叫资源桥接的呼叫资源ID。
+  :param str res_id: 要操作的呼叫资源的ID，即双通道连接的第一方。
+  :param int max_seconds: 最大双通道连接时间长度（秒）。
+  :param str call_res_id: 双通道连接的第二方
 
-  :param int bridge_mode: 桥接模式。
+  :param int connect_mode: 连接模式。
 
     ====== =====================
     值     说明
     ====== =====================
-    ``1``  桥接双方均可互相听到
-    ``2``  仅被桥接方可以听到发起方;发起方听不到被桥接方
-    ``3``  仅发起方可以听到被桥接方;被桥接方听不到发起方
+    ``1``  连接双方均可互相听到
+    ``2``  仅连接的第二方可以听到第一方;第一方听不到第二方
+    ``3``  仅连接的第一方可以听到第二方;第二方听不到第一方
     ====== =====================
 
   :param str record_file: 录音文件。如果该参数不为 `null` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
   :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。
-  :param int local_volume: 桥接建立后的发起方音量。`null` 表示默认音量。
-  :param int remote_volume: 桥接建立后的发起方音量。`null` 表示默认音量。
-  :param int schedule_play_time: 当本次桥接通话进行到这个 :term:`Unix time` 时间点播放声音。
-  :param str schedule_play_file: 当本次桥接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。
-  :param int schedule_play_loop: 当本次桥接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。
+  :param int local_volume: 双通道连接建立后的发起方音量。`null` 表示默认音量。
+  :param int remote_volume: 双通道连接建立后的发起方音量。`null` 表示默认音量。
+  :param int schedule_play_time: 当本次双通道连接通话进行到这个 :term:`Unix time` 时间点播放声音。
+  :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。
+  :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。
 
-结束桥接
-----------
+结束双通道连接
+---------------
 
-.. function:: bridge_stop(res_id)
+.. function:: connect_stop(res_id)
 
   :param str res_id: 要操作的呼叫资源的ID
 
-  .. attention:: 只能对作为桥接发起方的呼叫资源（即 :func:`bridge_start` 的 ``res_id`` 参数所指定的呼叫资源）进行该操作。
+  .. attention:: 只能对双通道连接发起方（第一方）的呼叫资源（即 :func:`connect_start` 的 ``res_id`` 参数所指定的呼叫资源）进行该操作。
 
 进入会议
 --------------
@@ -528,15 +528,15 @@
   :param int end_time: :term:`DTMF` 码接收结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str keys: 接收到的 :term:`DTMF` 码字符串。
 
-桥接结束
+双通道连接结束
 ----------------------------
 
-.. function:: on_bridge_completed(res_id, error, begin_time, end_time)
+.. function:: on_connect_completed(res_id, error, begin_time, end_time)
 
-  :param str res_id: 触发事件的呼叫资源 `ID`。
-  :param error: 错误信息。桥接启动失败或者桥接期间出现错误，该参数记录错误信息；否则该参数的值是 ``null``。
-  :param int begin_time: 桥接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param int end_time: 桥接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str res_id: 触发事件的呼叫资源 `ID`。该参数是双通道连接的第一方的呼叫 `ID`。
+  :param error: 错误信息。双通道连接启动失败或者双通道连接期间出现错误，该参数记录错误信息；否则该参数的值是 ``null``。
+  :param int begin_time: 双通道连接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 双通道连接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
 
 会议加入结束
 ----------------------------
@@ -545,7 +545,7 @@
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。加入会议失败或者会议期间出现错误。该参数记录错误信息；否则该参数的值是 ``null``。
-  :param int begin_time: 桥接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param int end_time: 桥接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int begin_time: 加入会议的时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 推出会议的时间(:term:`CTI` 服务器的 :term:`Unix time`)。
 
 .. attention:: 这是呼叫从会议退出的事件，不是整个会议结束的事件！
