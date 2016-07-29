@@ -134,11 +134,11 @@ release_delay = None
           <ExitType>113</ExitType>
         </case>
         <case>
-          <expression>method == 'call.bridge_start'</expression>
+          <expression>method == 'call.connect_start'</expression>
           <ExitType>114</ExitType>
         </case>
         <case>
-          <expression>method == 'call.bridge_stop'</expression>
+          <expression>method == 'call.connect_stop'</expression>
           <ExitType>115</ExitType>
         </case>
         <case>
@@ -1893,7 +1893,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1766</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.receive_bridge_start ok return</NodeName>
+    <NodeName>脚本 connect_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_result(sender, id_)
@@ -1921,7 +1921,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1767</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.receive_bridge_start error</NodeName>
+    <NodeName>脚本 connect_start error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_error(sender, id_)
@@ -1949,7 +1949,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1772</NodeID>
     <NodeType>INVOKESUB</NodeType>
-    <NodeName>调子流程 async bridge</NodeName>
+    <NodeName>调子流程 async connect</NodeName>
     <ExtendedProperty>SubFlowName=call_async_bridge;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
     <PropertySet>
       <AffectList />

@@ -118,9 +118,9 @@
   </ProjectFlow>
   <ProjectFlow>
     <ProjectID>sys</ProjectID>
-    <FlowID>call_async_bridge</FlowID>
-    <FlowFidPath>.\projects\sys\src\call_async_bridge.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\call_async_bridge.xma</FlowXmaPath>
+    <FlowID>call_async_connect</FlowID>
+    <FlowFidPath>.\projects\sys\src\call_async_connect.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\call_async_connect.xma</FlowXmaPath>
   </ProjectFlow>
   <ProjectFlow>
     <ProjectID>sys</ProjectID>
