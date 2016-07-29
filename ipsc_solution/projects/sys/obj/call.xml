@@ -2034,7 +2034,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		if call_info['state'] not in ['Bridge']:
+		if call_info['state'] not in ['Connect']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		ret_val = BreakConnect(chan, None)
 		if ret_val == 1:

@@ -74,8 +74,8 @@ bridge_call_info = call_map_r[call_res_id]
 bridge_chan = bridge_call_info['chan']
 
 #
-call_info['state'] = 'Bridge'
-bridge_call_info['state'] = 'Bridge'
+call_info['state'] = 'Connect'
+bridge_call_info['state'] = 'Connect'
 
 #
 try:
@@ -182,7 +182,7 @@ except:
   <FlowNode>
     <NodeID>1786</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call on bridge completed</NodeName>
+    <NodeName>脚本 call on connect completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['async_work_ch'] = None
@@ -196,7 +196,7 @@ try:
 		}
 	jsonrpc.send_event(
 		to=call_info['bus_addr'],
-		method='call.on_bridge_completed',
+		method='call.on_connect_completed',
 		params=params
 	)
 except IvrError as err:
