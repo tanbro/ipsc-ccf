@@ -306,7 +306,6 @@ try:
 			'end_time': now(),
 		}
 	jsonrpc.send_event(
-		to=call_info['bus_addr'],
 		method='call.on_send_dtmf_completed',
 		params=params
 	)

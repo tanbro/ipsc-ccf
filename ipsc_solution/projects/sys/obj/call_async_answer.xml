@@ -80,7 +80,6 @@ call_info['state'] = 'Idle'
 # return !
 try:
 	jsonrpc.send_event(
-		to=call_info['bus_addr'],
 		method='call.on_answer_completed',
 		params={
 			'res_id': res_id,
@@ -145,7 +144,6 @@ if not isinstance(error, IvrError):
 		if not error:
 			error = 'Un-catchable answer error.'
 		jsonrpc.send_event(
-			to=call_info['bus_addr'],
 			method='call.on_answer_completed',
 			params={
 				'res_id': res_id,

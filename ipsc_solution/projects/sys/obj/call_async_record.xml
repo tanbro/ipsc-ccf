@@ -183,7 +183,6 @@ try:
 			'finish_key': finish_key,
 		}
 	jsonrpc.send_event(
-		to=call_info['bus_addr'],
 		method='call.on_record_completed',
 		params=params
 	)

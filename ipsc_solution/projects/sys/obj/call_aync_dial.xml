@@ -133,7 +133,6 @@ try:
 		'error': error
 	}
 	jsonrpc.send_event(
-		to=call_info['bus_addr'],
 		method='call.on_dial_completed',
 		params=params
 	)

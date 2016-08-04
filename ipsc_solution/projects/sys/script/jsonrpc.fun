@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 #
 # @brief      随机获取一个可用的 smartbus 客户端（非IPSC） #
 #
@@ -31,16 +30,12 @@ def get_client(local_only=False, raise_if_empty=True):
 
 
 ## 事件通知
-def send_event(to, method, params=None):
+def send_event(method, params=None):
     if not method.startswith('sys.'):
         method = 'sys.' + method
     data = dict(method=method, params=params or {})
-    if to:
-        unit_id, client_id = to
-    else:
-        unit_id, client_id, _ = jsonrpc.get_client()
+    unit_id, client_id, _ = jsonrpc.get_client()
     SmartbusSendData(unit_id, client_id, 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
-    return unit_id, client_id
 
 
 ## 正常结果回复

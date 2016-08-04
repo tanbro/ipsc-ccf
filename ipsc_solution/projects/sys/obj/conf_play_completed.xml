@@ -63,7 +63,7 @@ try:
 		TraceErr('conference id &lt;%s&gt; NOT existed!' % e)
 	if conf_info:
 		res_id = conf_info['res_id']
-		jsonrpc.send_method(
+		jsonrpc.send_event(
 			method='conf.on_play_completed',
 			params={
 				'res_id': res_id,

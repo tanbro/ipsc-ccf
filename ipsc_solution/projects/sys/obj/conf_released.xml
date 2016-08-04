@@ -54,7 +54,7 @@ try:
 	res_id = conf_info['res_id']
 	conf_map_r.pop(res_id)
 
-	jsonrpc.send_method(
+	jsonrpc.send_event(
 		method='conf.on_released',
 		params={
 			'res_id': res_id,

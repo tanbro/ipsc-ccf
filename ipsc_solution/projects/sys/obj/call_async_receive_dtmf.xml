@@ -183,7 +183,6 @@ try:
 			'keys': keys,
 		}
 	jsonrpc.send_event(
-		to=call_info['bus_addr'],
 		method='call.on_receive_dtmf_completed',
 		params=params
 	)

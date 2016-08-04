@@ -795,7 +795,6 @@ try:
 		'cause': None,
 	}
 	call_info['bus_addr'] = sender = jsonrpc.send_event(
-		to = None,
 		method='call.on_incoming',
 		params=dict(
 			res_id=res_id,
