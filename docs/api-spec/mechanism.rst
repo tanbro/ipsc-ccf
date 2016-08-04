@@ -20,8 +20,8 @@
 
 :term:`RPC` 形态
 *******************
-我们采用 :term:`RPC` 的形式实现 :term:`CTI` 部分的 API：
-资源的创建、操作、释放、变化都被抽象为 **远程方法**。
+我们采用 **远程方法** (:term:`RPC`)的形式实现 :term:`CTI` 部分的 API：
+资源的创建、操作、释放、变化都被抽象为 :term:`RPC`。
 
 在本系统中，这些 :term:`RPC` 基本上采用 :term:`JSON` 格式
 
@@ -69,8 +69,9 @@ in_valuelist    该参数格式是 :term:`JSON` `Array` ，字符串内容最大
                 ==== ====================================================
                 序号 说明
                 ==== ====================================================
-                0.   :term:`RPC` 的 `id`: 应用服务应使用 :term:`UUID` 。
-                1.   :term:`RPC` 的 `params`: 参数名=>参数值 键值对， :term:`JSON` `object` 格式。不同的资源创建方法具有不同的参数。具体情况请参考下文。
+                0.   :term:`RPC` 调用者的 :doc:`/cti-bus/index` 地址(``[Integer, Integer]``)。IPSC向这个地址回复执行结果。
+                1.   :term:`RPC` 的 `id`: 应用服务应使用 :term:`UUID` 。
+                2.   :term:`RPC` 的 `params`: 参数名=>参数值 键值对， :term:`JSON` `object` 格式。不同的资源创建方法具有不同的参数。具体情况请参考下文。
                 ==== ====================================================
 
 =============== ================================================================
@@ -89,6 +90,8 @@ in_valuelist    该参数格式是 :term:`JSON` `Array` ，字符串内容最大
   #. 回复的消息包含错误信息
 
 应用服务通过 :doc:`/cti-bus/index` API 的回调函数 :c:type:`smartbus_cli_recvdata_cb` 接收该 :term:`RPC` 回复。
+
+.. attention:: :doc:`cti` 服务会把该回复消息发送给发起此次“创建资源”请求的 :doc:`/cti-bus/index` 节点。
 
 此时，该回调函数相关参数的含义是：
 
@@ -143,6 +146,7 @@ size            包体字节长度
   .. code-block:: c
 
     char in_valuelist[] = "[ \
+        [5, 0], \
         \"b07ee20a378111e6a2c768f7288d9a79\", \
         { \
           \"from_uri\": \"123\", \
@@ -198,9 +202,6 @@ size            包体字节长度
   其中， ``id`` 属性对应于创建请求的 ``id`` ；
   ``error`` 是错误描述对象。
 
-
-
-
 操作资源
 ==========
 当资源被成功创建后，应用服务获得了资源 `ID` ，通过向 `IPSC` 的流程项目发送资源控制命令，操作资源。
@@ -230,14 +231,15 @@ expires         消息有效时间长度，单位是毫秒。由于流程在异�
 param           该参数格式是 :term:`JSON` `Array` ，字符串内容最大长度不超过32K字节。
 
                 在操作资源时，将这个通知消息视为 :term:`RPC` 的调用数据，
-                使用这个数组的前三个元素作为 :term:`RPC` 的标识(`id`)，方法名(`method`)和参数(`params`)：
+                使用这个数组的第2~4个元素作为 :term:`RPC` 的标识(`id`)，方法名(`method`)和参数(`params`)：
 
                 ==== ====================================================
                 序号 说明
                 ==== ====================================================
-                0.   :term:`RPC` 的 `id`: 应用服务应使用 :term:`UUID` 。
-                1.   :term:`RPC` 的 `method`：方法名。
-                2.   :term:`RPC` 的 `params`: 参数名=>参数值 键值对， :term:`JSON` `object` 格式。不同的资源创建方法具有不同的参数。具体情况请参考下文。
+                0.   :term:`RPC` 调用者的 :doc:`/cti-bus/index` 地址(``[Integer, Integer]``)。IPSC向这个地址回复执行结果。
+                1.   :term:`RPC` 的 `id`: 应用服务应使用 :term:`UUID` 。
+                2.   :term:`RPC` 的 `method`：方法名。
+                3.   :term:`RPC` 的 `params`: 参数名=>参数值 键值对， :term:`JSON` `object` 格式。不同的资源创建方法具有不同的参数。具体情况请参考下文。
                 ==== ====================================================
 
 =============== ================================================================
@@ -255,6 +257,8 @@ param           该参数格式是 :term:`JSON` `Array` ，字符串内容最大
   #. 回复的消息包含错误信息
 
 应用服务通过 :doc:`/cti-bus/index` API 的回调函数 :c:type:`smartbus_cli_recvdata_cb` 接收该 :term:`RPC` 回复。
+
+.. attention:: :doc:`cti` 服务会把该回复消息发送给发起此次“操作资源”请求的 :doc:`/cti-bus/index` 节点。
 
 此时，该回调函数相关参数的含义是：
 
@@ -309,6 +313,7 @@ data            数据包体。我们使用这个参数，以 :term:`JSON` `obje
   .. code-block:: c
 
     char params[] = "[ \
+        [5, 0], \
         \"52008e82378211e6ba3668f7288d9a79\", \
         \"ivr.call.drop\" \
         { \
@@ -341,6 +346,9 @@ data            数据包体。我们使用这个参数，以 :term:`JSON` `obje
 在本系统中，目前的设计不需要应用服务对 `IPSC` 抛出的资源事件进行回复，所以，资源事件是不需要回复的（单程票） :term:`RPC` 。
 
 应用服务通过 CTI 总线 API 的回调函数 :c:type:`smartbus_cli_recvdata_cb` 接收该资源事件。
+
+.. note::
+  除了“新的呼入呼叫”事件，有关于某个资源的所有事件通知，都将被发送到“创建”这资源的 :doc:`/cti-bus/index` 节点。
 
 此时，该回调函数相关参数的含义是：
 
@@ -391,11 +399,15 @@ size            包体字节长度
 ====================
 资源创建 :term:`RPC` 被书写成以下形式::
 
-  <resource>.construct([params])
+  <namespace>.<resource>.construct([params])
 
 如::
 
-  call.construct(to_uri: str, from_uri: str) -> int
+  sys.call.construct(to_uri: str, from_uri: str) -> str
+
+或::
+
+  sys.call.construct(to_uri, from_uri)
 
 表示新建一个 ``call`` 资源。
 它对应于调用 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ，启动 `ID` 为 ``call`` 的流程。
@@ -408,11 +420,15 @@ size            包体字节长度
 ====================
 资源操作 :term:`RPC` 被书写成以下形式::
 
-  <resource>.<method>([params])
+  <namespace>.<resource>.<method>([params])
 
 如::
 
-  call.drop(reason: int)
+  sys.call.drop(res_id: str, reason: int)
+
+或::
+
+  sys.call.drop(res_id, reason)
 
 表示对指定的 ``call`` 资源进行挂断操作。
 它对应于调用 :c:func:`SmartBusNetCli_SendNotify` ，向指定的资源发送命令。
@@ -420,17 +436,21 @@ size            包体字节长度
 .. attention::
   所有的资源操作 :term:`RPC` 在调用 :c:func:`SmartBusNetCli_SendNotify` 时，
   **必须** 使用 ``title`` 参数传入要操作的资源的 `ID` 。
-  在 `CTI API` 定义文档中，该参数被认为是一个隐含的、必须的因素， **不做说明**。
+  在 `CTI API` 定义文档中，该参数是资源操作方法的 ``res_id`` 参数。
 
 资源事件 :term:`RPC`
 ====================
 资源操作 :term:`RPC` 被书写成以下形式::
 
-  <resource>.<event>([params])
+  <namespace>.<resource>.<event>([params])
 
 如::
 
-  call.on_answered(res_id: str)
+  sys.call.on_answered(res_id: str)
+
+或::
+
+  sys.call.on_answered(res_id)
 
 .. note::
   事件 :term:`RPC` 通常将资源 `ID` 写在第一个参数 ``res_id`` 中，

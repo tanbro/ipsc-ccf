@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <FlowItem>
-    <FlowID>call_async_bridge</FlowID>
-    <FlowName>call_async_bridge</FlowName>
+    <FlowID>call_async_connect</FlowID>
+    <FlowName>call_async_connect</FlowName>
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-24T17:30:41+08:00</CreateDate>
-    <ModifyDate>2016-06-27T02:19:05+08:00</ModifyDate>
+    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -17,6 +17,9 @@
     </ExtendedProperty>
     <PropertySet>
       <AffectList>
+        <varlist>
+          <var>sender</var>
+        </varlist>
         <varlist>
           <var>id_</var>
         </varlist>
@@ -71,8 +74,8 @@ bridge_call_info = call_map_r[call_res_id]
 bridge_chan = bridge_call_info['chan']
 
 #
-call_info['state'] = 'Bridge'
-bridge_call_info['state'] = 'Bridge'
+call_info['state'] = 'Connect'
+bridge_call_info['state'] = 'Connect'
 
 #
 try:
@@ -155,7 +158,7 @@ except:
     <NodeID>1785</NodeID>
     <NodeType>SUBEND</NodeType>
     <NodeName>子流程结束</NodeName>
-    <ExtendedProperty>IsHangup=0</ExtendedProperty>
+    <ExtendedProperty>IsHangup=1</ExtendedProperty>
     <PropertySet>
       <EffectList />
       <Exit>
@@ -179,7 +182,7 @@ except:
   <FlowNode>
     <NodeID>1786</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call on bridge completed</NodeName>
+    <NodeName>脚本 call on connect completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	call_info['async_work_ch'] = None
@@ -191,7 +194,10 @@ try:
 			'begin_time': begin_time,
 			'end_time': now(),
 		}
-	jsonrpc.send_method(method='call.on_bridge_completed', params=params)
+	jsonrpc.send_event(
+		method='call.on_connect_completed',
+		params=params
+	)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err

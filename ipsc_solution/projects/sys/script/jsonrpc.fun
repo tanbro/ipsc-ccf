@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 #
 # @brief      随机获取一个可用的 smartbus 客户端（非IPSC） #
 #
@@ -30,22 +29,23 @@ def get_client(local_only=False, raise_if_empty=True):
         return None
 
 
-def send_method(method, id_=None, params=None):
-    unit_id, client_id, client_type = jsonrpc.get_client()
-    data = dict(method=method, params=params or [])
-    if id_:
-        data['id'] = id_
-    SmartbusSendData(unit_id, client_id, client_type, 0, 3, json.dumps(data, ensure_ascii=False))
+## 事件通知
+def send_event(method, params=None):
+    if not method.startswith('sys.'):
+        method = 'sys.' + method
+    data = dict(method=method, params=params or {})
+    unit_id, client_id, _ = jsonrpc.get_client()
+    SmartbusSendData(unit_id, client_id, 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
 
 
-def send_result(id_, result=None):
-    unit_id, client_id, client_type = jsonrpc.get_client()
+## 正常结果回复
+def send_result(to, id_, result=None):
     data = dict(id=id_, result=result)
-    SmartbusSendData(unit_id, client_id, client_type, 0, 3, json.dumps(data, ensure_ascii=False))
+    SmartbusSendData(to[0], to[1], 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
 
 
-def send_error(id_, code=0, message='', data=None):
-    unit_id, client_id, client_type = jsonrpc.get_client()
+## Error 回复
+def send_error(to, id_, code=0, message='', data=None):
     error = dict(code=code, message=message, data=data)
     data = dict(id=id_, error=error)
-    SmartbusSendData(unit_id, client_id, client_type, 0, 3, json.dumps(data, ensure_ascii=False))
+    SmartbusSendData(to[0], to[1], 0xff, 0, 3, json.dumps(data, ensure_ascii=False))

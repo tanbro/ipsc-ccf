@@ -18,6 +18,9 @@
     <PropertySet>
       <AffectList>
         <varlist>
+          <var>sender</var>
+        </varlist>
+        <varlist>
           <var>id_</var>
         </varlist>
         <varlist>
@@ -147,7 +150,7 @@ call_info['state'] = 'Conf'
     <NodeID>1868</NodeID>
     <NodeType>SUBEND</NodeType>
     <NodeName>子流程结束</NodeName>
-    <ExtendedProperty>IsHangup=0</ExtendedProperty>
+    <ExtendedProperty>IsHangup=1</ExtendedProperty>
     <PropertySet>
       <EffectList />
       <Exit>
@@ -183,7 +186,10 @@ try:
 			'begin_time': begin_time,
 			'end_time': now(),
 		}
-	jsonrpc.send_method(method='call.on_conf_completed', params=params)
+	jsonrpc.send_event(
+		method='call.on_conf_completed',
+		params=params
+	)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
