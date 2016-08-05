@@ -61,8 +61,8 @@
     </Option>
   </Project>
   <Project>
-    <ProjectID>extra</ProjectID>
-    <ProjectName>extra</ProjectName>
+    <ProjectID>ext</ProjectID>
+    <ProjectName>ext</ProjectName>
     <ProjectType>0</ProjectType>
     <PlayPrd>
     </PlayPrd>

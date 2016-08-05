@@ -1,7 +1,7 @@
 双向回拨 API
 #############
 
-.. module:: ext.duo_callback
+.. module:: extra.duo_callback
 
 构造
 ==========

@@ -145,11 +145,11 @@ html_theme_options = {
     # alabaster
     'show_related': True,
     'fixed_sidebar': True,
-    'font_family': "'Microsoft Yahei UI', 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
-    'font_size': '18px',
-    'head_font_family': "'Microsoft Yahei UI', Garamond, Georgia, serif",
-    'code_font_family': "'Source Code Pro', Consolas, Menlo, 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace",
-    'code_font_size': '1em',
+    # 'font_family': "'Microsoft Yahei UI', 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
+    # 'font_size': '18px',
+    # 'head_font_family': "'Microsoft Yahei UI', Garamond, Georgia, serif",
+    # 'code_font_family': "'Source Code Pro', Consolas, Menlo, 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace",
+    # 'code_font_size': '1em',
     ## sphinx_rtd_theme
     # 'collapse_navigation': True,
     # 'display_version': True,

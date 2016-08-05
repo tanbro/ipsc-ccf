@@ -3,8 +3,8 @@
   <MaxNodeID>1033</MaxNodeID>
   <MachineOut>1</MachineOut>
   <ProjectInfo>
-    <ProjectID>extra</ProjectID>
-    <ProjectName>extra</ProjectName>
+    <ProjectID>ext</ProjectID>
+    <ProjectName>ext</ProjectName>
     <ProjectDesc>
     </ProjectDesc>
     <ProjectVer>1.0</ProjectVer>
@@ -17,15 +17,15 @@
     <FileName>project.fun</FileName>
   </Function>
   <ProjectFlow>
-    <ProjectID>extra</ProjectID>
+    <ProjectID>ext</ProjectID>
     <FlowID>duo_callback</FlowID>
-    <FlowFidPath>.\projects\extra\src\duo_callback.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\extra\src\duo_callback.xma</FlowXmaPath>
+    <FlowFidPath>.\projects\ext\src\duo_callback.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\ext\src\duo_callback.xma</FlowXmaPath>
   </ProjectFlow>
   <ProjectFlow>
-    <ProjectID>extra</ProjectID>
+    <ProjectID>ext</ProjectID>
     <FlowID>duo_callback_perform</FlowID>
-    <FlowFidPath>.\projects\extra\src\duo_callback_perform.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\extra\src\duo_callback_perform.xma</FlowXmaPath>
+    <FlowFidPath>.\projects\ext\src\duo_callback_perform.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\ext\src\duo_callback_perform.xma</FlowXmaPath>
   </ProjectFlow>
 </Project>
