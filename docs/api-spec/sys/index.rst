@@ -1,8 +1,7 @@
-API 说明
+SYS API
 ==================
 
 .. toctree::
 
-  实现原理 <mechanism>
   呼叫 API <call>
   会议 API <conf>

@@ -16,8 +16,7 @@
    概述 <abstract>
    系统结构 <structure>
    CTI 总线 <cti-bus/index>
-   sys API <api-spec/sys/index>
-   extra API <api-spec/extra/index>
+   API 说明 <api-spec/index>
    术语表 <glossary>
 
 **索引与表格**
