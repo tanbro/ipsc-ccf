@@ -519,6 +519,7 @@ elif err != 1:
 try:
 	res_id = utils.make_res_id()
 	Trace('call res_id: %s' % res_id)
+	ipsc_info = dict(process_id=GetProcessID())
 	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id,
@@ -526,6 +527,7 @@ try:
 		'state': 'Initiated',
 		'bus_addr': sender,
 		'chan': chan,
+		'ipsc_info': ipsc_info,
 		'call_dir': 'outbound',
 		'from_uri': from_uri,
 		'to_uri': to_uri,
@@ -536,7 +538,10 @@ try:
 		'reason': None,
 		'cause': None,
 	}
-	jsonrpc.send_result(sender, id_, res_id)
+	jsonrpc.send_result(sender, id_, {
+		'res_id': res_id,
+		'ipsc_info': ipsc_info,
+	})
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -562,11 +567,18 @@ except IvrError as err:
     <NodeID>1195</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call.perform error</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
 	call_map.pop(chan, None)
 	call_map_r.pop(res_id, None)
-	jsonrpc.send_error(sender, id_)
+
+	if last_err:
+		err_msg = str(last_err)
+	else:
+		err_msg = ''
+
+	jsonrpc.send_error(sender, id_, message=err_msg, data={
+		'ipsc_info': call_info['ipsc_info']
+	})
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -766,6 +778,7 @@ except IvrError as err:
 try:
 	res_id = utils.make_res_id()
 	Trace('call res_id: %s' % res_id)
+	ipsc_info = dict(process_id=GetProcessID())
 	chan = GetCurrentCh()
 	from_uri = 'sip:{}'.format(GetOrgCallNo())
 	if GetCalledNo():
@@ -783,6 +796,7 @@ try:
 		'params': params,
 		'state': 'Initiated',
 		'chan': chan,
+		'ipsc_info': ipsc_info,
 		'call_dir': 'inbound',
 		'bus_addr': sender,
 		'from_uri': from_uri,
@@ -863,7 +877,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1129</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.on_released</NodeName>
+    <NodeName>脚本 call released</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=try:
 	call_info['end_time'] = now()
 	call_info['state'] = 'Released'
@@ -913,6 +927,8 @@ try:
 			'end_time': call_info['end_time'],
 			'dropped_by': call_info['dropped_by'],
 			'cause': call_info['cause'],
+			'user_data': call_info['params'].get('user_data'),
+			'ipsc_info': call_info['ipsc_info'],
 		}
 	)
 except IvrError as err:
@@ -1150,6 +1166,10 @@ try:
 			raise RuntimeError('Can not answer an outbound call.')
 		if call_info['state'] not in ['Initiated']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#
+		for k, v in params.items():
+			if not k in call_info['params']:
+				call_info['params'][k] = v
 		#
 		max_answer_seconds = params['max_answer_seconds']
 		release_delay = params.get('release_delay', 1)

@@ -86,6 +86,7 @@ try:
 			'error': None,
 			'begin_time': begin_time,
 			'end_time': now(),
+			'user_data': call_info['params'].get('user_data'),
 		}
 	)
 except IvrError as err:
@@ -104,7 +105,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1856</target>
+          <target>1848</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -150,6 +151,7 @@ if not isinstance(error, IvrError):
 				'error': error,
 				'begin_time': begin_time,
 				'end_time': now(),
+				'user_data': call_info['params'].get('user_data'),
 			}
 		)
 	except IvrError as err:
@@ -167,44 +169,7 @@ if not isinstance(error, IvrError):
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1856</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 not error</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>not bool(error)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
           <target>1848</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1853</target>
         </ExitPort>
       </Exit>
     </PropertySet>

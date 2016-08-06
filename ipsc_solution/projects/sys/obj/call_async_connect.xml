@@ -118,43 +118,6 @@ except:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1784</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 not error</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>not bool(error)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1785</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
     <NodeID>1785</NodeID>
     <NodeType>SUBEND</NodeType>
     <NodeName>子流程结束</NodeName>
@@ -193,6 +156,7 @@ try:
 			'error': error,
 			'begin_time': begin_time,
 			'end_time': now(),
+			'user_data': call_info['params'].get('user_data'),
 		}
 	jsonrpc.send_event(
 		method='call.on_connect_completed',
@@ -208,13 +172,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1784</target>
+          <target>1785</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1784</target>
+          <target>1785</target>
         </ExitPort>
       </Exit>
     </PropertySet>
