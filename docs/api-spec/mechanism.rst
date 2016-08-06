@@ -193,7 +193,7 @@ size            包体字节长度
       {
         "id": "b07ee20a378111e6a2c768f7288d9a79",
         "result": {
-          "res_id": "0-0-call-23479873432234",
+          "res_id": "0.0.0-sys.call-23479873432234",
           "ipsc_info": {
               "process_id": "23479873432234"
           }
@@ -398,7 +398,7 @@ size            包体字节长度
   {
     "method": "ivr.call.on_answered",
     "params": {
-      "res_id": "0-0-call-23479873432234"
+      "res_id": "0.0.0-sys.call-23479873432234"
     }
   }
 
@@ -429,10 +429,6 @@ size            包体字节长度
 
 表示新建一个 ``call`` 资源。
 它对应于调用 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ，启动 `ID` 为 ``call`` 的流程。
-
-.. note::
-  所有的资源创建 :term:`RPC` 的返回值都是字符串类型的资源 `ID`。
-  在 `CTI API` 定义文档中， **省略** 针对该返回值的描述。
 
 资源操作 :term:`RPC`
 ====================
@@ -472,7 +468,6 @@ size            包体字节长度
 
 .. note::
   事件 :term:`RPC` 通常将资源 `ID` 写在第一个参数 ``res_id`` 中，
-  `CTI API` 定义文档 **不省略** 对这个参数的描述。
 
 .. warning::
   事件 :term:`RPC` 的方向与其它 :term:`RPC` 相反，它是 `IPSC` 发起的！
