@@ -517,7 +517,7 @@ elif err != 1:
     <NodeName>脚本 call out initiated</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_flow_id()
+	res_id = utils.make_res_id()
 	Trace('call res_id: %s' % res_id)
 	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
@@ -764,7 +764,7 @@ except IvrError as err:
     <NodeName>脚本 inbound</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_flow_id()
+	res_id = utils.make_res_id()
 	Trace('call res_id: %s' % res_id)
 	chan = GetCurrentCh()
 	from_uri = 'sip:{}'.format(GetOrgCallNo())
