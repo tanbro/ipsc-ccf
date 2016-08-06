@@ -91,7 +91,7 @@ in_valuelist    该参数格式是 :term:`JSON` `Array` ，字符串内容最大
 
 应用服务通过 :doc:`/cti-bus/index` API 的回调函数 :c:type:`smartbus_cli_recvdata_cb` 接收该 :term:`RPC` 回复。
 
-.. attention:: :doc:`cti` 服务会把该回复消息发送给发起此次“创建资源”请求的 :doc:`/cti-bus/index` 节点。
+.. attention:: :doc:`/cti-bus/index` 服务会把该回复消息发送给发起此次“创建资源”请求的 :doc:`/cti-bus/index` 节点。
 
 此时，该回调函数相关参数的含义是：
 
@@ -258,7 +258,7 @@ param           该参数格式是 :term:`JSON` `Array` ，字符串内容最大
 
 应用服务通过 :doc:`/cti-bus/index` API 的回调函数 :c:type:`smartbus_cli_recvdata_cb` 接收该 :term:`RPC` 回复。
 
-.. attention:: :doc:`cti` 服务会把该回复消息发送给发起此次“操作资源”请求的 :doc:`/cti-bus/index` 节点。
+.. attention:: :doc:`/cti-bus/index` 服务会把该回复消息发送给发起此次“操作资源”请求的 :doc:`/cti-bus/index` 节点。
 
 此时，该回调函数相关参数的含义是：
 
