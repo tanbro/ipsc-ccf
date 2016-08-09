@@ -63,6 +63,7 @@ call_info = call_map_r[res_id]
 chan = call_info['chan']
 #
 org_state = call_info['state']
+call_info['answer_time'] = now()
 call_info['state'] = 'Answer'
 #    
 SendAcceptCall(chan)
