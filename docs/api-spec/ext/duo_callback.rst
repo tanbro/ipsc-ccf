@@ -56,21 +56,49 @@
   :param str to1_uri: 第一方被叫号码 :term:`SIP URI`
   :param str form2_uri: 第二方主叫号码 :term:`SIP URI`
   :param str to2_uri: 第二方被叫号码 :term:`SIP URI`
-  :param int max_answer_seconds:
-  :param int max_ring_seconds:
+  :param int max_connect_seconds: 最大双通道连接时间（秒）
+  :param int max_ring_seconds: 呼叫时的最大振铃等待时间（秒），两次呼叫都用这个时间
   :param str ring_play_file: 第二方拨号时，对第一方播放的提示应，如果该值为空字符串或者 `null` ，则透传播放回铃音
 
-  :param int ring_play_mode: 回应提示应文件 ``ring_play_file`` 播放模式
+  :param int ring_play_mode: 回铃音文件 ``ring_play_file`` 播放模式
 
-    ====== ===========
-    枚举值  说明
-    ====== ===========
-    ``0``  第二方振铃后开始播放
-    ``1``  呼叫启动时开始播放
-    ====== ===========
+    ========= ============
+    枚举值     说明
+    ========= ============
+    ``0``     收到对端回铃后开始播放
+    ``1``     拨号时即开始播放，收到对端回铃后停止播放
+    ``2``     拨号时即开始播放，对端接听或者挂机后停止播放
+    ========= ============
 
-  :param str record_file:
+  :param str record_file: 录音文件
+
+  :param int record_mode: 录音模式枚举值
+
+    ========= ============
+    枚举值     说明
+    ========= ============
+    ``0``     双向接通后录音
+    ``1``     开始呼叫第一方时启动录音
+    ``2``     开始呼叫第二方时启动录音
+    ========= ============
+
   :param str user_data:
+
+  :return: 资源ID和IPSC相关信息。
+
+    其格式结果(``result``)部分形如:
+
+    .. code-block:: json
+
+      {
+        "res_id": "0.0.0-ext.duo_callback-23479873432234",
+        "ipsc_info": {
+          "process_id": 23479873432234
+        }
+      }
+
+    .. important::
+      在后续的资源操作 :term:`RPC` 中，应用服务需要使用 ``res_id`` 参数确定要操作的资源。
 
 方法
 ***********
@@ -81,4 +109,4 @@
 .. function::
   cancel(res_id)
 
-  .. warning:: 只能在呼叫第二方之前放弃！
+  .. warning:: 只能在第二方被接通之前放弃！
