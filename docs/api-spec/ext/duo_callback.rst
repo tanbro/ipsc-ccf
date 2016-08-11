@@ -6,6 +6,25 @@
 状态
 **********
 
+当 :term:`CTI` 服务器收到 :doc:`/api-spec/ext/duo_callback` 指令后，就会尝试新建一个 `双向回拨` 资源，并返回资源 ID，其状态变化描述如下：
+
+* 当资源被创建后，第一方尚未被呼通，处于初始状态(``Initiated``)。
+
+* 等待第一方呼叫的结果
+
+  * 如果第一方呼叫成功，状态变为 ``Answer1``。
+  * 如果第一方呼叫失败，资源将被释放，状态变为 ``Released``。
+
+* 在第一方呼叫成功之后，继续呼叫第二方
+
+  * 如果第二方呼叫成功，状态变为 ``Answer2``。
+  * 如果呼叫第二方失败，或呼叫期间第一方挂断，或者呼叫被取消，资源将被释放，状态变为 ``Released``。
+* 当应用程序控制呼叫进行 :term:`CTI` 动作时（如：录/放音、收/发 :term:`DTMF` 码），呼叫处于各个 :term:`CTI` 动作的执行状态。
+
+* 双方都呼叫成功后，就对两个呼叫进行双通道连接，让双方通话，此状态为 ``Connected``。
+
+* ``Connect`` 正常结束，或者期间任何一方挂断，资源将被释放，状态变为 ``Released``。
+
 .. graphviz::
 
   digraph CallResourceState {
@@ -15,12 +34,14 @@
     Released [shape=doublecircle, color=red, fontcolor=red];
 
     Start -> Initiated [label="启动"];
-    Initiated -> Dialing1 [label="呼叫第一方"]
-    Dialing1 -> Released [label="呼叫失败", color=red];
+    Initiated -> Answer1 [label="呼叫第一方成功"]
+    Initiated -> Released [color=red];
 
-    Dialing1 -> Dialing2 ["label"="第一方接通后，\n呼叫第二方"];
-    Dialing2 -> Released [label="呼叫失败", color=red];
-    Dialing2 -> Connected ["label"="通话", color=green];
+    Answer1 -> Answer2 ["label"="呼叫第二方成功"];
+    Answer1 -> Released [color=red];
+
+    Answer2 -> Connected ["label"="双向连接", color=green];
+    Answer2 -> Released [color=red];
 
     Connected -> Released [label="双向回拨结束", color=red];
   }
