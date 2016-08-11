@@ -245,6 +245,7 @@ res_obj['answer_time'] = now()
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['hangup_by'] = 1
+res_obj['state'] = 'Released'
 res_obj['end_time'] = now()</ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -270,6 +271,7 @@ res_obj['end_time'] = now()</ExtendedProperty>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['hangup_by'] = 2
+res_obj['state'] = 'Released'
 res_obj['end_time'] = now()</ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -295,6 +297,7 @@ res_obj['end_time'] = now()</ExtendedProperty>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['error'] = 'connect error'
+res_obj['state'] = 'Released'
 res_obj['end_time'] = now()</ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -320,6 +323,7 @@ res_obj['end_time'] = now()</ExtendedProperty>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['error'] = 'connect timeout'
+res_obj['state'] = 'Released'
 res_obj['end_time'] = now()</ExtendedProperty>
     <PropertySet>
       <Exit>

@@ -526,7 +526,20 @@ if method.startswith('ext.'):
     <NodeID>1056</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 cancel</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=</ExtendedProperty>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if res_obj['state'] not in ['Initiated', 'Answered']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, res_obj['state']))
+		Hangup(chan1, params.get('cause', 603))
+		jsonrpc.send_result(sender, id_)
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
