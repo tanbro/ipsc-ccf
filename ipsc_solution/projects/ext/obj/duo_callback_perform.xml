@@ -76,7 +76,7 @@ params = res_obj['params']
     <NodeID>1024</NodeID>
     <NodeType>WAITDIALEX</NodeType>
     <NodeName>等待拨号</NodeName>
-    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=res_obj['chan'];Option=</ExtendedProperty>
+    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=res_obj['chan1'];Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -113,7 +113,7 @@ params = res_obj['params']
     <NodeID>1027</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=res_obj['chan1'];Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=;RingTimeout=50;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <ExtendedProperty>WorkCh=res_obj['chan1'];Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=params['ring_play_file'];RingTimeout=params['max_ring_seconds'];IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -195,8 +195,9 @@ params = res_obj['params']
     <NodeID>1030</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['answered2'] = True
-res_obj['chan2'] = chan2
+    <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['chan2'] = chan2
+res_obj['state'] = 'Connected'
+res_obj['connect_time'] = now()
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -220,7 +221,8 @@ res_obj['chan2'] = chan2
     <NodeID>1032</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['answered1'] = True
+    <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['state'] = 'Answered'
+res_obj['answer_time'] = now()
 </ExtendedProperty>
     <PropertySet>
       <Exit>

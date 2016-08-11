@@ -12,16 +12,13 @@
 
 * 等待第一方呼叫的结果
 
-  * 如果第一方呼叫成功，状态变为 ``Answer1``。
+  * 如果第一方呼叫成功，状态变为 ``Answered``。
   * 如果第一方呼叫失败，资源将被释放，状态变为 ``Released``。
 
 * 在第一方呼叫成功之后，继续呼叫第二方
 
-  * 如果第二方呼叫成功，状态变为 ``Answer2``。
+  * 如果第二方呼叫成功，双方会进入通道连接模式（双向通话），状态变为 ``Connected``。
   * 如果呼叫第二方失败，或呼叫期间第一方挂断，或者呼叫被取消，资源将被释放，状态变为 ``Released``。
-* 当应用程序控制呼叫进行 :term:`CTI` 动作时（如：录/放音、收/发 :term:`DTMF` 码），呼叫处于各个 :term:`CTI` 动作的执行状态。
-
-* 双方都呼叫成功后，就对两个呼叫进行双通道连接，让双方通话，此状态为 ``Connected``。
 
 * ``Connect`` 正常结束，或者期间任何一方挂断，资源将被释放，状态变为 ``Released``。
 
@@ -34,16 +31,12 @@
     Released [shape=doublecircle, color=red, fontcolor=red];
 
     Start -> Initiated [label="启动"];
-    Initiated -> Answer1 [label="呼叫第一方成功"]
+    Initiated -> Answered [label="呼叫第一方成功"]
     Initiated -> Released [color=red];
 
-    Answer1 -> Answer2 ["label"="呼叫第二方成功"];
-    Answer1 -> Released [color=red];
+    Answered -> Connected ["label"="呼叫第二方成功"];
 
-    Answer2 -> Connected ["label"="双向连接", color=green];
-    Answer2 -> Released [color=red];
-
-    Connected -> Released [label="双向回拨结束", color=red];
+    Connected -> Released [color=red];
   }
 
 构造
