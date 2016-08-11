@@ -40,7 +40,7 @@
   }
 
 构造
-**********W
+**********
 
 .. function::
   construct(from1_uri, to1_uri, from2_uri, to2_uri, max_connect_seconds, max_ring_seconds, ring_play_file, ring_play_mode, record_file, user_data)
