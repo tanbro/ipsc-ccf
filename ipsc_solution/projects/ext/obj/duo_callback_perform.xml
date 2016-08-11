@@ -157,36 +157,32 @@ params = res_obj['params']
     <NodeID>1028</NodeID>
     <NodeType>CONNECT</NodeType>
     <NodeName>连接</NodeName>
-    <ExtendedProperty>ChNo1=chan1;Volum1=;ChNo2=chan2;Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=;OutExitCh=;IsRecord=0;RecordFile=;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
+    <ExtendedProperty>ChNo1=chan1;Volum1=;ChNo2=chan2;Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=params['max_connect_seconds'];OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1070</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1072</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1071</target>
         </ExitPort>
         <ExitPort>
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1073</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -198,6 +194,8 @@ params = res_obj['params']
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['chan2'] = chan2
 res_obj['state'] = 'Connected'
 res_obj['connect_time'] = now()
+
+record_file = params.get('record_file')
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -238,6 +236,106 @@ res_obj['answer_time'] = now()
           <targetflow>
           </targetflow>
           <target>1027</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1070</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['hangup_by'] = 1
+res_obj['end_time'] = now()</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1071</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['hangup_by'] = 2
+res_obj['end_time'] = now()</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1072</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['error'] = 'connect error'
+res_obj['end_time'] = now()</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1073</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['error'] = 'connect timeout'
+res_obj['end_time'] = now()</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>

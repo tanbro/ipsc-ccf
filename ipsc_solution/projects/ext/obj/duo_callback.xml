@@ -203,6 +203,9 @@ try:
 		params=params,
 		chan1=chan1,
 		chan2=None,
+		begin_time=now(),
+		hangup_by=0,
+		error=None,
 	)
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
@@ -305,6 +308,81 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1063</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 on_released</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	
+	jsonrpc.send_event(
+		to=sender,
+		method='duo_callback.on_released',
+		params={
+			'res_id': res_id,
+			'error': res_obj.get('error'),
+			'begin_time': res_obj.get('begin_time'),
+			'answer_time': res_obj.get('answer_time'),
+			'connect_time': res_obj.get('connect_time'),
+			'end_time': res_obj.get('end_time'),
+			'hangup_by': res_obj.get('hangup_by', 0),
+			'user_data': res_obj['params'].get('user_data'),
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1075</NodeID>
+    <NodeType>DELAY</NodeType>
+    <NodeName>延时</NodeName>
+    <ExtendedProperty>IsCheckHangup=0;Delay=1000;Contect=;WorkCh=;OutData=;Option=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1063</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1042</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
@@ -330,7 +408,7 @@ elif err != 1:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1044</target>
+          <target>1050</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -350,6 +428,113 @@ if method.startswith('ext.'):
           <targetflow>
           </targetflow>
           <target>1042</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1054</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1050</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 Delay returns</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>err == 1</expression>
+          <ExitType>101</ExitType>
+        </case>
+        <case>
+          <expression>err == -61</expression>
+          <ExitType>103</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1044</target>
+        </ExitPort>
+        <ExitPort>
+          <type>103</type>
+          <targetflow>
+          </targetflow>
+          <target>1075</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1054</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>method == "duo_callback.cancel"</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1056</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1056</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 cancel</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>1</type>

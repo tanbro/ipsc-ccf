@@ -40,10 +40,10 @@
   }
 
 构造
-**********
+**********W
 
 .. function::
-  construct(from1_uri, to1_uri, from2_uri, to2_uri, max_answer_seconds, max_ring_seconds, ring_play_file, ring_play_mode, record_file, user_data)
+  construct(from1_uri, to1_uri, from2_uri, to2_uri, max_connect_seconds, max_ring_seconds, ring_play_file, ring_play_mode, record_file, user_data)
 
   :param str form1_uri: 第一方主叫号码 :term:`SIP URI`
   :param str to1_uri: 第一方被叫号码 :term:`SIP URI`
@@ -55,15 +55,15 @@
 
   :param int ring_play_mode: 回铃音文件 ``ring_play_file`` 播放模式
 
-    ========= ============
+    ========= ================================================
     枚举值     说明
-    ========= ============
+    ========= ================================================
     ``0``     收到对端回铃后开始播放
     ``1``     拨号时即开始播放，收到对端回铃后停止播放
     ``2``     拨号时即开始播放，对端接听或者挂机后停止播放
-    ========= ============
+    ========= ================================================
 
-  :param str record_file: 录音文件
+  :param str record_file: 录音文件。`null` 或空字符串表示不录音。
 
   :param int record_mode: 录音模式枚举值
 
@@ -73,6 +73,19 @@
     ``0``     双向接通后录音
     ``1``     开始呼叫第一方时启动录音
     ``2``     开始呼叫第二方时启动录音
+    ========= ============
+
+  :param int record_format: 录音文件格式枚举值
+
+    ========= ============
+    枚举值     说明
+    ========= ============
+    ``1``     PCM liner 8k/8bit
+    ``2``     CCITT a-law 8k/8bit
+    ``3``     CCITT mu-law 8k/8bit
+    ``4``     IMA ADPCM
+    ``5``     GSM
+    ``6``     MP3
     ========= ============
 
   :param str user_data:
@@ -99,7 +112,22 @@
 放弃
 ===========
 
-.. function::
-  cancel(res_id)
+.. function:: cancel(res_id)
 
   .. warning:: 只能在第二方被接通之前放弃！
+
+事件
+***********
+
+结束
+===========
+
+.. function:: on_released(res_id, error, begin_time, answer_time, connect_time, end_time, user_data)
+
+  :param str res_id: 触发事件的资源 `ID`。
+  :param error: 错误信息。如果出现错误失败，该参数记录错误信息。
+  :param int begin_time: 开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+  :param int answer_time: 第一方应答时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。如果第一方未应答，则该参数的值是 ``null``。
+  :param int connect_time: 第二方应答时间，同时也是双通道连接开始的时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。如果第二方未应答，则该参数的值是 ``null``。
+  :param int end_time: 结束时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
