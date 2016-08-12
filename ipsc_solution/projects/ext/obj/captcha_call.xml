@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <FlowItem>
-    <FlowID>notify_call</FlowID>
-    <FlowName>notify_call</FlowName>
+    <FlowID>captcha_call</FlowID>
+    <FlowName>captcha_call</FlowName>
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
-    <CreateDate>2016-08-11T16:37:32+08:00</CreateDate>
+    <CreateDate>2016-08-11T17:47:27+08:00</CreateDate>
     <ModifyDate>2016-08-11T09:47:27+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
-    <NodeID>1077</NodeID>
+    <NodeID>1134</NodeID>
     <NodeType>SUBSTART</NodeType>
     <NodeName>子流程开始</NodeName>
     <ExtendedProperty>
@@ -39,13 +39,13 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1082</target>
+          <target>1138</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1078</NodeID>
+    <NodeID>1135</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
     <ExtendedProperty>WorkCh=;Dnis=params['to_uri'];Ani=params['from_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=params['max_ring_seconds'];IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
@@ -55,37 +55,37 @@
           <type>6</type>
           <targetflow>
           </targetflow>
-          <target>1096</target>
+          <target>1147</target>
         </ExitPort>
         <ExitPort>
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>1093</target>
+          <target>1144</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1113</target>
+          <target>1163</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1090</target>
+          <target>1142</target>
         </ExitPort>
         <ExitPort>
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>1097</target>
+          <target>1148</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1082</NodeID>
+    <NodeID>1138</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 init</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
@@ -94,7 +94,7 @@ begin_time=now
 answer_time=None
 dropped_by=None
 try:
-	_map_ = _gd_['notify_call']
+	_map_ = _gd_['captcha_call']
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -112,50 +112,13 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1078</target>
+          <target>1135</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1083</NodeID>
-    <NodeType>PLAY</NodeType>
-    <NodeName>放音</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
-    <PropertySet>
-      <DynamicVoice>
-        <VarVoice>
-          <content>params['play_content']</content>
-          <type>0</type>
-          <option>
-          </option>
-        </VarVoice>
-      </DynamicVoice>
-      <SubTitle />
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1100</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1130</target>
-        </ExitPort>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1132</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1086</NodeID>
+    <NodeID>1141</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 released</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
@@ -163,13 +126,14 @@ try:
 	
 	jsonrpc.send_event(
 		to=sender,
-		method='notify_call.on_released',
+		method='captcha_call.on_released',
 		params={
 			'res_id': res_id,
 			'error': error,
 			'begin_time': begin_time,
 			'answer_time': answer_time,
 			'end_time': now(),
+			'keys': keys,
 			'user_data': params.get('user_data'),
 		}
 	)
@@ -198,7 +162,7 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1090</NodeID>
+    <NodeID>1142</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = 'dial error'</ExtendedProperty>
@@ -215,13 +179,13 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1114</target>
+          <target>1164</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1093</NodeID>
+    <NodeID>1144</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = 'call timeout'</ExtendedProperty>
@@ -238,13 +202,13 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1114</target>
+          <target>1164</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1096</NodeID>
+    <NodeID>1147</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = 'dial failed'</ExtendedProperty>
@@ -261,13 +225,13 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1114</target>
+          <target>1164</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1097</NodeID>
+    <NodeID>1148</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = 'call rejected'
@@ -285,16 +249,16 @@ dropped_by='usr'</ExtendedProperty>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1114</target>
+          <target>1164</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1100</NodeID>
+    <NodeID>1151</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=error = 'play error'
+    <ExtendedProperty>ZoneType=0;ScriptContent=error = 'dtmf receive error'
 dropped_by='sys'
 </ExtendedProperty>
     <PropertySet>
@@ -310,13 +274,13 @@ dropped_by='sys'
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>1141</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1101</NodeID>
+    <NodeID>1152</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=answer_time = now()</ExtendedProperty>
@@ -333,13 +297,13 @@ dropped_by='sys'
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1083</target>
+          <target>1181</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1103</NodeID>
+    <NodeID>1154</NodeID>
     <NodeType>WAITDIALEX</NodeType>
     <NodeName>等待拨号</NodeName>
     <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=chan;Option=</ExtendedProperty>
@@ -349,31 +313,31 @@ dropped_by='sys'
           <type>6</type>
           <targetflow>
           </targetflow>
-          <target>1109</target>
+          <target>1160</target>
         </ExitPort>
         <ExitPort>
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>1106</target>
+          <target>1157</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1101</target>
+          <target>1152</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1108</target>
+          <target>1159</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1106</NodeID>
+    <NodeID>1157</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = 'ring timeout'
@@ -391,13 +355,13 @@ dropped_by = 'sys'</ExtendedProperty>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>1141</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1108</NodeID>
+    <NodeID>1159</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = 'dial error'</ExtendedProperty>
@@ -414,13 +378,13 @@ dropped_by = 'sys'</ExtendedProperty>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>1141</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1109</NodeID>
+    <NodeID>1160</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = 'dial failed'</ExtendedProperty>
@@ -437,13 +401,13 @@ dropped_by = 'sys'</ExtendedProperty>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>1141</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1113</NodeID>
+    <NodeID>1163</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 dial start ok</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
@@ -474,13 +438,13 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1103</target>
+          <target>1154</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1114</NodeID>
+    <NodeID>1164</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 dial start error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
@@ -516,7 +480,7 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1130</NodeID>
+    <NodeID>1175</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=dropped_by='sys'</ExtendedProperty>
@@ -533,13 +497,13 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>1141</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1132</NodeID>
+    <NodeID>1177</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=dropped_by='usr'</ExtendedProperty>
@@ -556,7 +520,83 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>1141</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1181</NodeID>
+    <NodeType>DTMFINPUT</NodeType>
+    <NodeName>数据输入</NodeName>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;Timeout=params.get('first_key_timeout', 45);IsBreak=1;ValidDtmfStr=params.get('valid_keys', "0123456789*#ABCD");InvalidProcType=0;OutData=keys;DtmfLen=params.get('max_keys', 11);EndExpression=params.get('finish_keys', '#');IsIncludeEnd=;ClearDtmfBufType=1;RepeatNum=params.get('play_repeat', 0);IntervalTimeout=params.get('continues_keys_timeout', 30);SaveEndDtmf=params.get('including_finish_key', False);IsRegex=0;TimeoutIsPlayEnd=1;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsDtmfEcho=0;DtmfEchoFontSize=16;DtmfEchoFontStyle=0;DtmfEchoColor="255:255:255:0";DtmfEchoLeft=0;DtmfEchoTop=120;DtmfEchoDir=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=;LogoAlphaBlending=0;Option=;DtmfEchoMask=</ExtendedProperty>
+    <PropertySet>
+      <DynamicVoice>
+        <VarVoice>
+          <content>params.get('play_content')</content>
+          <type>0</type>
+          <option>
+          </option>
+        </VarVoice>
+      </DynamicVoice>
+      <SubTitle />
+      <Exit>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1177</target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>1186</target>
+        </ExitPort>
+        <ExitPort>
+          <type>9</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1151</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1175</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1186</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=error = 'dtmf receive timeout'
+dropped_by='sys'
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>

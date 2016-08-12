@@ -34,7 +34,7 @@
 ************
 
 .. function::
-  construct(from_uri, to_uri, files, repeat, max_ring_seconds, user_data)
+  construct(from_uri, to_uri, play_content, play_repeat, max_ring_seconds, user_data)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
 
@@ -46,9 +46,13 @@
 
     应用服务需要通过该参数的 `user` 部分指定被叫号码，该参数 `address` 部分指定目标 `VoIP` 网关
 
-  :param files: 要播放的通知文件（列表）
-  :type files: str list
-  :param repeat: 重复播放次数。0表示不重复播放（只播放1次），1表示重复一次（共播放两次）
+  :param play_content: 通知提示音内容。
+
+    该参数格式定义见 :func:`sys.call.play_start` 的 `content` 参数
+
+  :type play_content: str, list
+
+  :param play_repeat: 重复播放次数。0表示不重复播放（只播放1次），1表示重复一次（共播放两次）
 
   :param int max_ring_seconds: 外呼时，收到对端振铃后，最大等待时间。振铃超过这个时间，则认为呼叫失败。
 

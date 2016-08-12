@@ -305,7 +305,7 @@
 -------------------------
 
 .. function::
-  receive_dtmf_start(res_id, valid_keys="0123456789*#ABCD", max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, if_break_on_key=True)
+  receive_dtmf_start(res_id, valid_keys="0123456789*#ABCD", max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, breaking_on_key=True, including_finish_key=False)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -326,7 +326,8 @@
       就会被接收过程忽略，无法结束接收过程。
 
     .. attention::
-      结束码字符 **不会** 被包含在 :func:`on_receive_dtmf_completed` 的 ``keys`` 参数中。
+      * 如果 ``including_finish_key`` 参数值是 `False` (默认情况)，该结束码字符 **不会** 被包含在 :func:`on_receive_dtmf_completed` 的 ``keys`` 参数中。
+      * 如果 ``including_finish_key`` 参数值是 `True` ，该结束码将被包含在 :func:`on_receive_dtmf_completed` 的 ``keys`` 参数中。
 
   :param int first_key_timeout: 等待接收第一个 :term:`DTMF` 码的超时时间（秒）。
     如果在这段时间内，没有收到第一个 :term:`DTMF` 码，则进行超时处理。
@@ -341,7 +342,8 @@
 
   :param int play_repeat: 如果出现等待超时，按照该参数重复播放提示音。
 
-  :param bool if_break_on_key: 是否在接收到第一个有效 :term:`DTMF` 码时停止放音。
+  :param bool breaking_on_key: 是否在接收到第一个有效 :term:`DTMF` 码时停止放音。
+  :param bool including_finish_key: 是否将结束码包含在接收码串中。
 
 结束接收 :term:`DTMF` 码
 -----------------------------
