@@ -26,6 +26,21 @@
     </Option>
     <DbType />
   </SysDBConnect>
+  <CallRouterToProject>
+    <ProjectID>sys</ProjectID>
+    <MatchMode>4</MatchMode>
+    <RouteCtrlType>0</RouteCtrlType>
+    <RouteTeleno>
+    </RouteTeleno>
+    <IsRegularExpression>0</IsRegularExpression>
+    <DevNo>
+    </DevNo>
+    <DevType>
+    </DevType>
+    <DevGroupID>
+    </DevGroupID>
+    <MediaType>1</MediaType>
+  </CallRouterToProject>
   <Project>
     <ProjectID>sys</ProjectID>
     <ProjectName>sys</ProjectName>
@@ -45,19 +60,23 @@
     <Option>
     </Option>
   </Project>
-  <CallRouterToProject>
-    <ProjectID>sys</ProjectID>
-    <MatchMode>4</MatchMode>
-    <RouteCtrlType>0</RouteCtrlType>
-    <RouteTeleno>
-    </RouteTeleno>
-    <IsRegularExpression>0</IsRegularExpression>
-    <DevNo>
-    </DevNo>
-    <DevType>
-    </DevType>
-    <DevGroupID>
-    </DevGroupID>
-    <MediaType>1</MediaType>
-  </CallRouterToProject>
+  <Project>
+    <ProjectID>ext</ProjectID>
+    <ProjectName>ext</ProjectName>
+    <ProjectType>0</ProjectType>
+    <PlayPrd>
+    </PlayPrd>
+    <PlayPrd>
+    </PlayPrd>
+    <RecordPrd>
+    </RecordPrd>
+    <ChGroupId>
+    </ChGroupId>
+    <MaxChUseNum>
+    </MaxChUseNum>
+    <MaxAgentNum>
+    </MaxAgentNum>
+    <Option>
+    </Option>
+  </Project>
 </Solution>

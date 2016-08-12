@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <FlowItem>
+    <FlowID>duo_callback</FlowID>
+    <FlowName>duo_callback</FlowName>
+    <FlowDesc />
+    <FlowVer>1.0</FlowVer>
+    <CreateDate>2016-08-04T18:00:49+08:00</CreateDate>
+    <ModifyDate>2016-08-11T09:47:27+08:00</ModifyDate>
+    <DesignVer>2.0</DesignVer>
+  </FlowItem>
+  <FlowNode>
+    <NodeID>1001</NodeID>
+    <NodeType>SUBSTART</NodeType>
+    <NodeName>子流程开始</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <AffectList>
+        <varlist>
+          <var>sender</var>
+        </varlist>
+        <varlist>
+          <var>id_</var>
+        </varlist>
+        <varlist>
+          <var>params</var>
+        </varlist>
+      </AffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1003</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1003</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 init</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+
+try:
+	_map_ = _gd_['duo_callback']
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1004</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1004</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1011</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1006</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本  error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if last_err:
+		err_msg = str(last_err)
+	else:
+		err_msg = ''
+	jsonrpc.send_error(sender, id_, message=err_msg, data={
+		'ipsc_info': ipsc_info
+	})
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1011</NodeID>
+    <NodeType>DIALEX</NodeType>
+    <NodeName>拨号</NodeName>
+    <ExtendedProperty>WorkCh=;Dnis=params['to1_uri'];Ani=params['from1_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=params['max_ring_seconds'];IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan1;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>6</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1013</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1013</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 dial start ok</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	res_id = utils.make_flow_id()
+	Trace('res_id: %s' % res_id)
+	ipsc_info = {
+		process_id = GetProcessID(),
+	}
+	res_obj = _map_[res_id] = dict(
+		id=res_id,
+		ipsc_info=ipsc_info,
+		state='Initiated',
+		params=params,
+		chan1=chan1,
+		chan2=None,
+		begin_time=now(),
+		hangup_by=0,
+		error=None,
+	)
+	jsonrpc.send_result(sender, id_, {
+		'res_id': res_id,
+		'ipsc_info': ipsc_info,
+	})
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1039</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1020</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程</NodeName>
+    <ExtendedProperty>SubFlowName=duo_callback_perform;InvokeType=1;ChNo=chan1;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1042</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>duo_callback_perform</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1039</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1020</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1063</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 on_released</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	
+	jsonrpc.send_event(
+		to=sender,
+		method='duo_callback.on_released',
+		params={
+			'res_id': res_id,
+			'error': res_obj.get('error'),
+			'begin_time': res_obj.get('begin_time'),
+			'answer_time': res_obj.get('answer_time'),
+			'connect_time': res_obj.get('connect_time'),
+			'end_time': res_obj.get('end_time'),
+			'hangup_by': res_obj.get('hangup_by', 0),
+			'user_data': res_obj['params'].get('user_data'),
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1075</NodeID>
+    <NodeType>DELAY</NodeType>
+    <NodeName>延时</NodeName>
+    <ExtendedProperty>IsCheckHangup=0;Delay=1000;Contect=;WorkCh=;OutData=;Option=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1063</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1042</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 Delay</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, 2, chan1, -1, "BusNotifyTitle=%s" % res_id))
+err, data = ret_val
+if err == -8:
+	Trace('DELAY: timeout')
+if err == -61:
+	TraceErr('DELAY: channle closed')
+elif err != 1:
+	TraceErr('Delay: error %s: %s' % (err, data))
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1050</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1044</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 parse data</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)
+if method.startswith('ext.'):
+	method = method[4:]
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1042</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1054</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1050</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 Delay returns</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>err == 1</expression>
+          <ExitType>101</ExitType>
+        </case>
+        <case>
+          <expression>err == -61</expression>
+          <ExitType>103</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1044</target>
+        </ExitPort>
+        <ExitPort>
+          <type>103</type>
+          <targetflow>
+          </targetflow>
+          <target>1075</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1054</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>method == "duo_callback.cancel"</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1056</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1056</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 cancel</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if res_obj['state'] not in ['Initiated', 'Answered']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, res_obj['state']))
+		Hangup(chan1, params.get('cause', 603))
+		jsonrpc.send_result(sender, id_)
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1042</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+</root>

@@ -3,8 +3,8 @@
 
 .. module:: sys.call
 
-呼叫资源的状态
-***************
+状态
+===============
 呼叫资源的产生有两个途径：
 
 #. 应用服务调用资源构造方法，用于呼出。
@@ -70,9 +70,6 @@
   呼叫资源只有当处于 ``Idel`` 状态时，才可以执行新的动作发起指令。
   应用服务需要等待上一个 :term:`CTI` 动作结束（不管是主动结束，抑或仅仅是被动等待其结束），方可发起下一个动作的开始指令。
 
-呼叫资源的接口
-***************
-
 构造
 ==========
 
@@ -107,6 +104,24 @@
     如果指定了 ``parent_call_res_id`` 参数，且本参数为 ``null`` 或者空字符串，则在拨号时向父呼叫透传原始的线路拨号提示音。
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+  :return: 资源ID和IPSC相关信息。
+
+    其格式结果(``result``)部分形如:
+
+    .. code-block:: json
+
+      {
+        "res_id": "0.0.0-sys.call-23479873432234",
+        "ipsc_info": {
+          "process_id": 23479873432234
+        }
+      }
+
+    .. important::
+      在后续的资源操作 :term:`RPC` 中，应用服务需要使用 ``res_id`` 参数确定要操作的资源。
+
+  :rtype: object
 
   .. important::
     仅适用于 **出方向** 呼叫。
@@ -290,7 +305,7 @@
 -------------------------
 
 .. function::
-  receive_dtmf_start(res_id, valid_keys="0123456789*#ABCD", max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, if_break_on_key=True)
+  receive_dtmf_start(res_id, valid_keys="0123456789*#ABCD", max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, breaking_on_key=True, including_finish_key=False)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -311,7 +326,8 @@
       就会被接收过程忽略，无法结束接收过程。
 
     .. attention::
-      结束码字符 **不会** 被包含在 :func:`on_receive_dtmf_completed` 的 ``keys`` 参数中。
+      * 如果 ``including_finish_key`` 参数值是 `False` (默认情况)，该结束码字符 **不会** 被包含在 :func:`on_receive_dtmf_completed` 的 ``keys`` 参数中。
+      * 如果 ``including_finish_key`` 参数值是 `True` ，该结束码将被包含在 :func:`on_receive_dtmf_completed` 的 ``keys`` 参数中。
 
   :param int first_key_timeout: 等待接收第一个 :term:`DTMF` 码的超时时间（秒）。
     如果在这段时间内，没有收到第一个 :term:`DTMF` 码，则进行超时处理。
@@ -326,7 +342,8 @@
 
   :param int play_repeat: 如果出现等待超时，按照该参数重复播放提示音。
 
-  :param bool if_break_on_key: 是否在接收到第一个有效 :term:`DTMF` 码时停止放音。
+  :param bool breaking_on_key: 是否在接收到第一个有效 :term:`DTMF` 码时停止放音。
+  :param bool including_finish_key: 是否将结束码包含在接收码串中。
 
 结束接收 :term:`DTMF` 码
 -----------------------------
@@ -412,12 +429,18 @@
 新呼入呼叫
 ------------
 
-.. function:: on_incoming(res_id, from_uri, to_uri, begin_time)
+.. function:: on_incoming(res_id, from_uri, to_uri, begin_time, user_data, ipsc_info)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param str from_uri: 该呼叫的主叫号码(:term:`SIP URI`)。
   :param str to_uri: 该呼叫的被叫号码(:term:`SIP URI`)。
   :param int begin_time: 本次入方向呼叫的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+
+  :param object ipsc_info: IPSC 相关信息，包括 ``process_id`` 属性。
+    形如::
+
+      {"process_id": 23479873432234}
 
   .. important::
     仅适用于 **入方向** 呼叫。
@@ -425,31 +448,13 @@
     应用服务可以：
 
     * 调用 :func:`answer` 应答，在当前 `IPSC` 继续该呼叫资源的生命周期
-
     * 调用 :func:`redirect` 重指向到其他 `IPSC`
-
     * 调用 :func:`drop` 挂断呼叫，拒绝接听
-
-拨号结束
------------
-在外呼拨号失败、超时或者被接听时发生
-
-.. function:: on_dial_completed(res_id, error, begin_time, answer_time, end_time)
-
-  :param str res_id: 触发事件的呼叫资源 `ID`。
-  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
-  :param int begin_time: 本次拨号的开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
-  :param int answer_time: 本次拨号的被应答时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
-    如果外呼拨号没有被应答，则该参数的值是 ``null``。
-
-  :param int end_time: 本次拨号的结束时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
-
-    .. note:: 这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
 
 呼叫被释放
 -------------
 
-.. function:: on_released(res_id, call_dir, from_uri, to_uri, begin_time, answer_time, end_time, dropped_by, cause)
+.. function:: on_released(res_id, call_dir, from_uri, to_uri, begin_time, answer_time, end_time, dropped_by, cause, user_data, ipsc_info)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
 
@@ -479,73 +484,105 @@
     ============ ============
 
   :param int cause: 呼叫结束的原因码。详见 :term:`SIP` 状态码定义。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+
+  :param object ipsc_info: IPSC 相关数据。
+    包括:
+
+    * ``process_id``
+    * ``call_id``
 
   .. warning:: 呼叫释放时，如果正在进行某项操作，如录音、放音、收码、发码，这些操作的结束事件也会同时被触发。
 
     **但是** 呼叫释放事件和上述操作结束事件 **不具备顺序性** 。
     也就是说，应用程序可能在收到放音结束事件之前，就收到呼叫释放事件。
 
+
+拨号结束
+-----------
+在外呼拨号失败、超时或者被接听时发生
+
+.. function:: on_dial_completed(res_id, error, begin_time, answer_time, end_time, user_data)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
+  :param int begin_time: 本次拨号的开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+  :param int answer_time: 本次拨号的被应答时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+    如果外呼拨号没有被应答，则该参数的值是 ``null``。
+
+  :param int end_time: 本次拨号的结束时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+
+    .. note:: 这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
+
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+
 放音结束
 -------------
 
-.. function:: on_play_completed(res_id, error, begin_time, end_time, finish_key)
+.. function:: on_play_completed(res_id, error, begin_time, end_time, finish_key, user_data)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。如果播放失败，该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: 放音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 放音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str finish_key: 中断此次放音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 录音结束
 --------------
 
-.. function:: on_record_completed(res_id, error, begin_time, end_time, finish_key)
+.. function:: on_record_completed(res_id, error, begin_time, end_time, finish_key, user_data)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。如果录音失败，该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: 录音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 录音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str finish_key: 中断此次录音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 发送 :term:`DTMF` 码结束
 --------------------------
 
-.. function:: on_send_dtmf_completed(res_id, error, begin_time, end_time)
+.. function:: on_send_dtmf_completed(res_id, error, begin_time, end_time, user_data)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。如果 :term:`DTMF` 码发送失败，该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: :term:`DTMF` 码发送开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: :term:`DTMF` 码发送结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 接收 :term:`DTMF` 码结束
 ----------------------------
 
-.. function:: on_receive_dtmf_completed(res_id, error, begin_time, end_time, keys)
+.. function:: on_receive_dtmf_completed(res_id, error, begin_time, end_time, keys, user_data)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。如果 :term:`DTMF` 码接收失败，该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: :term:`DTMF` 码接收开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: :term:`DTMF` 码接收结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str keys: 接收到的 :term:`DTMF` 码字符串。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 双通道连接结束
 ----------------------------
 
-.. function:: on_connect_completed(res_id, error, begin_time, end_time)
+.. function:: on_connect_completed(res_id, error, begin_time, end_time, user_data)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。该参数是双通道连接的第一方的呼叫 `ID`。
   :param error: 错误信息。双通道连接启动失败或者双通道连接期间出现错误，该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: 双通道连接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 双通道连接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 会议加入结束
 ----------------------------
 
-.. function:: on_conf_completed(res_id, error, begin_time, end_time)
+.. function:: on_conf_completed(res_id, error, begin_time, end_time, user_data)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。加入会议失败或者会议期间出现错误。该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: 加入会议的时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 推出会议的时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 .. attention:: 这是呼叫从会议退出的事件，不是整个会议结束的事件！
