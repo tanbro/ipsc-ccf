@@ -210,7 +210,7 @@ record_file = params.get('record_file', '')
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1028</target>
+          <target>1190</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -336,6 +336,112 @@ res_obj['end_time'] = now()</ExtendedProperty>
         </ExitPort>
         <ExitPort>
           <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1189</NodeID>
+    <NodeType>CREATECONFEX</NodeType>
+    <NodeName>创建会议组</NodeName>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=params['max_connect_seconds'];ReallocResNum=0;PlayFile=;PlayMode=0;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=1</ExtendedProperty>
+    <PropertySet>
+      <Events />
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1193</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1190</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>0 == 0</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1189</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1028</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1193</NodeID>
+    <NodeType>JOINCONFEX</NodeType>
+    <NodeName>加入会议组</NodeName>
+    <ExtendedProperty>ConfID=conf_id;InitVolume=;WaitMode=0;MainCh=res_obj['chan1'];MainJoinMode=1;MainTimeOut=;AddChList=res_obj['chan2'];JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
+    <PropertySet>
+      <Actions />
+      <Exit>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>8</type>
           <targetflow>
           </targetflow>
           <target>
