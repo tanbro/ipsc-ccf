@@ -195,7 +195,7 @@ params = res_obj['params']
 res_obj['state'] = 'Connected'
 res_obj['connect_time'] = now()
 
-record_file = params.get('record_file')
+record_file = params.get('record_file', '')
 </ExtendedProperty>
     <PropertySet>
       <Exit>
