@@ -191,7 +191,7 @@ except IvrError as err:
     <NodeName>脚本 dial start ok</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_flow_id()
+	res_id = utils.make_res_id()
 	Trace('res_id: %s' % res_id)
 	ipsc_info = {
 		'process_id' : MakeResourceID(),

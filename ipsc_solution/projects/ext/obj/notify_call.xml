@@ -448,10 +448,10 @@ dropped_by = 'sys'</ExtendedProperty>
     <NodeName>脚本 dial start ok</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_flow_id()
+	res_id = utils.make_res_id()
 	Trace('res_id: %s' % res_id)
 	ipsc_info = {
-		process_id = GetProcessID(),
+		process_id = res_id,
 	}
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
