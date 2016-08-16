@@ -10,12 +10,9 @@
     <ProjectVer>1.0</ProjectVer>
     <ProjectType>0</ProjectType>
     <CreateDate>2016-08-04T17:55:20+08:00</CreateDate>
-    <ModifyDate>2016-08-11T17:47:27+08:00</ModifyDate>
+    <ModifyDate>2016-08-16T16:26:05+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </ProjectInfo>
-  <Function>
-    <FileName>project.fun</FileName>
-  </Function>
   <ProjectFlow>
     <ProjectID>ext</ProjectID>
     <FlowID>duo_callback</FlowID>
@@ -40,4 +37,54 @@
     <FlowFidPath>.\projects\ext\src\captcha_call.fid</FlowFidPath>
     <FlowXmaPath>.\projects\ext\src\captcha_call.xma</FlowXmaPath>
   </ProjectFlow>
+  <ChannelOrderSet>
+    <TrunkFront>1</TrunkFront>
+  </ChannelOrderSet>
+  <SystemOption>
+    <TraceLogLevel>
+    </TraceLogLevel>
+    <ShowLogLevel>
+    </ShowLogLevel>
+    <WriteLogLevel>
+    </WriteLogLevel>
+    <LogCh>-1</LogCh>
+    <TaskLog>0</TaskLog>
+    <UBM>
+    </UBM>
+    <SyncDBTimeType>0</SyncDBTimeType>
+    <SyncDBTimeInterval>
+    </SyncDBTimeInterval>
+    <FormatLocalAni>0</FormatLocalAni>
+    <LocalAreaID>
+    </LocalAreaID>
+  </SystemOption>
+  <AgentCtrl>
+    <AgentLoginType>0</AgentLoginType>
+    <IdleOffhook>1</IdleOffhook>
+    <AutoHangup>1</AutoHangup>
+    <QueueOnNotLogon>1</QueueOnNotLogon>
+    <ForceLogon>1</ForceLogon>
+    <RecMaxTime>0</RecMaxTime>
+    <RecPath>\AGENTRECORD\</RecPath>
+    <RecFileType>1</RecFileType>
+    <WorkEndStateDelay>0</WorkEndStateDelay>
+    <HoldWaitVoiceFile>
+    </HoldWaitVoiceFile>
+    <HoldStatePauseRec>0</HoldStatePauseRec>
+    <StopHoldByHangup>0</StopHoldByHangup>
+    <CallOutAni>
+    </CallOutAni>
+    <UseExAgentGroup>0</UseExAgentGroup>
+    <BoundUserID>0</BoundUserID>
+    <DefaultConnInitVolume>0</DefaultConnInitVolume>
+  </AgentCtrl>
+  <Function>
+    <FileName>project.fun</FileName>
+  </Function>
+  <Function>
+    <FileName>jsonrpc.fun</FileName>
+  </Function>
+  <Function>
+    <FileName>utils.fun</FileName>
+  </Function>
 </Project>
