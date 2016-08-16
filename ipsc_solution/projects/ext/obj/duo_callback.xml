@@ -315,7 +315,6 @@ except IvrError as err:
 try:
 	
 	jsonrpc.send_event(
-		to=sender,
 		method='duo_callback.on_released',
 		params={
 			'res_id': res_id,
