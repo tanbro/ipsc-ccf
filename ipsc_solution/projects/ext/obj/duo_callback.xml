@@ -194,7 +194,7 @@ try:
 	res_id = utils.make_flow_id()
 	Trace('res_id: %s' % res_id)
 	ipsc_info = {
-		process_id = GetProcessID(),
+		process_id = MakeResourceID(),
 	}
 	res_obj = _map_[res_id] = dict(
 		id=res_id,
