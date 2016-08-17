@@ -408,7 +408,7 @@ res_obj['end_time'] = now()</ExtendedProperty>
     <NodeID>1193</NodeID>
     <NodeType>JOINCONFEX</NodeType>
     <NodeName>加入会议组</NodeName>
-    <ExtendedProperty>ConfID=conf_id;InitVolume=;WaitMode=0;MainCh=res_obj['chan1'];MainJoinMode=1;MainTimeOut=;AddChList=res_obj['chan2'];JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=</ExtendedProperty>
+    <ExtendedProperty>ConfID=conf_id;InitVolume=;WaitMode=0;MainCh=res_obj['chan1'];MainJoinMode=1;MainTimeOut=params['max_connect_seconds'] * 1000;AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=;IsClampTone=1;Option=;OutExitData=;MainPmCh=res_obj['chan2']</ExtendedProperty>
     <PropertySet>
       <Actions />
       <Exit>
