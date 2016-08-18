@@ -26,5 +26,5 @@ function prj_channel_close(id, nodeid, processid, callid, ch, devno, ani, dnis, 
 begin
 	args = (id, nodeid, processid, callid, ch, devno, ani, dnis, dnis2, orgcallno, dir, devtype, busitype, callstatus, endtype, ipscreason, callfailcause, callbegintime, connectbegintime, callendtime, projectid, flowid, additionalinfo1, additionalinfo2, additionalinfo3, additionalinfo4, additionalinfo5)
 	Trace('{} {}'.format(prj_channel_close, args))
-	jsonrpc.send_event('call.closed', {"res_id": additionalinfo1, "user_data": additionalinfo2, "ipsc_info": args})
+	jsonrpc.send_event('call.on_chan_closed', {"res_id": additionalinfo1, "user_data": additionalinfo2, "ipsc_info": args})
 end

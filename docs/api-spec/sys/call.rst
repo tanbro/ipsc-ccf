@@ -536,7 +536,7 @@
 
     .. note:: 这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
 
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
 放音结束
 -------------
@@ -548,7 +548,7 @@
   :param int begin_time: 放音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 放音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str finish_key: 中断此次放音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
 录音结束
 --------------
@@ -560,7 +560,7 @@
   :param int begin_time: 录音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 录音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str finish_key: 中断此次录音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
 发送 :term:`DTMF` 码结束
 --------------------------
@@ -571,7 +571,7 @@
   :param error: 错误信息。如果 :term:`DTMF` 码发送失败，该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: :term:`DTMF` 码发送开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: :term:`DTMF` 码发送结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
 接收 :term:`DTMF` 码结束
 ----------------------------
@@ -583,7 +583,7 @@
   :param int begin_time: :term:`DTMF` 码接收开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: :term:`DTMF` 码接收结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str keys: 接收到的 :term:`DTMF` 码字符串。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
 双通道连接结束
 ----------------------------
@@ -594,7 +594,7 @@
   :param error: 错误信息。双通道连接启动失败或者双通道连接期间出现错误，该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: 双通道连接开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 双通道连接结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
 会议加入结束
 ----------------------------
@@ -605,6 +605,56 @@
   :param error: 错误信息。加入会议失败或者会议期间出现错误。该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: 加入会议的时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 推出会议的时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
 .. attention:: 这是呼叫从会议退出的事件，不是整个会议结束的事件！
+
+物理通道关闭
+---------------------
+
+当呼叫所使用的物理通道被关闭，该事件触发。
+
+一下情况引发物理通道关闭：
+
+* 拨号失败
+* 呼叫断开
+* 呼入被重定向（调用 :func:`redirect` 引发）
+* 呼入被拒接（调用 :func:`reject` 引发）
+
+.. tip::
+  这是获取呼叫 CDR 数据最有效的方式
+
+.. function:: on_chan_closed(res_id, user_data, ipsc_info)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
+
+  :param list ipsc_info: IPSC 底层数据，是一个数组，其值按照顺序分别是：
+
+    #. id
+    #. nodeid
+    #. processid
+    #. callid
+    #. ch
+    #. devno
+    #. ani
+    #. dnis
+    #. dnis2
+    #. orgcallno
+    #. dir
+    #. devtype
+    #. busitype
+    #. callstatus
+    #. endtype
+    #. ipscreason
+    #. callfailcause
+    #. callbegintime
+    #. connectbegintime
+    #. callendtime
+    #. projectid
+    #. flowid
+    #. additionalinfo1
+    #. additionalinfo2
+    #. additionalinfo3
+    #. additionalinfo4
+    #. additionalinfo5
