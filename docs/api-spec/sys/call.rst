@@ -158,7 +158,7 @@
 应答
 -------
 
-.. function:: answer(res_id, max_answer_seconds, user_data)
+.. function:: answer(res_id, max_answer_seconds, user_data=None)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -177,13 +177,11 @@
 拒接
 --------
 
-.. function:: reject(res_id, user_data, cause=603)
+.. function:: reject(res_id, cause=603, user_data=None)
 
   :param str res_id: 要操作的呼叫资源的ID
 
-  :param int max_answer_seconds: 呼叫的通话最大允许时间，单位是秒。
-
-    .. warning:: 必须合理设定该参数，防止超时呼叫问题！
+  :param int cause: 挂机原因，详见 :term:`SIP` 协议 `status code` 规范。默认值 ``603 decline``
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
@@ -215,7 +213,7 @@
 
 通常用于在收到与当前 `IPSC` 进程不匹配的呼入时，将呼入呼叫重指向到正确的 `IPSC` 进程。
 
-.. function:: redirect(res_id, redirect_uri)
+.. function:: redirect(res_id, redirect_uri, user_data=None)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -223,6 +221,8 @@
 
     这个地址的格式应该是 ``[sip:]<目标IPSC进程对应的SIP地址>[:目标IPSC进程对应的端口]``。
     VoIP网关应按照标准的 :term:`SIP` 协议向新的地址进行一次新的呼叫。
+
+  :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
   .. important::
 

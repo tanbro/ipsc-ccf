@@ -1096,12 +1096,23 @@ except IvrError as err:
 try:
 	try:
 		if call_info['call_dir'] == 'outbound':
-			raise RuntimeError('Can not redirect an outbound call.')
+			raise RuntimeError('Can not perform method "%s" an outbound call.' % method)
 		if call_info['state'] not in ['Initiated']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		redirect_uri = params['redirect_uri']
 		destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
+		# set cdr info
+		cdr_datas = [
+			str(res_id),
+			str(params.get('user_data', '')),
+			None,
+			None,
+			None,
+		]
+		SetCdrAdditionalInfo(chan, *cdr_datas)
+		# make SIP redirct and then bye
 		ReadySipRedirect(chan, 302, destuser, destip, destport)
+		# return the RPC
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
