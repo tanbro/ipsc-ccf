@@ -75,8 +75,8 @@ params = res_obj['params']
   <FlowNode>
     <NodeID>1024</NodeID>
     <NodeType>WAITDIALEX</NodeType>
-    <NodeName>等待拨号</NodeName>
-    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=res_obj['chan1'];Option=</ExtendedProperty>
+    <NodeName>等待拨号 1</NodeName>
+    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=;Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -112,8 +112,8 @@ params = res_obj['params']
   <FlowNode>
     <NodeID>1027</NodeID>
     <NodeType>DIALEX</NodeType>
-    <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=res_obj['chan1'];Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=params.get('ring_play_file');RingTimeout=int(params.get('max_ring_seconds', 45));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <NodeName>拨号 2</NodeName>
+    <ExtendedProperty>WorkCh=;Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=params.get('ring_play_file', '');RingTimeout=int(params.get('max_ring_seconds', 45));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -157,7 +157,7 @@ params = res_obj['params']
     <NodeID>1028</NodeID>
     <NodeType>CONNECT</NodeType>
     <NodeName>连接</NodeName>
-    <ExtendedProperty>ChNo1=res_obj['chan1'];Volum1=;ChNo2=res_obj['chan2'];Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=params['max_connect_seconds'];OutExitCh=;IsRecord=1;RecordFile=;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
+    <ExtendedProperty>ChNo1=res_obj['chan1'];Volum1=;ChNo2=res_obj['chan2'];Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=params['max_connect_seconds'];OutExitCh=;IsRecord=0;RecordFile=record_file;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
