@@ -33,7 +33,7 @@
     Released [shape=doublecircle, color=red, fontcolor=red];
 
     Start -> Initiated[label="呼入/呼出", color=blue];
-    Initiated -> Released [label="未接听", color=red];
+    Initiated -> Released [label="呼入被拒绝/未被接听", color=red];
     Initiated -> Answer[label="呼入接听", fontcolor=blue];
     Initiated -> Idle [label="呼出被接听", color=green];
     Answer -> Idle [label="接听成功", color=green];
@@ -174,6 +174,25 @@
     * 只能在 :func:`on_incoming` 事件触发后调用。
     * 已经应答的呼叫不可再次应答。
 
+拒接
+--------
+
+.. function:: reject(res_id, user_data, cause=603)
+
+  :param str res_id: 要操作的呼叫资源的ID
+
+  :param int max_answer_seconds: 呼叫的通话最大允许时间，单位是秒。
+
+    .. warning:: 必须合理设定该参数，防止超时呼叫问题！
+
+  :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+  .. important::
+
+    * 仅适用于 **入方向** 呼叫。
+    * 只能在 :func:`on_incoming` 事件触发后调用。
+    * 已经应答的呼叫不可被拒接。
+
 挂断
 ------
 
@@ -185,8 +204,11 @@
 
   .. important::
 
-    * 调用后，呼叫资源被释放。
     * 调用后，将触发 :func:`on_released` 事件。
+    * 调用后，呼叫资源被释放。
+    * 对于 **入方向** 呼叫，只能在其成功应答后方可调用。
+    * 对于 **出方向** 呼叫，在呼叫的任何活动状态都可以调用。
+
 
 重定向
 ---------

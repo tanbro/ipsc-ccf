@@ -519,6 +519,15 @@ elif err != 1:
 try:
 	# set channel of the call
 	call_info['chan'] = chan
+	# set cdr info
+	cdr_datas = [
+		str(res_id),
+		str(params.get('user_data', '')),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan, *cdr_datas)
 	# RPC Result:
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
@@ -665,7 +674,8 @@ try:
 	# process_id = GetProcessID()
 	process_id=MakeResourceID()
 	ipsc_info = dict(process_id=process_id)
-	# 
+	begin_time = now()
+	#
 	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id,
@@ -677,7 +687,7 @@ try:
 		'call_dir': 'outbound',
 		'from_uri': from_uri,
 		'to_uri': to_uri,
-		'begin_time': now(),
+		'begin_time': begin_time,
 		'answer_time': None,
 		'end_time': None,
 		'dropped_by': None,
@@ -730,7 +740,7 @@ except IvrError as err:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1192</target>
+          <target>1925</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -781,6 +791,40 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1925</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 set fail cdr add info</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	fail_cdr_datas = [
+		str(res_id),
+		str(params.get('user_data', '')),
+		True,
+		None
+		None,
+	]
+	SetFailCdrAdditionalInfo(*fail_cdr_datas)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1192</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1216</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 inbound</NodeName>
@@ -804,6 +848,7 @@ try:
 		from_uri = from_uri,
 		to_uri = to_uri
 	)
+	begin_time = now()
 	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id,
@@ -815,13 +860,14 @@ try:
 		'bus_addr': sender,
 		'from_uri': from_uri,
 		'to_uri': to_uri,
-		'begin_time': now(),
+		'begin_time': begin_time,
 		'answer_time': None,
 		'end_time': None,
 		'dropped_by': None,
 		'reason': None,
 		'cause': None,
 	}
+	# trigger sys.call.on_incoming event
 	call_info['bus_addr'] = sender = jsonrpc.send_event(
 		method='call.on_incoming',
 		params=dict(
