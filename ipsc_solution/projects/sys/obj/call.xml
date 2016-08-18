@@ -403,12 +403,18 @@ if method.startswith('sys.'):
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=answer_time = call_info.get('answer_time')
+expect_delay_seconds = default_delay_seconds = 15
 if answer_time:
-	if max_answer_seconds &lt;= now() - answer_time:
-		TraceErr('max_answer_seconds(%d) expired' % max_answer_seconds)
+	now_time = now()
+	residual_seconds = max_answer_seconds - (now_time - answer_time)
+	if residual_seconds &gt; 0:
+		if residual_seconds &lt; default_delay_seconds:
+			expect_delay_seconds = residual_seconds
+	else:
+		TraceErr('call answer time expired: max_answer_seconds=%s, residual_seconds=%s, answer_time=%s, now_time=%s' % (max_answer_seconds, residual_seconds, answer_time, now_time))
 		Hangup(chan, 603)
 #
-ret_val = AsynchInvoke(Delay(15000, 2, chan, -1, "BusNotifyTitle=%s" % res_id))
+ret_val = AsynchInvoke(Delay(int(expect_delay_seconds * 1000), 2, chan, -1, "BusNotifyTitle=%s" % res_id))
 err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
