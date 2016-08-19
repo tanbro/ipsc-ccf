@@ -478,8 +478,7 @@ if method.startswith('ext.'):
           <type>100</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1042</target>
         </ExitPort>
       </Exit>
     </PropertySet>
