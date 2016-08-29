@@ -52,6 +52,12 @@
 
 try:
 	_map_ = _gd_['duo_callback']
+	#
+	res_id = utils.make_res_id()
+	Trace('res_id: %s' % res_id)
+	ipsc_info = {
+		'process_id' : GetProcessID(),
+	}
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -98,7 +104,7 @@ except IvrError as err:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1011</target>
+          <target>1202</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -191,11 +197,7 @@ except IvrError as err:
     <NodeName>脚本 dial start ok</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_res_id()
-	Trace('res_id: %s' % res_id)
-	ipsc_info = {
-		'process_id' : MakeResourceID(),
-	}
+	#
 	res_obj = _map_[res_id] = dict(
 		id=res_id,
 		ipsc_info=ipsc_info,
@@ -207,6 +209,16 @@ try:
 		hangup_by=0,
 		error=None,
 	)
+	# set cdr info
+	cdr_datas = [
+		str(res_id),
+		params.get('user_data1'),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan1, *cdr_datas)
+	#
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
 		'ipsc_info': ipsc_info,
@@ -303,6 +315,41 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1006</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1202</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 SetCallFailCdrAdditionalInfo</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	fail_cdr_datas = [
+		str(res_id),
+		params.get('user_data1'),
+		None,
+		None,
+		None,
+	]
+	SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
+except IvrError as err:
+	last_err = err
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1011</target>
         </ExitPort>
       </Exit>
     </PropertySet>

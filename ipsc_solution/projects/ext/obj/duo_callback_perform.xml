@@ -53,6 +53,7 @@ _map_ = _gd_['duo_callback']
 
 res_obj = _map_[res_id]
 params = res_obj['params']
+
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -196,7 +197,16 @@ res_obj['state'] = 'Connected'
 res_obj['connect_time'] = now()
 
 record_file = params.get('record_file')
-</ExtendedProperty>
+
+# set cdr info
+cdr_datas = [
+	str(res_id),
+	params.get('user_data2'),
+	None,
+	None,
+	None,
+]
+SetCdrAdditionalInfo(chan2, *cdr_datas)</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -221,7 +231,16 @@ record_file = params.get('record_file')
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['state'] = 'Answered'
 res_obj['answer_time'] = now()
-</ExtendedProperty>
+
+
+fail_cdr_datas = [
+	str(res_id),
+	params.get('user_data2'),
+	None,
+	None,
+	None,
+]
+SetCallFailCdrAdditionalInfo(*fail_cdr_datas)</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
