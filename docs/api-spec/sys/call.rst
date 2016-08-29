@@ -631,30 +631,49 @@
 
   :param list ipsc_info: IPSC 底层数据，是一个数组，其值按照顺序分别是：
 
-    #. id
-    #. nodeid
-    #. processid
-    #. callid
-    #. ch
-    #. devno
-    #. ani
-    #. dnis
-    #. dnis2
-    #. orgcallno
-    #. dir
-    #. devtype
-    #. busitype
-    #. callstatus
-    #. endtype
-    #. ipscreason
-    #. callfailcause
-    #. callbegintime
-    #. connectbegintime
-    #. callendtime
-    #. projectid
-    #. flowid
-    #. additionalinfo1
-    #. additionalinfo2
-    #. additionalinfo3
-    #. additionalinfo4
-    #. additionalinfo5
+    #. ``id``: UUID
+    #. ``nodeid``: IPSC节点ID（格式：区域ID.站ID.IPSC实例ID）
+    #. ``processid``: 流水号（全局唯一，IPSC实例启动时开始计算，单个实例期间严格递增）
+    #. ``callid``: 呼叫标识号（节点内全局唯一）
+    #. ``ch``: 通道号：因交换机初始化时间不同，通道号可能会变化
+    #. ``devno``: 设备号：
+        * 中继：格式 “0:0:1:1”---“交换机号:板号:中继号:通道号”；
+        * SIP：格式“0:0:1”---“交换机号:板号:通道号”；
+        * FXO：格式“0:0:1”---“交换机号:板号:通道号”；
+    #. ``ani``:	主叫号码
+    #. ``dnis``: 被叫号码
+    #. ``dnis2``: 原被叫号码
+    #. ``orgcallno``: 原始号码
+    #. ``dir``: 呼叫方向
+        * `0`: 呼入
+        * `1`: 呼出
+        * `2`: 内部呼叫（保留）
+    #. ``devtype``: 通道设备类型
+        * `1`: 中继
+        * `2`: SIP
+        * `3`: H323
+        * `4`: 模拟外线
+        * `5`: 模拟内线
+        * `10`:	逻辑通道
+    #. ``busitype``: 业务类型字符串标志
+    #. ``callstatus``: 呼通标志
+        * `0`: 呼叫未接通
+        * `1`: 呼叫接通
+    #. ``endtype``: 结束类型
+        * `0`: 空（初始值，未定义）
+        * `1`: 本地拆线
+        * `2`: 远端拆线
+        * `3`: 设备拆线
+    #. ``ipscreason``: 呼叫失败原因：IPSC定义reason值
+    #. ``callfailcause``: 呼叫失败原因：设备、SS7、PRI、SIP的失败cause值
+    #. ``callbegintime``: 开始时间（`YYYY-MM-DD HH:MM:SS`）
+    #. ``connectbegintime``: 应答时间（`YYYY-MM-DD HH:MM:SS`）（呼叫未接通时，该时间为空）
+    #. ``callendtime``: 挂断时间（`YYYY-MM-DD HH:MM:SS`）
+    #. ``talkduration``: 通话时长（单位秒，应答时间-挂断时间，如果没有应答时间，通话时长为0）
+    #. ``projectid``: 虚拟化项目ID
+    #. ``flowid``: 流程ID
+    #. ``additionalinfo1``: 附加信息1，本项目中用于记录资源ID(`res_id`)，资源的概念见 :doc:`../mechanism` 一章。
+    #. ``additionalinfo2``: 附加信息2，本项目中用于记录 ``user_data``
+    #. ``additionalinfo3``: 附加信息3，未使用。
+    #. ``additionalinfo4``: 附加信息4，未使用。
+    #. ``additionalinfo5``: 附加信息5，未使用。
