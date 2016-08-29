@@ -629,7 +629,11 @@
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
-  :param list ipsc_info: IPSC 底层数据，是一个数组，其值按照顺序分别是：
+  :param list ipsc_info: IPSC 底层数据，是一个数组。
+
+    .. note:: 这个数组与该呼叫所对应的 CDR 行完全一样。
+
+    其值按照顺序分别是：
 
     #. ``id``: UUID
     #. ``nodeid``: IPSC节点ID（格式：区域ID.站ID.IPSC实例ID）
