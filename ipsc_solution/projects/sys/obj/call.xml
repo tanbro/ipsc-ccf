@@ -533,8 +533,25 @@ elif err != 1:
     <NodeName>脚本 call out initiated</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	# set channel of the call
-	call_info['chan'] = chan
+	# call info
+	call_info = call_map[chan] = call_map_r[res_id] = {
+		'id': id_,
+		'res_id': res_id,
+		'params': params,
+		'state': 'Initiated',
+		'bus_addr': sender,
+		'chan': chan,
+		'ipsc_info': ipsc_info,
+		'call_dir': 'outbound',
+		'from_uri': from_uri,
+		'to_uri': to_uri,
+		'begin_time': begin_time,
+		'answer_time': None,
+		'end_time': None,
+		'dropped_by': None,
+		'reason': None,
+		'cause': None,
+	}
 	# set cdr info
 	cdr_datas = [
 		str(res_id),
@@ -691,25 +708,7 @@ try:
 	process_id=MakeResourceID()
 	ipsc_info = dict(process_id=process_id)
 	begin_time = now()
-	#
-	call_info = call_map[chan] = call_map_r[res_id] = {
-		'id': id_,
-		'res_id': res_id,
-		'params': params,
-		'state': 'Initiated',
-		'bus_addr': sender,
-		'chan': None,
-		'ipsc_info': ipsc_info,
-		'call_dir': 'outbound',
-		'from_uri': from_uri,
-		'to_uri': to_uri,
-		'begin_time': begin_time,
-		'answer_time': None,
-		'end_time': None,
-		'dropped_by': None,
-		'reason': None,
-		'cause': None,
-	}
+
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
