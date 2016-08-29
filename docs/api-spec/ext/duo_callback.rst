@@ -43,7 +43,7 @@
 **********
 
 .. function::
-  construct(from1_uri, to1_uri, from2_uri, to2_uri, max_connect_seconds, max_ring_seconds, ring_play_file, ring_play_mode, record_file, user_data)
+  construct(from1_uri, to1_uri, from2_uri, to2_uri, max_connect_seconds, max_ring_seconds, ring_play_file, ring_play_mode, record_file, user_data1, user_data2)
 
   :param str form1_uri: 第一方主叫号码 :term:`SIP URI`
   :param str to1_uri: 第一方被叫号码 :term:`SIP URI`
@@ -88,7 +88,8 @@
     ``6``     MP3
     ========= ============
 
-  :param str user_data:
+  :param str user_data1: 将在第一方的 CDR 数据中出现
+  :param str user_data2: 将在第二方的 CDR 数据中出现
 
   :return: 资源ID和IPSC相关信息。
 

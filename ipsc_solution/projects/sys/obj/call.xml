@@ -815,11 +815,11 @@ try:
 	fail_cdr_datas = [
 		str(res_id),
 		str(params.get('user_data', '')),
-		True,
+		None,
 		None,
 		None,
 	]
-	SetFailCdrAdditionalInfo(*fail_cdr_datas)
+	SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err</ExtendedProperty>
