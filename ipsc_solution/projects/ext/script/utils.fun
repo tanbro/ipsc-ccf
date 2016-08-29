@@ -3,10 +3,7 @@
 
 
 def make_res_id(chan=None):
-    # GetProcessID ERROR !!!!
-    # return '{0[0]}.{0[1]}.{0[2]}-{1}.{2}-{3}'.format(GetIpscID().split('.'), GetProjectID(), GetFlowID(), GetProcessID(chan))
-    # replace it!
-    return '{0[0]}.{0[1]}.{0[2]}-{1}.{2}-{3}'.format(GetIpscID().split('.'), GetProjectID(), GetFlowID(), MakeResourceID())
+    return '{0[0]}.{0[1]}.{0[2]}-{1}.{2}-{3}'.format(GetIpscID().split('.'), GetProjectID(), GetFlowID(), GetProcessID(chan))
 
 
 def parse_sip_uri(sip_uri):
