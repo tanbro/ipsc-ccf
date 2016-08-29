@@ -555,7 +555,7 @@ try:
 	# set cdr info
 	cdr_datas = [
 		str(res_id),
-		str(params.get('user_data', '')),
+		params.get('user_data'),
 		None,
 		None,
 		None,
@@ -703,9 +703,7 @@ try:
 	##################################
 	res_id = utils.make_res_id()
 	Trace('call res_id: %s' % res_id)
-	# GetProcessID ERROR!!!!!
-	# process_id = GetProcessID()
-	process_id=MakeResourceID()
+	process_id = GetProcessID()
 	ipsc_info = dict(process_id=process_id)
 	begin_time = now()
 
@@ -847,9 +845,7 @@ except IvrError as err:
 try:
 	res_id = utils.make_res_id()
 	Trace('call res_id: %s' % res_id)
-	# GetProcessID ERROR!!!!
-	# ipsc_info = GetProcessID()
-	ipsc_info = MakeResourceID()
+	ipsc_info = GetProcessID()
 	ipsc_info = dict(process_id=ipsc_info)
 	# 
 	chan = GetCurrentCh()

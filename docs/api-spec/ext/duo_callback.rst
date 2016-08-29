@@ -123,7 +123,7 @@
 结束
 ===========
 
-.. function:: on_released(res_id, error, begin_time, answer_time, connect_time, end_time, user_data)
+.. function:: on_released(res_id, error, begin_time, answer_time, connect_time, end_time, user_data1, user_data2)
 
   :param str res_id: 触发事件的资源 `ID`。
   :param error: 错误信息。如果出现错误失败，该参数记录错误信息。
@@ -131,4 +131,5 @@
   :param int answer_time: 第一方应答时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。如果第一方未应答，则该参数的值是 ``null``。
   :param int connect_time: 第二方应答时间，同时也是双通道连接开始的时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。如果第二方未应答，则该参数的值是 ``null``。
   :param int end_time: 结束时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param str user_data1: 用户数据，来源于 :func:`construct` 的 ``user_data1`` 参数，它同时也在将在第一方的 CDR 数据中出现。
+  :param str user_data2: 用户数据，来源于 :func:`construct` 的 ``user_data2`` 参数，它同时也在将在第二方的 CDR 数据中出现。

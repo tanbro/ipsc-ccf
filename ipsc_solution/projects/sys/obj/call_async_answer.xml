@@ -82,7 +82,7 @@ try:
 # set cdr info
 	cdr_datas = [
 		str(res_id),
-		str(params.get('user_data', '')),
+		params.get('user_data'),
 		None,
 		None,
 		None,
