@@ -989,7 +989,6 @@ finally:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_event(
-		to=sender,
 		method='call.on_released',
 		params={
 			'res_id': call_info['res_id'],
