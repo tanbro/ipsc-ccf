@@ -811,7 +811,7 @@ except IvrError as err:
 try:
 	fail_cdr_datas = [
 		str(res_id),
-		str(params.get('user_data', '')),
+		params.get('user_data'),
 		None,
 		None,
 		None,
