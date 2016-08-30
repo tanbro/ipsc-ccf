@@ -85,7 +85,7 @@ begin
         target_addr = randchoice(local_candidates)
     elif (not local_only) and remote_candidates:
         target_addr = randchoice(remote_candidates)
-    elif:
+    else:
         raise IvrError(0, '找不到可用的bus客户端')
     # send
     unit_id, client_id, _ = target_addr
