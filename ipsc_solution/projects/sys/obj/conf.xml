@@ -20,7 +20,7 @@ chan = None
 conf_id = None
 
 call_map = _gd_['call_map'] # chan =&gt; call_info
-conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+conf_map = _gd_['conf_map'] # conf_id =&gt; conf_info
 
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
@@ -67,6 +67,10 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <expression>method == 'conf.set_part_voice_mode'</expression>
           <ExitType>104</ExitType>
         </case>
+        <case>
+          <expression>method = 'conf.exists'</expression>
+          <ExitType>105</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -99,6 +103,12 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <targetflow>
           </targetflow>
           <target>1902</target>
+        </ExitPort>
+        <ExitPort>
+          <type>105</type>
+          <targetflow>
+          </targetflow>
+          <target>1949</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -531,6 +541,38 @@ try:
 		voice_mode = params['mode']
 		ChangeConfer(conf_id, chan, voice_mode)
 		jsonrpc.send_result(sender, id_)
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1949</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>exists</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		jsonrpc.send_result(sender, id_, params['res_id'] in call_map_r)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
