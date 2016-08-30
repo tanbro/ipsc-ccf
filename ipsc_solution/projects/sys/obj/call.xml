@@ -1547,7 +1547,7 @@ except IvrError as err:
     <NodeName>脚本 call.record_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(sender, id_)
+	jsonrpc.send_result(sender, id_, params.get('record_file'))
 except IvrError as err:
 	TraceErr(err)
 	last_err = err

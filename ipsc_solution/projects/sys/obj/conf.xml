@@ -471,7 +471,7 @@ try:
 			params['file'],
 			mode=int(params.get('is_loop', False))
 		)
-		jsonrpc.send_result(sender, id_)
+		jsonrpc.send_result(sender, id_, params.get('record_file'))
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
