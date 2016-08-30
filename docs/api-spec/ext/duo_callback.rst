@@ -46,12 +46,26 @@
   construct(from1_uri, to1_uri, from2_uri, to2_uri, max_connect_seconds, max_ring_seconds, ring_play_file, ring_play_mode, record_file, user_data1, user_data2)
 
   :param str form1_uri: 第一方主叫号码 :term:`SIP URI`
+
+    :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
+
   :param str to1_uri: 第一方被叫号码 :term:`SIP URI`
+
   :param str form2_uri: 第二方主叫号码 :term:`SIP URI`
+
+    :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
+
   :param str to2_uri: 第二方被叫号码 :term:`SIP URI`
+
   :param int max_connect_seconds: 最大双通道连接时间（秒）
+
   :param int max_ring_seconds: 呼叫时的最大振铃等待时间（秒），两次呼叫都用这个时间
-  :param str ring_play_file: 第二方拨号时，对第一方播放的提示应，如果该值为空字符串或者 `null` ，则透传播放回铃音
+
+    :default: `50`
+
+  :param str ring_play_file: 第二方拨号时，对第一方播放的提示应，如果该值为空字符串或者 `None` ，则透传播放回铃音
+
+    :default: `None`
 
   :param int ring_play_mode: 回铃音文件 ``ring_play_file`` 播放模式
 
@@ -63,7 +77,11 @@
     ``2``     拨号时即开始播放，对端接听或者挂机后停止播放
     ========= ================================================
 
-  :param str record_file: 录音文件。`null` 或空字符串表示不录音。
+    :default: `1`
+
+  :param str record_file: 录音文件。`None` 或空字符串表示不录音。
+
+    :default: `None`
 
   :param int record_mode: 录音模式枚举值
 
@@ -74,6 +92,8 @@
     ``1``     开始呼叫第一方时启动录音
     ``2``     开始呼叫第二方时启动录音
     ========= ============
+
+    :default: `0`
 
   :param int record_format: 录音文件格式枚举值
 
@@ -88,8 +108,15 @@
     ``6``     MP3
     ========= ============
 
+    :default: `2`
+
   :param str user_data1: 将在第一方的 CDR 数据中出现
+
+    :default: `None`
+
   :param str user_data2: 将在第二方的 CDR 数据中出现
+
+    :default: `None`
 
   :return: 资源ID和IPSC相关信息。
 

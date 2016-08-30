@@ -34,7 +34,7 @@
 ************
 
 .. function::
-  construct(from_uri, to_uri, max_ring_seconds, valid_keys, max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, breaking_on_key=True, including_finish_key=False, user_data=None)
+  construct(from_uri, to_uri, max_ring_seconds, valid_keys, max_keys, finish_keys, first_key_timeout, continues_keys_timeout, play_content, play_repeat, breaking_on_key, including_finish_key, user_data)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
 
@@ -58,11 +58,15 @@
   :param int max_keys: 接收 :term:`DTMF` 码的最大长度。
     一旦达到最大长度，此次接收过程即宣告结束。
 
+    :default: `11`
+
     .. note::
       只要收到的 :term:`DTMF` 码达到最大长度，即使没有收到结束码，接收过程也会结束。
 
   :param str finish_keys: 结束码串。
     在接收 :term:`DTMF` 码的过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则此次接收过程即宣告结束。
+
+    :default: `"#"`
 
     .. important::
       结束码串中的字符如果不属于有效 :term:`DTMF` 码范围字符串(``valid_keys``)，
@@ -74,20 +78,37 @@
 
   :param int first_key_timeout: 等待接收第一个 :term:`DTMF` 码的超时时间（秒）。
     如果在这段时间内，没有收到第一个 :term:`DTMF` 码，则进行超时处理。
+
+    :default: `45`
+
   :param int continues_keys_timeout: 等待接收后续 :term:`DTMF` 码的超时时间（秒）。
     如果在这段时间内，没有收到后续 :term:`DTMF` 码，则进行超时处理。
+
+    :default: `30`
 
   :param play_content: 提示音。在接收过程开始时，要播放的声音内容。
 
     该参数格式定义见 :func:`sys.call.play_start` 的 `content` 参数
 
+    :default: `None` 表示不播放提示音。
+
   :type play_content: str, list
 
   :param int play_repeat: 如果出现等待超时，按照该参数重复播放提示音。
+
+    :default: `0` 表示不重复
+
   :param bool breaking_on_key: 是否在接收到第一个有效 :term:`DTMF` 码时停止放音。
+
+    :default: `True`
+
   :param bool including_finish_key: 是否将结束码包含在接收码串中。
 
+    :default: `False`
+
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+    :default: `None`
 
   :return: 资源ID和IPSC相关信息。
 
