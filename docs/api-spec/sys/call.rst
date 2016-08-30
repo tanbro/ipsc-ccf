@@ -80,6 +80,8 @@
 
     主叫号码隐藏功能可通过该参数的不同赋值实现。
 
+    :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
+
     .. attention:: 不是每个主叫号码都能被 VoIP 网关的外呼线路接受！
 
   :param str to_uri: 被叫号码 :term:`SIP URI`。
@@ -90,12 +92,16 @@
 
     .. warning:: 必须合理设定该参数，防止超时呼叫问题！
 
-  :param int max_ring_seconds: 外呼时，收到对端振铃后，最大等待时间。振铃超过这个时间，则认为呼叫失败。
+  :param int max_ring_seconds: 外呼时，收到对端振铃后，最大等待时间（秒）。振铃超过这个时间，则认为呼叫失败。
+
+    :default: `50`
 
   :param str parent_call_res_id: 父呼叫资源ID。
 
-    如果该参数不为 `null` ，系统将在此参数指定父呼叫资源上进行拨号。
+    如果该参数不为 `None` ，系统将在此参数指定父呼叫资源上进行拨号。
     拨号期间，父呼叫可以听到拨号提示音。
+
+    :default: `None`
 
   :param str ring_play_file: 拨号时，在对方振铃期间向父呼叫播放的声音文件。
 
@@ -103,7 +109,11 @@
 
     如果指定了 ``parent_call_res_id`` 参数，且本参数为 ``null`` 或者空字符串，则在拨号时向父呼叫透传原始的线路拨号提示音。
 
+    :default: `None`
+
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+    :default: `None`
 
   :return: 资源ID和IPSC相关信息。
 
@@ -159,6 +169,8 @@
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
+    :default: `None`
+
   .. important::
 
     * 仅适用于 **入方向** 呼叫。
@@ -175,6 +187,8 @@
   :param int cause: 挂机原因，详见 :term:`SIP` 协议 `status code` 规范。默认值 ``603 decline``
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+    :default: `None`
 
   .. important::
 
