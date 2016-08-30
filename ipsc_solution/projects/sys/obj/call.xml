@@ -55,7 +55,7 @@ chan = None
 conf_id = None
 
 call_map = _gd_['call_map'] # chan =&gt; call_info
-conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+conf_map = _gd_['conf_map'] # conf_id =&gt; conf_info
 
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
@@ -156,6 +156,10 @@ release_delay = None
         <case>
           <expression>method == 'call.reject'</expression>
           <ExitType>117</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.exists'</expression>
+          <ExitType>118</ExitType>
         </case>
       </switch>
       <Exit>
@@ -267,6 +271,12 @@ release_delay = None
           <targetflow>
           </targetflow>
           <target>1932</target>
+        </ExitPort>
+        <ExitPort>
+          <type>118</type>
+          <targetflow>
+          </targetflow>
+          <target>1941</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -2367,6 +2377,39 @@ try:
 			jsonrpc.send_result(sender, id_)
 		else:
 			raise RuntimeError('RemoveConfer(conf_id=%d, chan=%d) returns %d' % (conf_id, chan, ret_val))
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1941</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 exists</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		res_id = params['res_id']
+		jsonrpc.send_result(sender, id_, res_id in call_map_r)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise

@@ -139,21 +139,11 @@
 .. function:: exists(res_id)
 
   :param str res_id: 判断ID为该值的呼叫资源是否存在
+  :rtype: bool
 
 .. tip::
   应用服务可以使用该函数，判断呼叫是否还在。
   在错过呼叫释放事件的情况下，该方法能用于消除“残留物”
-
-空操作
-----------
-
-.. function:: nop(res_id)
-
-  :param str res_id: 要操作的呼叫资源
-
-.. tip::
-  应用服务如果长时间没有向 :term:`CTI` 服务中的资源发送操作命令，该资源可能会因为长期空闲而自动释放。
-  可调用该方法避免自动释放。
 
 应答
 -------
@@ -305,6 +295,9 @@
 
   :param str finish_keys: 录音打断按键码串。
     在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
+
+  :rtype: str
+  :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
 
 停止录音
 -------------

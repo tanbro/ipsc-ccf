@@ -96,6 +96,8 @@
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
   :param str record_file: 录音文件名。
   :param int record_format: 录音文件格式枚举值。见 :func:`sys.call.record_start` 的同名参数。
+  :rtype: str
+  :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
 
 停止录音
 ===============
