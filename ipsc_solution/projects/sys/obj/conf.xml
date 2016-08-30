@@ -375,7 +375,10 @@ try:
 		'begin_time': now(),
 		'end_time': None,
 	}
-	jsonrpc.send_result(sender, id_, res_id)
+	jsonrpc.send_result(sender, id_, {
+		'res_id': res_id,
+		'user_data': params.get('user_data'),
+	})
 except IvrError as err:
 	TraceErr(err)
 	last_err = err

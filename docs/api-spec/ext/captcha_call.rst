@@ -93,6 +93,7 @@
 
       {
         "res_id": "0.0.0-ext.captcha_call-23479873432234",
+        "user_data": "your user data",
         "ipsc_info": {
           "process_id": 23479873432234
         }

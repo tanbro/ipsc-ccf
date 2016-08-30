@@ -221,6 +221,7 @@ try:
 	#
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
+		'user_data': params.get('user_data'),
 		'ipsc_info': ipsc_info,
 	})
 except IvrError as err:
