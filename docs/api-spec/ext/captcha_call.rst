@@ -34,11 +34,13 @@
 ************
 
 .. function::
-  construct(from_uri, to_uri, max_ring_seconds, valid_keys="0123456789*#ABCD", max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, breaking_on_key=True, including_finish_key=False, user_data=None)
+  construct(from_uri, to_uri, max_ring_seconds, valid_keys, max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, breaking_on_key=True, including_finish_key=False, user_data=None)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
 
     主叫号码隐藏功能可通过该参数的不同赋值实现。
+
+    :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
 
     .. attention:: 不是每个主叫号码都能被 VoIP 网关的外呼线路接受！
 
@@ -50,6 +52,8 @@
 
   :param str valid_keys: 有效 :term:`DTMF` 码范围字符串。
     只有存于这个字符串范围内的 :term:`DTMF` 码才会被接收，否则被忽略。
+
+    :default: `"0123456789*#ABCD"`
 
   :param int max_keys: 接收 :term:`DTMF` 码的最大长度。
     一旦达到最大长度，此次接收过程即宣告结束。

@@ -203,7 +203,9 @@
 
   :param str res_id: 要操作的呼叫资源的ID
 
-  :param int cause: 挂机原因，详见 :term:`SIP` 协议 `status code` 规范。默认值 ``603 decline``
+  :param int cause: 挂机原因，详见 :term:`SIP` 协议 `status code` 规范。
+
+    :default: `603 decline`
 
   .. important::
 
@@ -211,7 +213,6 @@
     * 调用后，呼叫资源被释放。
     * 对于 **入方向** 呼叫，只能在其成功应答后方可调用。
     * 对于 **出方向** 呼叫，在呼叫的任何活动状态都可以调用。
-
 
 重定向
 ---------
@@ -228,6 +229,8 @@
     VoIP网关应按照标准的 :term:`SIP` 协议向新的地址进行一次新的呼叫。
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+    :default: `None`
 
   .. important::
 
@@ -274,8 +277,11 @@
       ====== ==================
 
   :type content: str, list
-  :param str finish_keys: 播放打断按键码串。
+
+  :param str finish_keys: 播放的打断按键码串。
     在播放过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止播放。
+
+    :default: `None` 无打断按键
 
 停止放音
 -------------
@@ -293,7 +299,10 @@
 
   :param str res_id: 要操作的呼叫资源的ID
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
+
   :param bool beep: 是否在录音之前播放“嘀”的一声。
+
+    :default: `True`
 
   :param int record_format: 录音文件格式枚举值
 
@@ -308,8 +317,12 @@
     ``6``  MP3
     ====== ===========
 
+    :default: `2`
+
   :param str finish_keys: 录音打断按键码串。
     在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
+
+    :default: `None` 无打断按键
 
   :rtype: str
   :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
@@ -335,21 +348,27 @@
 -------------------------
 
 .. function::
-  receive_dtmf_start(res_id, valid_keys="0123456789*#ABCD", max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, breaking_on_key=True, including_finish_key=False)
+  receive_dtmf_start(res_id, valid_keys, max_keys, finish_keys, first_key_timeout, continues_keys_timeout, play_content, play_repeat, breaking_on_key, including_finish_key)
 
   :param str res_id: 要操作的呼叫资源的ID
 
   :param str valid_keys: 有效 :term:`DTMF` 码范围字符串。
     只有存于这个字符串范围内的 :term:`DTMF` 码才会被接收，否则被忽略。
 
+    :default: `"0123456789*#ABCD"`
+
   :param int max_keys: 接收 :term:`DTMF` 码的最大长度。
     一旦达到最大长度，此次接收过程即宣告结束。
+
+    :default: `11`
 
     .. note::
       只要收到的 :term:`DTMF` 码达到最大长度，即使没有收到结束码，接收过程也会结束。
 
   :param str finish_keys: 结束码串。
     在接收 :term:`DTMF` 码的过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则此次接收过程即宣告结束。
+
+    :default: `"#"`
 
     .. important::
       结束码串中的字符如果不属于有效 :term:`DTMF` 码范围字符串(``valid_keys``)，
@@ -361,19 +380,33 @@
 
   :param int first_key_timeout: 等待接收第一个 :term:`DTMF` 码的超时时间（秒）。
     如果在这段时间内，没有收到第一个 :term:`DTMF` 码，则进行超时处理。
+
+    :default: `45`
+
   :param int continues_keys_timeout: 等待接收后续 :term:`DTMF` 码的超时时间（秒）。
     如果在这段时间内，没有收到后续 :term:`DTMF` 码，则进行超时处理。
+
+    :default: `30`
 
   :param int play_content: 提示音。在接收过程开始时，要播放的声音内容。
 
     该参数格式定义见 :func:`play_start` 的 `content` 参数
 
+    :default: `None` 无提示音
+
   :type play_content: str, list
 
   :param int play_repeat: 如果出现等待超时，按照该参数重复播放提示音。
 
+    :default: `0`
+
   :param bool breaking_on_key: 是否在接收到第一个有效 :term:`DTMF` 码时停止放音。
+
+    :default: `True`
+
   :param bool including_finish_key: 是否将结束码包含在接收码串中。
+
+    :default: `False`
 
 结束接收 :term:`DTMF` 码
 -----------------------------
@@ -404,13 +437,37 @@
     ``3``  仅连接的第一方可以听到第二方;第二方听不到第一方
     ====== =====================
 
-  :param str record_file: 录音文件。如果该参数不为 `null` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
+  :param str record_file: 录音文件。如果该参数不为 `None` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
+
+    :default: `None`
+
   :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。
-  :param int local_volume: 双通道连接建立后的发起方音量。`null` 表示默认音量。
-  :param int remote_volume: 双通道连接建立后的发起方音量。`null` 表示默认音量。
+
+    :default: `2`
+
+  :param int local_volume: 双通道连接建立后的发起方音量。
+
+    :default: `None` 表示默认音量
+
+
+  :param int remote_volume: 双通道连接建立后的发起方音量。
+
+    :default: `None` 表示默认音量
+
+
   :param int schedule_play_time: 当本次双通道连接通话进行到这个 :term:`Unix time` 时间点播放声音。
+
+    :default: `None` 表示无定时放音
+
+
   :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。
+
+    :default: `None ` 表示无定时放音
+
+
   :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。
+
+    :default: `0` 表示不播放
 
 结束双通道连接
 ---------------
@@ -441,9 +498,15 @@
     ``4``  无
     ====== ========
 
+    :default: `1`
+
   :param int volume: 加入会议后的初始音量
 
+    :default: `None` 表示默认音量
+
   :param str play_file: 该呼叫加入后，对会议播放的声音文件
+
+    :default: `None` 表示不播放
 
 退出会议
 -------------
