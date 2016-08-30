@@ -71,8 +71,8 @@ CDR(Call detail record)在每一次呼叫结束后产生一条，无论是否呼
     #. ``talkduration``: 通话时长（单位秒，应答时间-挂断时间，如果没有应答时间，通话时长为0）
     #. ``projectid``: 虚拟化项目ID
     #. ``flowid``: 流程ID
-    #. ``additionalinfo1``: 附加信息1，本项目中用于记录资源ID(`res_id`)，资源的概念见 :doc:`../mechanism` 一章。
-    #. ``additionalinfo2``: 附加信息2，本项目中用于记录 ``user_data``
+    #. ``additionalinfo1``: 附加信息1，本项目中用于记录资源ID(`res_id`)，资源的概念见 :doc:`mechanism` 一章。
+    #. ``additionalinfo2``: 附加信息2，本项目中用于记录此呼叫的相关 ``user_data``
     #. ``additionalinfo3``: 附加信息3，未使用。
     #. ``additionalinfo4``: 附加信息4，未使用。
     #. ``additionalinfo5``: 附加信息5，未使用。
