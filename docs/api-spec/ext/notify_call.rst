@@ -44,9 +44,8 @@
 
     .. attention:: 不是每个主叫号码都能被 VoIP 网关的外呼线路接受！
 
-  :param str to_uri: 被叫号码 :term:`SIP URI`。
-
-    应用服务需要通过该参数的 `user` 部分指定被叫号码，该参数 `address` 部分指定目标 `VoIP` 网关
+  :param to_uri: 见 :func:`sys.call.construct` 的同名参数
+  :type to_uri: str, list
 
   :param play_content: 通知提示音内容。
 

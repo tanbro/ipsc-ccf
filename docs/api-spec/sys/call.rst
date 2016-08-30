@@ -84,9 +84,13 @@
 
     .. attention:: 不是每个主叫号码都能被 VoIP 网关的外呼线路接受！
 
-  :param str to_uri: 被叫号码 :term:`SIP URI`。
+  :param to_uri: 被叫号码 :term:`SIP URI`。
 
-    应用服务需要通过该参数的 `user` 部分指定被叫号码，该参数 `address` 部分指定目标 `VoIP` 网关
+    .. note::
+      * 当该参数是字符串时，它是 :term:`SIP URI`，应用服务需要通过该参数的 `user` 部分指定被叫号码，该参数 `address` 部分指定目标 `VoIP` 网关。
+      * 当该参数是列表时，其中的每个元素都是一个 :term:`SIP URI` ，CTI 服务器选择其中排列最靠前且并发数未满的网关。
+
+  :type to_uri: str, list
 
   :param int max_answer_seconds: 呼叫的通话最大允许时间，单位是秒。
 
@@ -123,11 +127,23 @@
 
       {
         "res_id": "0.0.0-sys.call-23479873432234",
+        "to_uri": "xxxx@xxx:xx",
         "user_data": "your user data",
         "ipsc_info": {
           "process_id": 23479873432234
         }
       }
+
+    其属性含义是：
+
+    ============= ==============================================================
+    属性            说明
+    ============= ==============================================================
+    ``res_id``    新产生的资源ID
+    ``to_uri``    该呼叫实际使用的被叫 :term:`SIP` URI
+    ``user_data`` 用于数据，对应于 :func:`construct` 的同名参数
+    ``ipsc_info`` IPSC 平台数据，包括 `process_id` 等重要数据
+    ============= ==============================================================
 
     .. important::
       在后续的资源操作 :term:`RPC` 中，应用服务需要使用 ``res_id`` 参数确定要操作的资源。

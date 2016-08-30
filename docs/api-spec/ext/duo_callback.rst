@@ -49,13 +49,15 @@
 
     :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
 
-  :param str to1_uri: 第一方被叫号码 :term:`SIP URI`
+  :param to1_uri: 第一方被叫号码，见 :func:`sys.call.construct` 的参数 `to_uri`。
+  :type to1_uri: str, list
 
   :param str form2_uri: 第二方主叫号码 :term:`SIP URI`
 
     :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
 
-  :param str to2_uri: 第二方被叫号码 :term:`SIP URI`
+  :param to2_uri: 第二方被叫号码，，见 :func:`sys.call.construct` 的参数 `to_uri`。
+  :type to2_uri: str, list
 
   :param int max_connect_seconds: 最大双通道连接时间（秒）
 
