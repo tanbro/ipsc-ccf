@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-13T18:16:37+08:00</CreateDate>
-    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
+    <ModifyDate>2016-09-01T10:24:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -58,6 +58,7 @@ try:
 		method='conf.on_released',
 		params={
 			'res_id': res_id,
+			'parts': conf_info['parts'],
 		}
 	)
 except IvrError as err:
