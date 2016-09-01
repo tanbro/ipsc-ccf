@@ -128,11 +128,21 @@
 
       {
         "res_id": "0.0.0-ext.duo_callback-23479873432234",
+        "record_file": "/full/path/of/the/record/file.wav",
         "user_data": "your user data",
         "ipsc_info": {
           "process_id": 23479873432234
         }
       }
+
+    ================= ==========================================================
+    属性               说明
+    ================= ==========================================================
+    ``res_id``        新产生的资源ID
+    ``record_file``   完整的录音文件路径（如果有录音）。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
+    ``user_data``     用于数据，对应于 :func:`construct` 的同名参数
+    ``ipsc_info``     IPSC 平台数据，包括 `process_id` 等重要数据
+    ================= ==========================================================
 
     .. important::
       在后续的资源操作 :term:`RPC` 中，应用服务需要使用 ``res_id`` 参数确定要操作的资源。
