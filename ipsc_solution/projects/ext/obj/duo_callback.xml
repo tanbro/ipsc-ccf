@@ -221,6 +221,7 @@ try:
 	#
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
+		'record_file': params.get('record_file'),
 		'user_data': params.get('user_data'),
 		'ipsc_info': ipsc_info,
 	})
