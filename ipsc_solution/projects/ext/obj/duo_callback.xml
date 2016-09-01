@@ -155,7 +155,7 @@ except IvrError as err:
     <NodeID>1011</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to1_uri'];Ani=params['from1_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 45));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan1;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=params['to1_uri'];Ani=params['from1_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan1;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -221,6 +221,7 @@ try:
 	#
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
+		'record_file': params.get('record_file'),
 		'user_data': params.get('user_data'),
 		'ipsc_info': ipsc_info,
 	})

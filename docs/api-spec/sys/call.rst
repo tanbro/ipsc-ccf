@@ -80,22 +80,32 @@
 
     主叫号码隐藏功能可通过该参数的不同赋值实现。
 
+    :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
+
     .. attention:: 不是每个主叫号码都能被 VoIP 网关的外呼线路接受！
 
-  :param str to_uri: 被叫号码 :term:`SIP URI`。
+  :param to_uri: 被叫号码 :term:`SIP URI`。
 
-    应用服务需要通过该参数的 `user` 部分指定被叫号码，该参数 `address` 部分指定目标 `VoIP` 网关
+    .. note::
+      * 当该参数是字符串时，它是 :term:`SIP URI`，应用服务需要通过该参数的 `user` 部分指定被叫号码，该参数 `address` 部分指定目标 `VoIP` 网关。
+      * 当该参数是列表时，其中的每个元素都是一个 :term:`SIP URI` ，CTI 服务器选择其中排列最靠前且并发数未满的网关。
+
+  :type to_uri: str, list
 
   :param int max_answer_seconds: 呼叫的通话最大允许时间，单位是秒。
 
     .. warning:: 必须合理设定该参数，防止超时呼叫问题！
 
-  :param int max_ring_seconds: 外呼时，收到对端振铃后，最大等待时间。振铃超过这个时间，则认为呼叫失败。
+  :param int max_ring_seconds: 外呼时，收到对端振铃后，最大等待时间（秒）。振铃超过这个时间，则认为呼叫失败。
+
+    :default: `50`
 
   :param str parent_call_res_id: 父呼叫资源ID。
 
-    如果该参数不为 `null` ，系统将在此参数指定父呼叫资源上进行拨号。
+    如果该参数不为 `None` ，系统将在此参数指定父呼叫资源上进行拨号。
     拨号期间，父呼叫可以听到拨号提示音。
+
+    :default: `None`
 
   :param str ring_play_file: 拨号时，在对方振铃期间向父呼叫播放的声音文件。
 
@@ -103,7 +113,11 @@
 
     如果指定了 ``parent_call_res_id`` 参数，且本参数为 ``null`` 或者空字符串，则在拨号时向父呼叫透传原始的线路拨号提示音。
 
+    :default: `None`
+
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+    :default: `None`
 
   :return: 资源ID和IPSC相关信息。
 
@@ -113,11 +127,23 @@
 
       {
         "res_id": "0.0.0-sys.call-23479873432234",
+        "to_uri": "xxxx@xxx:xx",
         "user_data": "your user data",
         "ipsc_info": {
           "process_id": 23479873432234
         }
       }
+
+    其属性含义是：
+
+    ============= ==============================================================
+    属性            说明
+    ============= ==============================================================
+    ``res_id``    新产生的资源ID
+    ``to_uri``    该呼叫实际使用的被叫 :term:`SIP` URI
+    ``user_data`` 用于数据，对应于 :func:`construct` 的同名参数
+    ``ipsc_info`` IPSC 平台数据，包括 `process_id` 等重要数据
+    ============= ==============================================================
 
     .. important::
       在后续的资源操作 :term:`RPC` 中，应用服务需要使用 ``res_id`` 参数确定要操作的资源。
@@ -159,6 +185,8 @@
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
+    :default: `None`
+
   .. important::
 
     * 仅适用于 **入方向** 呼叫。
@@ -176,6 +204,8 @@
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
+    :default: `None`
+
   .. important::
 
     * 仅适用于 **入方向** 呼叫。
@@ -189,7 +219,9 @@
 
   :param str res_id: 要操作的呼叫资源的ID
 
-  :param int cause: 挂机原因，详见 :term:`SIP` 协议 `status code` 规范。默认值 ``603 decline``
+  :param int cause: 挂机原因，详见 :term:`SIP` 协议 `status code` 规范。
+
+    :default: `603 decline`
 
   .. important::
 
@@ -197,7 +229,6 @@
     * 调用后，呼叫资源被释放。
     * 对于 **入方向** 呼叫，只能在其成功应答后方可调用。
     * 对于 **出方向** 呼叫，在呼叫的任何活动状态都可以调用。
-
 
 重定向
 ---------
@@ -214,6 +245,8 @@
     VoIP网关应按照标准的 :term:`SIP` 协议向新的地址进行一次新的呼叫。
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+    :default: `None`
 
   .. important::
 
@@ -260,8 +293,11 @@
       ====== ==================
 
   :type content: str, list
-  :param str finish_keys: 播放打断按键码串。
+
+  :param str finish_keys: 播放的打断按键码串。
     在播放过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止播放。
+
+    :default: `None` 无打断按键
 
 停止放音
 -------------
@@ -279,7 +315,10 @@
 
   :param str res_id: 要操作的呼叫资源的ID
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
+
   :param bool beep: 是否在录音之前播放“嘀”的一声。
+
+    :default: `True`
 
   :param int record_format: 录音文件格式枚举值
 
@@ -294,8 +333,12 @@
     ``6``  MP3
     ====== ===========
 
+    :default: `2`
+
   :param str finish_keys: 录音打断按键码串。
     在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
+
+    :default: `None` 无打断按键
 
   :rtype: str
   :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
@@ -321,21 +364,27 @@
 -------------------------
 
 .. function::
-  receive_dtmf_start(res_id, valid_keys="0123456789*#ABCD", max_keys=11, finish_keys="#", first_key_timeout=45, continues_keys_timeout=30, play_content=null, play_repeat=0, breaking_on_key=True, including_finish_key=False)
+  receive_dtmf_start(res_id, valid_keys, max_keys, finish_keys, first_key_timeout, continues_keys_timeout, play_content, play_repeat, breaking_on_key, including_finish_key)
 
   :param str res_id: 要操作的呼叫资源的ID
 
   :param str valid_keys: 有效 :term:`DTMF` 码范围字符串。
     只有存于这个字符串范围内的 :term:`DTMF` 码才会被接收，否则被忽略。
 
+    :default: `"0123456789*#ABCD"`
+
   :param int max_keys: 接收 :term:`DTMF` 码的最大长度。
     一旦达到最大长度，此次接收过程即宣告结束。
+
+    :default: `11`
 
     .. note::
       只要收到的 :term:`DTMF` 码达到最大长度，即使没有收到结束码，接收过程也会结束。
 
   :param str finish_keys: 结束码串。
     在接收 :term:`DTMF` 码的过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则此次接收过程即宣告结束。
+
+    :default: `"#"`
 
     .. important::
       结束码串中的字符如果不属于有效 :term:`DTMF` 码范围字符串(``valid_keys``)，
@@ -347,19 +396,33 @@
 
   :param int first_key_timeout: 等待接收第一个 :term:`DTMF` 码的超时时间（秒）。
     如果在这段时间内，没有收到第一个 :term:`DTMF` 码，则进行超时处理。
+
+    :default: `45`
+
   :param int continues_keys_timeout: 等待接收后续 :term:`DTMF` 码的超时时间（秒）。
     如果在这段时间内，没有收到后续 :term:`DTMF` 码，则进行超时处理。
+
+    :default: `30`
 
   :param int play_content: 提示音。在接收过程开始时，要播放的声音内容。
 
     该参数格式定义见 :func:`play_start` 的 `content` 参数
 
+    :default: `None` 无提示音
+
   :type play_content: str, list
 
   :param int play_repeat: 如果出现等待超时，按照该参数重复播放提示音。
 
+    :default: `0`
+
   :param bool breaking_on_key: 是否在接收到第一个有效 :term:`DTMF` 码时停止放音。
+
+    :default: `True`
+
   :param bool including_finish_key: 是否将结束码包含在接收码串中。
+
+    :default: `False`
 
 结束接收 :term:`DTMF` 码
 -----------------------------
@@ -390,13 +453,37 @@
     ``3``  仅连接的第一方可以听到第二方;第二方听不到第一方
     ====== =====================
 
-  :param str record_file: 录音文件。如果该参数不为 `null` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
+  :param str record_file: 录音文件。如果该参数不为 `None` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
+
+    :default: `None`
+
   :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。
-  :param int local_volume: 双通道连接建立后的发起方音量。`null` 表示默认音量。
-  :param int remote_volume: 双通道连接建立后的发起方音量。`null` 表示默认音量。
+
+    :default: `2`
+
+  :param int local_volume: 双通道连接建立后的发起方音量。
+
+    :default: `None` 表示默认音量
+
+
+  :param int remote_volume: 双通道连接建立后的发起方音量。
+
+    :default: `None` 表示默认音量
+
+
   :param int schedule_play_time: 当本次双通道连接通话进行到这个 :term:`Unix time` 时间点播放声音。
+
+    :default: `None` 表示无定时放音
+
+
   :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。
+
+    :default: `None ` 表示无定时放音
+
+
   :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。
+
+    :default: `0` 表示不播放
 
 结束双通道连接
 ---------------
@@ -427,9 +514,15 @@
     ``4``  无
     ====== ========
 
+    :default: `1`
+
   :param int volume: 加入会议后的初始音量
 
+    :default: `None` 表示默认音量
+
   :param str play_file: 该呼叫加入后，对会议播放的声音文件
+
+    :default: `None` 表示不播放
 
 退出会议
 -------------
@@ -602,77 +695,3 @@
   :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
 .. attention:: 这是呼叫从会议退出的事件，不是整个会议结束的事件！
-
-物理通道关闭
----------------------
-
-当呼叫所使用的物理通道被关闭，该事件触发。
-
-一下情况引发物理通道关闭：
-
-* 拨号失败
-* 呼叫断开
-* 呼入被重定向（调用 :func:`redirect` 引发）
-* 呼入被拒接（调用 :func:`reject` 引发）
-
-.. tip::
-  这是获取呼叫 CDR 数据最有效的方式
-
-.. function:: on_chan_closed(res_id, user_data, ipsc_info)
-
-  :param str res_id: 触发事件的呼叫资源 `ID`。
-  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
-
-  :param list ipsc_info: IPSC 底层数据，是一个数组。
-
-    .. note:: 这个数组与该呼叫所对应的 CDR 行完全一样。
-
-    其值按照顺序分别是：
-
-    #. ``id``: UUID
-    #. ``nodeid``: IPSC节点ID（格式：区域ID.站ID.IPSC实例ID）
-    #. ``cdrid`` CDR 记录ID
-    #. ``processid``: 流水号（全局唯一，IPSC实例启动时开始计算，单个实例期间严格递增）
-    #. ``callid``: 呼叫标识号（节点内全局唯一）
-    #. ``ch``: 通道号：因交换机初始化时间不同，通道号可能会变化
-    #. ``devno``: 设备号：
-        * 中继：格式 “0:0:1:1”---“交换机号:板号:中继号:通道号”；
-        * SIP：格式“0:0:1”---“交换机号:板号:通道号”；
-        * FXO：格式“0:0:1”---“交换机号:板号:通道号”；
-    #. ``ani``:	主叫号码
-    #. ``dnis``: 被叫号码
-    #. ``dnis2``: 原被叫号码
-    #. ``orgcallno``: 原始号码
-    #. ``dir``: 呼叫方向
-        * `0`: 呼入
-        * `1`: 呼出
-        * `2`: 内部呼叫（保留）
-    #. ``devtype``: 通道设备类型
-        * `1`: 中继
-        * `2`: SIP
-        * `3`: H323
-        * `4`: 模拟外线
-        * `5`: 模拟内线
-        * `10`:	逻辑通道
-    #. ``busitype``: 业务类型字符串标志
-    #. ``callstatus``: 呼通标志
-        * `0`: 呼叫未接通
-        * `1`: 呼叫接通
-    #. ``endtype``: 结束类型
-        * `0`: 空（初始值，未定义）
-        * `1`: 本地拆线
-        * `2`: 远端拆线
-        * `3`: 设备拆线
-    #. ``ipscreason``: 呼叫失败原因：IPSC定义reason值
-    #. ``callfailcause``: 呼叫失败原因：设备、SS7、PRI、SIP的失败cause值
-    #. ``callbegintime``: 开始时间（`YYYY-MM-DD HH:MM:SS`）
-    #. ``connectbegintime``: 应答时间（`YYYY-MM-DD HH:MM:SS`）（呼叫未接通时，该时间为空）
-    #. ``callendtime``: 挂断时间（`YYYY-MM-DD HH:MM:SS`）
-    #. ``talkduration``: 通话时长（单位秒，应答时间-挂断时间，如果没有应答时间，通话时长为0）
-    #. ``projectid``: 虚拟化项目ID
-    #. ``flowid``: 流程ID
-    #. ``additionalinfo1``: 附加信息1，本项目中用于记录资源ID(`res_id`)，资源的概念见 :doc:`../mechanism` 一章。
-    #. ``additionalinfo2``: 附加信息2，本项目中用于记录 ``user_data``
-    #. ``additionalinfo3``: 附加信息3，未使用。
-    #. ``additionalinfo4``: 附加信息4，未使用。
-    #. ``additionalinfo5``: 附加信息5，未使用。

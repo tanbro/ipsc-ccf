@@ -114,7 +114,7 @@ params = res_obj['params']
     <NodeID>1027</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号 2</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=params.get('ring_play_file', '');RingTimeout=int(params.get('max_ring_seconds', 45));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=params.get('ring_play_file', '');RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>

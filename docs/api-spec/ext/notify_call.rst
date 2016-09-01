@@ -40,11 +40,12 @@
 
     主叫号码隐藏功能可通过该参数的不同赋值实现。
 
+    :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
+
     .. attention:: 不是每个主叫号码都能被 VoIP 网关的外呼线路接受！
 
-  :param str to_uri: 被叫号码 :term:`SIP URI`。
-
-    应用服务需要通过该参数的 `user` 部分指定被叫号码，该参数 `address` 部分指定目标 `VoIP` 网关
+  :param to_uri: 见 :func:`sys.call.construct` 的同名参数
+  :type to_uri: str, list
 
   :param play_content: 通知提示音内容。
 
@@ -54,9 +55,15 @@
 
   :param play_repeat: 重复播放次数。0表示不重复播放（只播放1次），1表示重复一次（共播放两次）
 
+    :default: `1`
+
   :param int max_ring_seconds: 外呼时，收到对端振铃后，最大等待时间。振铃超过这个时间，则认为呼叫失败。
 
+    :default: `50`
+
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
+
+    :default: `None`
 
   :return: 资源ID和IPSC相关信息。
 

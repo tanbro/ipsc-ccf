@@ -9,10 +9,16 @@
 .. function:: construct(max_seconds, bg_file, release_threshold)
 
   :param int max_seconds: 会议的最大允许时间，单位是秒。
+
   :param str bg_file: 会议创建后，自动播放这个声音文件作为背景音。
+
+    :default: `None` 表示无背景音
+
   :param int parts_threshold: 删除会议的人数阈值。
     会议在第二方加入后，任何一方推出后，如果剩余人数低于该阈值，就删除会议资源。
     `0` 表示不因与会方退出而删除会议。
+
+    :default: `1`
 
   :return: 资源ID和IPSC相关信息。
 
@@ -84,9 +90,15 @@
 .. function:: record_start(res_id, max_seconds, record_file, record_format)
 
   :param str res_id: 在该会议中开始录音。
+
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
+
   :param str record_file: 录音文件名。
+
   :param int record_format: 录音文件格式枚举值。见 :func:`sys.call.record_start` 的同名参数。
+
+    :default: `2`
+
   :rtype: str
   :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
 
@@ -115,6 +127,8 @@
     ``3``  放音
     ``4``  无
     ====== ========
+
+    :default: `1`
 
 事件
 **************
