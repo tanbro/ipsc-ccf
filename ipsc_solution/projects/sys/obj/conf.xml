@@ -384,6 +384,7 @@ try:
 		'conf_id': conf_id,
 		'begin_time': now(),
 		'end_time': None,
+		'parts': [],
 	}
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
