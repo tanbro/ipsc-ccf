@@ -30,8 +30,8 @@ def get_client(local_only=False, raise_if_empty=True):
 
 ## 事件通知
 def send_event(method, params=None):
-    if not method.startswith('extra.'):
-        method = 'extra.' + method
+    if not method.startswith('ext.'):
+        method = 'ext.' + method
     data = dict(method=method, params=params or {})
     unit_id, client_id, _ = jsonrpc.get_client()
     SmartbusSendData(unit_id, client_id, 0xff, 0, 3, json.dumps(data, ensure_ascii=False))

@@ -58,9 +58,13 @@ try:
 	ipsc_info = {
 		'process_id' : GetProcessID(),
 	}
-except IvrError as err:
-	TraceErr(err)
+
+	# params type cast
+	params['max_connect_seconds'] = int(params['max_connect_seconds'])
+
+except Exception as err:
 	last_err = err
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -201,6 +205,7 @@ try:
 	res_obj = _map_[res_id] = dict(
 		id=res_id,
 		ipsc_info=ipsc_info,
+		max_connect_seconds=int(params['max_connect_seconds']),
 		state='Initiated',
 		params=params,
 		chan1=chan1,
@@ -228,6 +233,9 @@ try:
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
+except Exception as err:
+	last_err = err
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -335,7 +343,7 @@ try:
 		None,
 	]
 	SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
-except IvrError as err:
+except Exception as err:
 	last_err = err
 	raise
 </ExtendedProperty>

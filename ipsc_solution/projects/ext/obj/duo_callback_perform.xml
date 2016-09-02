@@ -54,6 +54,7 @@ _map_ = _gd_['duo_callback']
 res_obj = _map_[res_id]
 params = res_obj['params']
 
+max_connect_seconds = res_obj['max_connect_seconds']
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -158,7 +159,7 @@ params = res_obj['params']
     <NodeID>1028</NodeID>
     <NodeType>CONNECT</NodeType>
     <NodeName>连接</NodeName>
-    <ExtendedProperty>ChNo1=res_obj['chan1'];Volum1=;ChNo2=res_obj['chan2'];Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=params['max_connect_seconds'];OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
+    <ExtendedProperty>ChNo1=res_obj['chan1'];Volum1=;ChNo2=res_obj['chan2'];Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=max_connect_seconds;OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
