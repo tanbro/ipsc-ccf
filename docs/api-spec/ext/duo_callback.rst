@@ -43,7 +43,7 @@
 **********
 
 .. function::
-  construct(from1_uri, to1_uri, from2_uri, to2_uri, max_connect_seconds, max_ring_seconds, ring_play_file, ring_play_mode, record_file, user_data1, user_data2)
+  construct(from1_uri, to1_uri, from2_uri, to2_uri, max_connect_seconds, max_ring_seconds, ring_play_file, ring_play_mode, record_file, play_mode, play_after_seconds, play_file, user_data1, user_data2)
 
   :param str form1_uri: 第一方主叫号码 :term:`SIP URI`
 
@@ -111,6 +111,26 @@
     ========= ============
 
     :default: `2`
+
+  :param int play_mode: 放音模式枚举值
+
+    ========= ============
+    枚举值     说明
+    ========= ============
+    ``0``     连接建立时放音，**不** 循环播放 `play_file` 文件
+    ``1``     连接建立时放音，循环播放 `play_file` 文件
+    ``3``     在连接建立后 `play_after_seconds` 秒后播放 `play_file` 文件，**不** 循环。
+    ========= ============
+
+    :default: 0
+
+  :param int play_after_seconds: 在两个被叫方被连接成功后多少秒之后，播放 `play_file` 提示音。
+
+    .. note:: 该参数在 `play_mode` 参数值为 `3` 时，方才有效，且此种情况下必须填写。
+
+  :param int play_file: 要播放的播放文件。
+
+    :default: `None` 。`None` 或空字符串表示无文件、不播放。
 
   :param str user_data1: 将在第一方的 CDR 数据中出现
 

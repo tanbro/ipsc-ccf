@@ -62,8 +62,17 @@ try:
 	# params type cast
 	params['max_connect_seconds'] = int(params['max_connect_seconds'])
 	params['ring_play_mode'] = int(params.get('ring_play_mode', 1))
-	params['ring_play_file'] = str(params.get('ring_play_file', ''))
-
+	if params.get('ring_play_file') is None:
+		params['ring_play_file'] = ''
+	else:
+		params['ring_play_file'] = str(params.get('ring_play_file'))
+	params['play_mode'] = int(params.get('play_mode', 0))
+	if params['play_mode'] == 3:
+		params['play_after_seconds'] = int(params['play_after_seconds'])
+	if params.get('play_file') is None:
+		params['play_file'] = ''
+	else:
+		params['play_file'] = str(params.get('play_file'))
 except Exception as err:
 	last_err = err
 	raise

@@ -54,9 +54,16 @@ _map_ = _gd_['duo_callback']
 res_obj = _map_[res_id]
 params = res_obj['params']
 
+# params var
 max_connect_seconds = params['max_connect_seconds']
 ring_play_mode = params['ring_play_mode']
 ring_play_file = params['ring_play_file']
+play_mode = params['play_mode']
+if play_mode == 3:
+	play_after_seconds = params['play_after_seconds']
+else:
+	play_after_seconds = 0
+play_file = params['play_file']
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -161,7 +168,7 @@ ring_play_file = params['ring_play_file']
     <NodeID>1028</NodeID>
     <NodeType>CONNECT</NodeType>
     <NodeName>连接</NodeName>
-    <ExtendedProperty>ChNo1=res_obj['chan1'];Volum1=;ChNo2=res_obj['chan2'];Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=max_connect_seconds;OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
+    <ExtendedProperty>ChNo1=res_obj['chan1'];Volum1=;ChNo2=res_obj['chan2'];Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=max_connect_seconds;OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=6;EndCloseCh=1;EndBeepTime=play_after_seconds;Option=opts_dict</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -209,7 +216,18 @@ cdr_datas = [
 	None,
 	None,
 ]
-SetCdrAdditionalInfo(chan2, *cdr_datas)</ExtendedProperty>
+SetCdrAdditionalInfo(chan2, *cdr_datas)
+#
+opts = ''
+opts_dict = {}
+if play_file:
+	opts_dict['PlayMode'] = play_mode
+	opts_dict['PlayFile'] = play_file
+for k, v in opts_dict.items():
+	if opts:
+		opts = opts + ';'
+	opts = opts + '{}={}'.format(k,v)
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
