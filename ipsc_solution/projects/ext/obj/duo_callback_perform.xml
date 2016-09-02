@@ -252,7 +252,7 @@ if ring_play_file:
 	opts_dict['PlayFileMode'] = ring_play_mode
 else:
 	opts_dict['ConnectSrcCh'] = 1
-for k, v in opts_dict:
+for k, v in opts_dict.items():
 	if opts:
 		opts = opts + ';'
 	opts = opts + '{}={}'.format(k,v)
