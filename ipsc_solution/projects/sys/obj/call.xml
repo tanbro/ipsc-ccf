@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
+    <ModifyDate>2016-09-01T10:24:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -428,7 +428,7 @@ ret_val = AsynchInvoke(Delay(int(expect_delay_seconds * 1000), 2, chan, -1, "Bus
 err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
-if err == -61:
+elif err == -61:
 	TraceErr('DELAY: channle closed')
 elif err != 1:
 	TraceErr('Delay: error %s: %s' % (err, data))

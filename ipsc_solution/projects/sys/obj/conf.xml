@@ -199,7 +199,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, False, 0, -1, "BusNotifyTitle=%s" % res_id))
 err, data = ret_val
 if err == -8:
-	pass
+	Trace('DELAY: timeout')
 elif err != 1:
 	TraceErr('Delay error %s: %s' % (err, data))
 </ExtendedProperty>
