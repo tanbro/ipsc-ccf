@@ -128,7 +128,7 @@
 
     .. note:: 该参数在 `play_mode` 参数值为 `3` 时，方才有效，且此种情况下必须填写。
 
-  :param int play_file: 要播放的播放文件。
+  :param str play_file: 要播放的播放文件。
 
     :default: `None` 。`None` 或空字符串表示无文件、不播放。
 
