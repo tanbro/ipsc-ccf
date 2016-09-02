@@ -54,7 +54,7 @@ _map_ = _gd_['duo_callback']
 res_obj = _map_[res_id]
 params = res_obj['params']
 
-max_connect_seconds = res_obj['max_connect_seconds']
+max_connect_seconds = params['max_connect_seconds']
 </ExtendedProperty>
     <PropertySet>
       <Exit>
