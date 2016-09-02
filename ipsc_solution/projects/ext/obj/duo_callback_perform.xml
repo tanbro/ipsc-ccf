@@ -55,6 +55,8 @@ res_obj = _map_[res_id]
 params = res_obj['params']
 
 max_connect_seconds = params['max_connect_seconds']
+ring_play_mode = params['ring_play_mode']
+ring_play_file = params['ring_play_file']
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -115,7 +117,7 @@ max_connect_seconds = params['max_connect_seconds']
     <NodeID>1027</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号 2</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=params.get('ring_play_file', '');RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -241,7 +243,20 @@ fail_cdr_datas = [
 	None,
 	None,
 ]
-SetCallFailCdrAdditionalInfo(*fail_cdr_datas)</ExtendedProperty>
+SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
+#
+opts = ''
+opts_dict = {}
+if ring_play_file:
+	opts_dict['ConnectSrcCh'] = 0
+	opts_dict['PlayFileMode'] = ring_play_mode
+else:
+	opts_dict['ConnectSrcCh'] = 1
+for k, v in opts_dict:
+	if opts:
+		opts = opts + ';'
+	opts = opts + '{}={}'.format(k,v)
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
