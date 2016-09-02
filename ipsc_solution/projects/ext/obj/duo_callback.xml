@@ -205,7 +205,6 @@ try:
 	res_obj = _map_[res_id] = dict(
 		id=res_id,
 		ipsc_info=ipsc_info,
-		max_connect_seconds=int(params['max_connect_seconds']),
 		state='Initiated',
 		params=params,
 		chan1=chan1,
