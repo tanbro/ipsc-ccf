@@ -79,11 +79,11 @@ begin
     for unit_id, client_id, client_type, add_info in SmartbusGetNodeInfo(10):
         if unit_id == local_unit_id:
             local_candidates.append((unit_id, client_id, client_type))
-        elif not local_only:
+        else:
             remote_candidates.append((unit_id, client_id, client_type))
     if local_candidates:
         target_addr = randchoice(local_candidates)
-    elif (not local_only) and remote_candidates:
+    elif remote_candidates:
         target_addr = randchoice(remote_candidates)
     else:
         raise IvrError(0, '找不到可用的bus客户端')
