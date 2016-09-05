@@ -89,6 +89,6 @@ begin
         raise IvrError(0, '找不到可用的bus客户端')
     # send
     unit_id, client_id, _ = target_addr
-    data = dict(method='sys.on_chan_closed', params=args)
+    data = dict(method='sys.on_chan_closed', params={'data':args})
     SmartbusSendData(unit_id, client_id, 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
 end

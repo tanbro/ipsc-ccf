@@ -21,9 +21,9 @@ CDR(Call detail record)在每一次呼叫结束后产生一条，无论是否呼
 
 :mod:`ext` 这一系列呼叫的结束也会引发通道关闭。
 
-.. function:: on_chan_closed(*args)
+.. function:: on_chan_closed(data)
 
-  :param list args: 这一条CDR数据的值，是一个数组。
+  :param list data: 这一条CDR数据的值，是一个数组。
 
     .. tip:: CDR 文本日志的行数据中，使用逗号分隔的形式记录这个数组。
 
