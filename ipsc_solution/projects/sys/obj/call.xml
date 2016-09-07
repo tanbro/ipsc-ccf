@@ -1346,7 +1346,7 @@ try:
 	try:
 		if call_info['call_dir'] == 'inbound':
 			if call_info['state'] in ['Initiated', 'Answer']:
-			raise RuntimeError('Can not perform method "%s" on an inbound call whose state is "%s"'  % (method, call_info['state']))
+				raise RuntimeError('Can not perform method "%s" on an inbound call whose state is "%s"'  % (method, call_info['state']))
 		Hangup(chan, params.get('cause', 603))
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
