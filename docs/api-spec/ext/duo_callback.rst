@@ -150,7 +150,7 @@
         "res_id": "0.0.0-ext.duo_callback-23479873432234",
         "record_file": "/full/path/of/the/record/file.wav",
         "user_data1": "your user data 1",
-        "user_data1": "your user data 2",
+        "user_data2": "your user data 2",
         "ipsc_info": {
           "process_id": 23479873432234
         }
