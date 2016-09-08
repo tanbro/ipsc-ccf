@@ -160,7 +160,8 @@
     ================= ==========================================================
     ``res_id``        新产生的资源ID
     ``record_file``   完整的录音文件路径（如果有录音）。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
-    ``user_data``     用于数据，对应于 :func:`construct` 的同名参数
+    ``user_data1``    用户数据，对应于 :func:`construct` 的同名参数
+    ``user_data2``    用户数据，对应于 :func:`construct` 的同名参数
     ``ipsc_info``     IPSC 平台数据，包括 `process_id` 等重要数据
     ================= ==========================================================
 
