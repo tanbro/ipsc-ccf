@@ -414,7 +414,7 @@ try:
 	res_id = utils.make_res_id()
 	Trace('res_id: %s' % res_id)
 	ipsc_info = {
-		process_id = res_id,
+		'process_id' : GetProcessID(),
 	}
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
