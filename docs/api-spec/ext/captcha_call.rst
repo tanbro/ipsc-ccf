@@ -3,6 +3,8 @@
 
 .. module:: ext.captcha_call
 
+.. important:: 不要用这个接口，用 :mod:`ext.notify_call` 实现语音验证码功能。
+
 状态
 **********
 

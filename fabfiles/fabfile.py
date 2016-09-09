@@ -5,7 +5,7 @@ from fabric.api import *
 
 env.roledefs = {
     'ipsc': [
-#        'root@192.168.22.10',
+        'root@192.168.22.10',
         'root@192.168.2.100'
     ],
     'docs': ['bind@101.200.220.202:21210'],

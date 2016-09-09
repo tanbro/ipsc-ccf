@@ -1,7 +1,9 @@
 外呼通知
 ############
 
-.. module:: ext.duo_callback
+.. module:: ext.notify_call
+
+.. important:: 语音验证码功能应使用这个接口实现！
 
 状态
 ************
