@@ -77,10 +77,20 @@ if ret_val[0] == 2:
 	if ret_val[0] &lt; 1:
 		error = RuntimeError('WaitCallStatus(states=2xx) returns error value  %s, %s' % ret_val)
 		raise error
-# Answer OK!!!
-call_info['state'] = 'Idle'
-# return !
+
 try:
+# set cdr info
+	cdr_datas = [
+		str(res_id),
+		params.get('user_data'),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan, *cdr_datas)
+# Answer OK!!!
+	call_info['state'] = 'Idle'
+# return !
 	jsonrpc.send_event(
 		method='call.on_answer_completed',
 		params={

@@ -9,10 +9,16 @@
 .. function:: construct(max_seconds, bg_file, release_threshold)
 
   :param int max_seconds: 会议的最大允许时间，单位是秒。
+
   :param str bg_file: 会议创建后，自动播放这个声音文件作为背景音。
+
+    :default: `None` 表示无背景音
+
   :param int parts_threshold: 删除会议的人数阈值。
     会议在第二方加入后，任何一方推出后，如果剩余人数低于该阈值，就删除会议资源。
     `0` 表示不因与会方退出而删除会议。
+
+    :default: `1`
 
   :return: 资源ID和IPSC相关信息。
 
@@ -22,6 +28,7 @@
 
       {
         "res_id": "0.0.0-sys.conf-23479873432234",
+        "user_data": "your user data",
         "ipsc_info": {
           "process_id": "23479873432234"
         }
@@ -40,21 +47,50 @@
 .. function:: exists(res_id)
 
   :param str res_id: 判断ID为该值的会议资源是否存在
+  :rtype: bool
 
 .. tip::
   应用服务可以使用该函数，判断会议是否还在。
   在错过会议释放事件的情况下，该方法能用于消除“残留物”
 
-空操作
-===============
+获取与会方列表
+================
+返回会议当前与会方（处于会议中的呼叫）列表
 
-.. function:: nop(res_id)
+.. function:: get_parts(res_id)
 
-  :param str res_id: 要操作的会议资源
+  :param str res_id: 会议资源ID
 
-.. tip::
-  应用服务如果长时间没有向 :term:`CTI` 服务中的资源发送操作命令，该资源可能会因为长期空闲而自动释放。
-  可调用该方法避免自动释放。
+  :rtype: list
+  :return: 会议资源ID为 ``res_id`` 的当前所属呼叫列表信息。
+
+    该列表的数组元素是 :term:`JSON` `Object`，形如：
+
+    .. code-block:: json
+
+      [
+        {
+          "res_id": "0.0.0-sys.call-23479873432234",
+          "voice_mode": 1,
+          "user_data": "your user data"
+        },
+        {
+          "res_id": "0.0.0-sys.call-67416434654464",
+          "voice_mode": 1,
+          "user_data": "your user data"
+        }
+      ]
+
+    数组元素的的属性有：
+
+    ================= ==========================================================
+    属性               说明
+    ================= ==========================================================
+    ``res_id``        与会方（呼叫）的资源ID
+    ``voice_mode``    成员的听说模式，见 :func:`set_part_voice_mode`
+    ``user_data``     与会方（呼叫）的用户数据，来源于呼叫的构造函数
+    ================= ==========================================================
+
 
 删除会议
 ===============
@@ -93,9 +129,17 @@
 .. function:: record_start(res_id, max_seconds, record_file, record_format)
 
   :param str res_id: 在该会议中开始录音。
+
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
+
   :param str record_file: 录音文件名。
+
   :param int record_format: 录音文件格式枚举值。见 :func:`sys.call.record_start` 的同名参数。
+
+    :default: `2`
+
+  :rtype: str
+  :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
 
 停止录音
 ===============
@@ -122,6 +166,8 @@
     ``3``  放音
     ``4``  无
     ====== ========
+
+    :default: `1`
 
 事件
 **************

@@ -53,6 +53,17 @@ _map_ = _gd_['duo_callback']
 
 res_obj = _map_[res_id]
 params = res_obj['params']
+
+# params var
+max_connect_seconds = params['max_connect_seconds']
+ring_play_mode = params['ring_play_mode']
+ring_play_file = params['ring_play_file']
+play_mode = params['play_mode']
+if play_mode == 3:
+	play_after_seconds = params['play_after_seconds']
+else:
+	play_after_seconds = 0
+play_file = params['play_file']
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -75,8 +86,8 @@ params = res_obj['params']
   <FlowNode>
     <NodeID>1024</NodeID>
     <NodeType>WAITDIALEX</NodeType>
-    <NodeName>等待拨号</NodeName>
-    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=res_obj['chan1'];Option=</ExtendedProperty>
+    <NodeName>等待拨号 1</NodeName>
+    <ExtendedProperty>OutConnCh=;OutDnis=;Timeout=;WorkCh=;Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -112,8 +123,8 @@ params = res_obj['params']
   <FlowNode>
     <NodeID>1027</NodeID>
     <NodeType>DIALEX</NodeType>
-    <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=res_obj['chan1'];Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=params['ring_play_file'];RingTimeout=params['max_ring_seconds'];IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <NodeName>拨号 2</NodeName>
+    <ExtendedProperty>WorkCh=;Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -157,7 +168,7 @@ params = res_obj['params']
     <NodeID>1028</NodeID>
     <NodeType>CONNECT</NodeType>
     <NodeName>连接</NodeName>
-    <ExtendedProperty>ChNo1=chan1;Volum1=;ChNo2=chan2;Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=params['max_connect_seconds'];OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
+    <ExtendedProperty>ChNo1=res_obj['chan1'];Volum1=;ChNo2=res_obj['chan2'];Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=max_connect_seconds;OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=6;EndCloseCh=1;EndBeepTime=play_after_seconds;Option=opts_dict</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -196,6 +207,26 @@ res_obj['state'] = 'Connected'
 res_obj['connect_time'] = now()
 
 record_file = params.get('record_file')
+
+# set cdr info
+cdr_datas = [
+	str(res_id),
+	params.get('user_data2'),
+	None,
+	None,
+	None,
+]
+SetCdrAdditionalInfo(chan2, *cdr_datas)
+#
+opts = ''
+opts_dict = {}
+if play_file:
+	opts_dict['PlayMode'] = play_mode
+	opts_dict['PlayFile'] = play_file
+for k, v in opts_dict.items():
+	if opts:
+		opts = opts + ';'
+	opts = opts + '{}={}'.format(k,v)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -221,6 +252,28 @@ record_file = params.get('record_file')
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['state'] = 'Answered'
 res_obj['answer_time'] = now()
+
+
+fail_cdr_datas = [
+	str(res_id),
+	params.get('user_data2'),
+	None,
+	None,
+	None,
+]
+SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
+#
+opts = ''
+opts_dict = {}
+if ring_play_file:
+	opts_dict['ConnectSrcCh'] = 0
+	opts_dict['PlayFileMode'] = ring_play_mode
+else:
+	opts_dict['ConnectSrcCh'] = 1
+for k, v in opts_dict.items():
+	if opts:
+		opts = opts + ';'
+	opts = opts + '{}={}'.format(k,v)
 </ExtendedProperty>
     <PropertySet>
       <Exit>

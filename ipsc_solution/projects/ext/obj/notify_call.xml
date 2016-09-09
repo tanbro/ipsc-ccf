@@ -48,7 +48,7 @@
     <NodeID>1078</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to_uri'];Ani=params['from_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=params['max_ring_seconds'];IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=params['to_uri'];Ani=params['from_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -95,9 +95,10 @@ answer_time=None
 dropped_by=None
 try:
 	_map_ = _gd_['notify_call']
+	#
+	play_content = params['play_content']
 except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	error = str(err)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -120,12 +121,12 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1083</NodeID>
     <NodeType>PLAY</NodeType>
-    <NodeName>放音</NodeName>
+    <NodeName>放音 file</NodeName>
     <ExtendedProperty>PrePromptVoice=;ChNo=;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
     <PropertySet>
       <DynamicVoice>
         <VarVoice>
-          <content>params['play_content']</content>
+          <content>play_content</content>
           <type>0</type>
           <option>
           </option>
@@ -162,7 +163,6 @@ except IvrError as err:
 try:
 	
 	jsonrpc.send_event(
-		to=sender,
 		method='notify_call.on_released',
 		params={
 			'res_id': res_id,
@@ -333,7 +333,7 @@ dropped_by='sys'
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1083</target>
+          <target>1205</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -448,13 +448,14 @@ dropped_by = 'sys'</ExtendedProperty>
     <NodeName>脚本 dial start ok</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_flow_id()
+	res_id = utils.make_res_id()
 	Trace('res_id: %s' % res_id)
 	ipsc_info = {
-		process_id = GetProcessID(),
+		'process_id' : GetProcessID(),
 	}
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
+		'user_data': params.get('user_data'),
 		'ipsc_info': ipsc_info,
 	})
 except IvrError as err:
@@ -557,6 +558,79 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1086</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1205</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 play_content is list?</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>isinstance(play_content, list)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1207</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1083</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1207</NodeID>
+    <NodeType>PLAY</NodeType>
+    <NodeName>放音 list</NodeName>
+    <ExtendedProperty>PrePromptVoice=;ChNo=;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
+    <PropertySet>
+      <DynamicVoice>
+        <VarVoice>
+          <content>params['play_content']</content>
+          <type>0</type>
+          <option>
+          </option>
+        </VarVoice>
+      </DynamicVoice>
+      <SubTitle />
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1100</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1130</target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1132</target>
         </ExitPort>
       </Exit>
     </PropertySet>

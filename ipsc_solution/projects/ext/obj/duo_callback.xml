@@ -52,9 +52,30 @@
 
 try:
 	_map_ = _gd_['duo_callback']
-except IvrError as err:
-	TraceErr(err)
+	#
+	res_id = utils.make_res_id()
+	Trace('res_id: %s' % res_id)
+	ipsc_info = {
+		'process_id' : GetProcessID(),
+	}
+
+	# params type cast
+	params['max_connect_seconds'] = int(params['max_connect_seconds'])
+	params['ring_play_mode'] = int(params.get('ring_play_mode', 1))
+	if params.get('ring_play_file') is None:
+		params['ring_play_file'] = ''
+	else:
+		params['ring_play_file'] = str(params.get('ring_play_file'))
+	params['play_mode'] = int(params.get('play_mode', 0))
+	if params['play_mode'] == 3:
+		params['play_after_seconds'] = int(params['play_after_seconds'])
+	if params.get('play_file') is None:
+		params['play_file'] = ''
+	else:
+		params['play_file'] = str(params.get('play_file'))
+except Exception as err:
 	last_err = err
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -98,7 +119,7 @@ except IvrError as err:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1011</target>
+          <target>1202</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -149,7 +170,7 @@ except IvrError as err:
     <NodeID>1011</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to1_uri'];Ani=params['from1_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=params['max_ring_seconds'];IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan1;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=params['to1_uri'];Ani=params['from1_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan1;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -191,11 +212,7 @@ except IvrError as err:
     <NodeName>脚本 dial start ok</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_flow_id()
-	Trace('res_id: %s' % res_id)
-	ipsc_info = {
-		process_id = GetProcessID(),
-	}
+	#
 	res_obj = _map_[res_id] = dict(
 		id=res_id,
 		ipsc_info=ipsc_info,
@@ -207,13 +224,29 @@ try:
 		hangup_by=0,
 		error=None,
 	)
+	# set cdr info
+	cdr_datas = [
+		str(res_id),
+		params.get('user_data1'),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan1, *cdr_datas)
+	#
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
+		'record_file': params.get('record_file'),
+		'user_data1': params.get('user_data1'),
+		'user_data2': params.get('user_data2'),
 		'ipsc_info': ipsc_info,
 	})
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
+except Exception as err:
+	last_err = err
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -308,6 +341,41 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1202</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 SetCallFailCdrAdditionalInfo</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	fail_cdr_datas = [
+		str(res_id),
+		params.get('user_data1'),
+		None,
+		None,
+		None,
+	]
+	SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
+except Exception as err:
+	last_err = err
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1006</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1011</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1063</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 on_released</NodeName>
@@ -315,7 +383,6 @@ except IvrError as err:
 try:
 	
 	jsonrpc.send_event(
-		to=sender,
 		method='duo_callback.on_released',
 		params={
 			'res_id': res_id,
@@ -325,7 +392,8 @@ try:
 			'connect_time': res_obj.get('connect_time'),
 			'end_time': res_obj.get('end_time'),
 			'hangup_by': res_obj.get('hangup_by', 0),
-			'user_data': res_obj['params'].get('user_data'),
+			'user_data1': res_obj['params'].get('user_data1'),
+			'user_data2': res_obj['params'].get('user_data2'),
 		}
 	)
 except IvrError as err:
@@ -390,7 +458,7 @@ except IvrError as err:
 err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
-if err == -61:
+elif err == -61:
 	TraceErr('DELAY: channle closed')
 elif err != 1:
 	TraceErr('Delay: error %s: %s' % (err, data))
@@ -479,8 +547,7 @@ if method.startswith('ext.'):
           <type>100</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1042</target>
         </ExitPort>
       </Exit>
     </PropertySet>

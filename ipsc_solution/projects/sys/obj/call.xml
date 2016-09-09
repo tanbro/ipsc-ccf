@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
+    <ModifyDate>2016-09-01T10:24:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -55,7 +55,7 @@ chan = None
 conf_id = None
 
 call_map = _gd_['call_map'] # chan =&gt; call_info
-conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+conf_map = _gd_['conf_map'] # conf_id =&gt; conf_info
 
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
@@ -152,6 +152,14 @@ release_delay = None
         <case>
           <expression>method == 'call.get'</expression>
           <ExitType>116</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.reject'</expression>
+          <ExitType>117</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.exists'</expression>
+          <ExitType>118</ExitType>
         </case>
       </switch>
       <Exit>
@@ -257,6 +265,18 @@ release_delay = None
           <targetflow>
           </targetflow>
           <target>1907</target>
+        </ExitPort>
+        <ExitPort>
+          <type>117</type>
+          <targetflow>
+          </targetflow>
+          <target>1932</target>
+        </ExitPort>
+        <ExitPort>
+          <type>118</type>
+          <targetflow>
+          </targetflow>
+          <target>1941</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -393,16 +413,22 @@ if method.startswith('sys.'):
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=answer_time = call_info.get('answer_time')
+expect_delay_seconds = default_delay_seconds = 15
 if answer_time:
-	if max_answer_seconds &lt;= now() - answer_time:
-		TraceErr('max_answer_seconds(%d) expired' % max_answer_seconds)
+	now_time = now()
+	residual_seconds = max_answer_seconds - (now_time - answer_time)
+	if residual_seconds &gt; 0:
+		if residual_seconds &lt; default_delay_seconds:
+			expect_delay_seconds = residual_seconds
+	else:
+		TraceErr('call answer time expired: max_answer_seconds=%s, residual_seconds=%s, answer_time=%s, now_time=%s' % (max_answer_seconds, residual_seconds, answer_time, now_time))
 		Hangup(chan, 603)
 #
-ret_val = AsynchInvoke(Delay(15000, 2, chan, -1, "BusNotifyTitle=%s" % res_id))
+ret_val = AsynchInvoke(Delay(int(expect_delay_seconds * 1000), 2, chan, -1, "BusNotifyTitle=%s" % res_id))
 err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
-if err == -61:
+elif err == -61:
 	TraceErr('DELAY: channle closed')
 elif err != 1:
 	TraceErr('Delay: error %s: %s' % (err, data))
@@ -517,9 +543,7 @@ elif err != 1:
     <NodeName>脚本 call out initiated</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_res_id()
-	Trace('call res_id: %s' % res_id)
-	ipsc_info = dict(process_id=GetProcessID())
+	# call info
 	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id,
@@ -531,15 +555,26 @@ try:
 		'call_dir': 'outbound',
 		'from_uri': from_uri,
 		'to_uri': to_uri,
-		'begin_time': now(),
+		'begin_time': begin_time,
 		'answer_time': None,
 		'end_time': None,
 		'dropped_by': None,
 		'reason': None,
 		'cause': None,
 	}
+	# set cdr info
+	cdr_datas = [
+		str(res_id),
+		params.get('user_data'),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan, *cdr_datas)
+	# RPC Result:
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
+		'user_data': params.get('user_data'),
 		'ipsc_info': ipsc_info,
 	})
 except IvrError as err:
@@ -674,6 +709,15 @@ try:
 		parent_call_info = None
 		dial_chan = GetCurrentCh()
 		ring_play_file = None
+	##################################
+	# new call-info
+	##################################
+	res_id = utils.make_res_id()
+	Trace('call res_id: %s' % res_id)
+	process_id = GetProcessID()
+	ipsc_info = dict(process_id=process_id)
+	begin_time = now()
+
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -720,7 +764,7 @@ except IvrError as err:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1192</target>
+          <target>1925</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -771,6 +815,40 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1925</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 set fail cdr add info</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	fail_cdr_datas = [
+		str(res_id),
+		params.get('user_data'),
+		None,
+		None,
+		None,
+	]
+	SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1192</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1216</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 inbound</NodeName>
@@ -778,7 +856,9 @@ except IvrError as err:
 try:
 	res_id = utils.make_res_id()
 	Trace('call res_id: %s' % res_id)
-	ipsc_info = dict(process_id=GetProcessID())
+	ipsc_info = GetProcessID()
+	ipsc_info = dict(process_id=ipsc_info)
+	# 
 	chan = GetCurrentCh()
 	from_uri = 'sip:{}'.format(GetOrgCallNo())
 	if GetCalledNo():
@@ -790,6 +870,7 @@ try:
 		from_uri = from_uri,
 		to_uri = to_uri
 	)
+	begin_time = now()
 	call_info = call_map[chan] = call_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id,
@@ -801,13 +882,14 @@ try:
 		'bus_addr': sender,
 		'from_uri': from_uri,
 		'to_uri': to_uri,
-		'begin_time': now(),
+		'begin_time': begin_time,
 		'answer_time': None,
 		'end_time': None,
 		'dropped_by': None,
 		'reason': None,
 		'cause': None,
 	}
+	# trigger sys.call.on_incoming event
 	call_info['bus_addr'] = sender = jsonrpc.send_event(
 		method='call.on_incoming',
 		params=dict(
@@ -914,7 +996,6 @@ finally:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	jsonrpc.send_event(
-		to=sender,
 		method='call.on_released',
 		params={
 			'res_id': call_info['res_id'],
@@ -1026,12 +1107,23 @@ except IvrError as err:
 try:
 	try:
 		if call_info['call_dir'] == 'outbound':
-			raise RuntimeError('Can not redirect an outbound call.')
+			raise RuntimeError('Can not perform method "%s" an outbound call.' % method)
 		if call_info['state'] not in ['Initiated']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		redirect_uri = params['redirect_uri']
 		destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
+		# set cdr info
+		cdr_datas = [
+			str(res_id),
+			str(params.get('user_data', '')),
+			None,
+			None,
+			None,
+		]
+		SetCdrAdditionalInfo(chan, *cdr_datas)
+		# make SIP redirct and then bye
 		ReadySipRedirect(chan, 302, destuser, destip, destport)
+		# return the RPC
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
@@ -1163,7 +1255,7 @@ except IvrError as err:
 try:
 	try:
 		if call_info['call_dir'] == 'outbound':
-			raise RuntimeError('Can not answer an outbound call.')
+			raise RuntimeError('Can not perform method "%s" an outbound call.' % method)
 		if call_info['state'] not in ['Initiated']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
@@ -1199,14 +1291,62 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
+    <NodeID>1932</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 reject</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if call_info['call_dir'] == 'outbound':
+			raise RuntimeError('Can not perform method "%s" on an outbound call.' % method)
+		if call_info['state'] not in ['Initiated']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		# set cdr info
+		cdr_datas = [
+			str(res_id),
+			params.get('user_data'),
+			None,
+			None,
+			None,
+		]
+		SetCdrAdditionalInfo(chan, *cdr_datas)
+		# hangup the incoming call!
+		Hangup(chan, params.get('cause', 603))
+		jsonrpc.send_result(sender, id_)
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
     <NodeID>1273</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 drop</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		if call_info['state'] in ['Answer']:
-			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		if call_info['call_dir'] == 'inbound':
+			if call_info['state'] in ['Initiated', 'Answer']:
+				raise RuntimeError('Can not perform method "%s" on an inbound call whose state is "%s"'  % (method, call_info['state']))
 		Hangup(chan, params.get('cause', 603))
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
@@ -1408,7 +1548,7 @@ except IvrError as err:
     <NodeName>脚本 call.record_start ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_result(sender, id_)
+	jsonrpc.send_result(sender, id_, params.get('record_file'))
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -2238,6 +2378,39 @@ try:
 			jsonrpc.send_result(sender, id_)
 		else:
 			raise RuntimeError('RemoveConfer(conf_id=%d, chan=%d) returns %d' % (conf_id, chan, ret_val))
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1941</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 exists</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		res_id = params['res_id']
+		jsonrpc.send_result(sender, id_, res_id in call_map_r)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise

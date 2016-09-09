@@ -48,7 +48,7 @@
     <NodeID>1135</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to_uri'];Ani=params['from_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=params['max_ring_seconds'];IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=params['to_uri'];Ani=params['from_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -125,7 +125,6 @@ except IvrError as err:
 try:
 	
 	jsonrpc.send_event(
-		to=sender,
 		method='captcha_call.on_released',
 		params={
 			'res_id': res_id,
@@ -412,13 +411,14 @@ dropped_by = 'sys'</ExtendedProperty>
     <NodeName>脚本 dial start ok</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	res_id = utils.make_flow_id()
+	res_id = utils.make_res_id()
 	Trace('res_id: %s' % res_id)
 	ipsc_info = {
-		process_id = GetProcessID(),
+		'process_id' : GetProcessID(),
 	}
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id,
+		'user_data': params.get('user_data'),
 		'ipsc_info': ipsc_info,
 	})
 except IvrError as err:

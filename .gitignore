@@ -297,4 +297,5 @@ local.properties
 docs/.atom-build.yml
 
 # my ignore
+tests/
 logs/
