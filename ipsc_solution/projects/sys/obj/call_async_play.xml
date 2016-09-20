@@ -77,8 +77,11 @@ content = params['content']
 if isinstance(content, str):
 	cl.append([content, 0, ''])
 elif isinstance(content, (list,tuple)):
-	for item in isinstance:
+	for item in content[0:29]:
+		if len(item) &lt; 3:
+			item[2] = ''
 		cl.append([str(item[0]), int(item[1]), str(item[2])])
+cl.append([None, 0, ""])
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -105,10 +108,159 @@ elif isinstance(content, (list,tuple)):
     <PropertySet>
       <DynamicVoice>
         <VarVoice>
-          <content>params['content']</content>
-          <type>0</type>
-          <option>
-          </option>
+          <content>cl[0][0]</content>
+          <type>cl[0][1]</type>
+          <option>cl[0][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[1][0]</content>
+          <type>cl[1][1]</type>
+          <option>cl[1][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[2][0]</content>
+          <type>cl[2][1]</type>
+          <option>cl[2][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[3][0]</content>
+          <type>cl[3][1]</type>
+          <option>cl[3][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[4][0]</content>
+          <type>cl[4][1]</type>
+          <option>cl[4][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[5][0]</content>
+          <type>cl[5][1]</type>
+          <option>cl[5][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[6][0]</content>
+          <type>cl[6][1]</type>
+          <option>cl[6][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[7][0]</content>
+          <type>cl[7][1]</type>
+          <option>cl[7][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[8][0]</content>
+          <type>cl[8][1]</type>
+          <option>cl[8][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[9][0]</content>
+          <type>cl[9][1]</type>
+          <option>cl[9][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[10][0]</content>
+          <type>cl[10][1]</type>
+          <option>cl[10][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[11][0]</content>
+          <type>cl[11][1]</type>
+          <option>cl[12][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[12][0]</content>
+          <type>cl[12][1]</type>
+          <option>cl[12][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[13][0]</content>
+          <type>cl[13][1]</type>
+          <option>cl[13][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[14][0]</content>
+          <type>cl[14][1]</type>
+          <option>cl[14][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[15][0]</content>
+          <type>cl[15][1]</type>
+          <option>cl[15][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[16][0]</content>
+          <type>cl[16][1]</type>
+          <option>cl[16][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[17][0]</content>
+          <type>cl[17][1]</type>
+          <option>cl[17][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[18][0]</content>
+          <type>cl[18][1]</type>
+          <option>cl[18][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[19][0]</content>
+          <type>cl[19][1]</type>
+          <option>cl[19][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[20][0]</content>
+          <type>cl[20][1]</type>
+          <option>cl[20][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[21][0]</content>
+          <type>cl[21][1]</type>
+          <option>cl[21][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[22][0]</content>
+          <type>cl[22][1]</type>
+          <option>cl[22][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[23][0]</content>
+          <type>cl[23][1]</type>
+          <option>cl[23][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[24][0]</content>
+          <type>cl[24][1]</type>
+          <option>cl[24][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[25][0]</content>
+          <type>cl[25][1]</type>
+          <option>cl[25][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[26][0]</content>
+          <type>cl[26][1]</type>
+          <option>cl[26][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[27][0]</content>
+          <type>cl[27][1]</type>
+          <option>cl[27][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[28][0]</content>
+          <type>cl[28][1]</type>
+          <option>cl[28][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[29][0]</content>
+          <type>cl[29][1]</type>
+          <option>cl[29][2]</option>
+        </VarVoice>
+        <VarVoice>
+          <content>cl[30][0]</content>
+          <type>cl[30][1]</type>
+          <option>cl[30][2]</option>
         </VarVoice>
       </DynamicVoice>
       <SubTitle />
