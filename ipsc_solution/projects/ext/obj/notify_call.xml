@@ -90,7 +90,7 @@
     <NodeName>脚本 init</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 error=None
-begin_time=now
+begin_time=now()
 answer_time=None
 dropped_by=None
 is_ignore_release = False
