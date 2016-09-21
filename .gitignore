@@ -299,3 +299,4 @@ docs/.atom-build.yml
 # my ignore
 tests/
 logs/
+ipsc_voice/
