@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-08-11T16:37:32+08:00</CreateDate>
-    <ModifyDate>2016-08-11T09:47:27+08:00</ModifyDate>
+    <ModifyDate>2016-09-21T09:36:07+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -93,12 +93,31 @@ error=None
 begin_time=now
 answer_time=None
 dropped_by=None
+is_ignore_release = False
+
 try:
 	_map_ = _gd_['notify_call']
-	#
-	play_content = params['play_content']
-except IvrError as err:
-	error = str(err)
+
+	play_repeat = int(params.get('play_repeat', 0))
+
+	cl = []
+	content = params['play_content']
+	if isinstance(content, str):
+		cl.append([content, 0, ''])
+	elif cl is None:
+		cl = []
+	elif isinstance(content, (list,tuple)):
+		for item in content[:30]:
+			if len(item) == 1:
+				item.extend([0, ''])
+			elif len(item) == 2:
+				item.append('')
+			elif item[2] is None:
+				item[2] = ''
+			cl.append([str(item[0]), int(item[1]), str(item[2])])
+except Exception as err:
+	error = '{}'.format(err)
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -106,8 +125,7 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1114</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -119,63 +137,24 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1083</NodeID>
-    <NodeType>PLAY</NodeType>
-    <NodeName>放音 file</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
-    <PropertySet>
-      <DynamicVoice>
-        <VarVoice>
-          <content>play_content</content>
-          <type>0</type>
-          <option>
-          </option>
-        </VarVoice>
-      </DynamicVoice>
-      <SubTitle />
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1100</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1130</target>
-        </ExitPort>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1132</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
     <NodeID>1086</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 released</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	
-	jsonrpc.send_event(
-		method='notify_call.on_released',
-		params={
-			'res_id': res_id,
-			'error': error,
-			'begin_time': begin_time,
-			'answer_time': answer_time,
-			'end_time': now(),
-			'user_data': params.get('user_data'),
-		}
-	)
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if not is_ignore_release:
+		jsonrpc.send_event(
+			method='notify_call.on_released',
+			params={
+				'res_id': res_id,
+				'error': error,
+				'begin_time': begin_time,
+				'answer_time': answer_time,
+				'end_time': now(),
+				'user_data': params.get('user_data'),
+			}
+		)
 except IvrError as err:
 	TraceErr(err)
-	last_err = err
 
 </ExtendedProperty>
     <PropertySet>
@@ -293,7 +272,7 @@ dropped_by='usr'</ExtendedProperty>
   <FlowNode>
     <NodeID>1100</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本</NodeName>
+    <NodeName>脚本 error on play</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=error = 'play error'
 dropped_by='sys'
 </ExtendedProperty>
@@ -310,7 +289,8 @@ dropped_by='sys'
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -318,8 +298,10 @@ dropped_by='sys'
   <FlowNode>
     <NodeID>1101</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=answer_time = now()</ExtendedProperty>
+    <NodeName>脚本 接通</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=error = None
+answer_time = now()
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -333,7 +315,7 @@ dropped_by='sys'
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1205</target>
+          <target>1222</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -391,7 +373,8 @@ dropped_by = 'sys'</ExtendedProperty>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -414,7 +397,8 @@ dropped_by = 'sys'</ExtendedProperty>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -437,7 +421,8 @@ dropped_by = 'sys'</ExtendedProperty>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -446,8 +431,7 @@ dropped_by = 'sys'</ExtendedProperty>
     <NodeID>1113</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 dial start ok</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
 	res_id = utils.make_res_id()
 	Trace('res_id: %s' % res_id)
 	ipsc_info = {
@@ -460,7 +444,9 @@ try:
 	})
 except IvrError as err:
 	TraceErr(err)
-	last_err = err
+except Exception as err:
+	error = '{}'.format(err)
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -468,8 +454,7 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1114</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -484,10 +469,9 @@ except IvrError as err:
     <NodeID>1114</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 dial start error</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	if last_err:
-		err_msg = str(last_err)
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if error:
+		err_msg = str(error)
 	else:
 		err_msg = ''
 	jsonrpc.send_error(sender, id_, message=err_msg, data={
@@ -495,7 +479,8 @@ try:
 	})
 except IvrError as err:
 	TraceErr(err)
-	last_err = err
+finally:
+	is_ignore_release = True
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -519,7 +504,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1130</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本</NodeName>
+    <NodeName>脚本 play ok</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=dropped_by='sys'</ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -534,7 +519,8 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1086</target>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -542,7 +528,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1132</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本</NodeName>
+    <NodeName>脚本 hangup on play</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=dropped_by='usr'</ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -557,21 +543,100 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1217</NodeID>
+    <NodeType>AFTERPROC</NodeType>
+    <NodeName>后处理</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
           <target>1086</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1205</NodeID>
+    <NodeID>1221</NodeID>
+    <NodeType>PLAY</NodeType>
+    <NodeName>放音</NodeName>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0;Option=PlayList=cl</ExtendedProperty>
+    <PropertySet>
+      <DynamicVoice />
+      <SubTitle />
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1100</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1224</target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1132</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1222</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 i=0</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>i</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>0</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1221</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1224</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 play_content is list?</NodeName>
+    <NodeName>判断 i &lt; play_repeat</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <switch>
         <case>
-          <expression>isinstance(play_content, list)</expression>
+          <expression>i &lt; play_repeat</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>
@@ -587,50 +652,44 @@ except IvrError as err:
           <type>101</type>
           <targetflow>
           </targetflow>
-          <target>1207</target>
+          <target>1226</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
           <targetflow>
           </targetflow>
-          <target>1083</target>
+          <target>1130</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1207</NodeID>
-    <NodeType>PLAY</NodeType>
-    <NodeName>放音 list</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0</ExtendedProperty>
+    <NodeID>1226</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 ++i</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
     <PropertySet>
-      <DynamicVoice>
-        <VarVoice>
-          <content>params['play_content']</content>
-          <type>0</type>
-          <option>
-          </option>
-        </VarVoice>
-      </DynamicVoice>
-      <SubTitle />
+      <letlist>
+        <let>
+          <VarName>i</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>i+1</Value>
+        </let>
+      </letlist>
       <Exit>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1100</target>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1130</target>
-        </ExitPort>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1132</target>
+          <target>1221</target>
         </ExitPort>
       </Exit>
     </PropertySet>
