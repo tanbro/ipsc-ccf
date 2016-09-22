@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-25T15:33:37+08:00</CreateDate>
-    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
+    <ModifyDate>2016-09-01T10:24:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -69,8 +69,8 @@ call_info['state'] = 'Answer'
 SendAcceptCall(chan)
 ret_val = AsynchInvoke(WaitCallStatus(chan, 5000, 0, [2, 3, 4]))
 if ret_val[0] &lt; 1:
-    error = RuntimeError('WaitCallStatus(status=1xx) returns error value %s, %s' % ret_val)
-    raise error
+	error = RuntimeError('WaitCallStatus(status=1xx) returns error value %s, %s' % ret_val)
+	raise error
 if ret_val[0] == 2:
 	SendANS(chan, 1)
 	ret_val = AsynchInvoke(WaitCallStatus(chan, 5000, 0, [3,4]))
