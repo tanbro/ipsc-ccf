@@ -59,6 +59,10 @@
           <expression>eventtype == 1</expression>
           <ExitType>101</ExitType>
         </case>
+        <case>
+          <expression>eventtype == 2</expression>
+          <ExitType>102</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -73,6 +77,12 @@
           <targetflow>
           </targetflow>
           <target>3563</target>
+        </ExitPort>
+        <ExitPort>
+          <type>102</type>
+          <targetflow>
+          </targetflow>
+          <target>1963</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -107,8 +117,7 @@ _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1963</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -176,6 +185,42 @@ _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
           <targetflow>
           </targetflow>
           <target>1135</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1963</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 SIP 注册</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=sip_accounts = [
+	(
+		'8675522730043', # display name
+		'8675522730043', #user
+		'3365984456', # password
+		'8675522730043', # auth user
+		'ngntel.852call.net', # domain
+	)
+]
+
+for sip_account in sip_accounts:
+	SipRegister(*sip_account)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
