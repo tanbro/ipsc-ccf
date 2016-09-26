@@ -266,8 +266,11 @@ SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
 opts = ''
 opts_dict = {}
 if ring_play_file:
-	opts_dict['ConnectSrcCh'] = 0
 	opts_dict['PlayFileMode'] = ring_play_mode
+	if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+		opts_dict['ConnectSrcCh'] = 1
+	else:
+		opts_dict['ConnectSrcCh'] = 0
 else:
 	opts_dict['ConnectSrcCh'] = 1
 for k, v in opts_dict.items():

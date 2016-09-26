@@ -61,7 +61,7 @@ try:
 
 	# params type cast
 	params['max_connect_seconds'] = int(params['max_connect_seconds'])
-	params['ring_play_mode'] = int(params.get('ring_play_mode', 1))
+	params['ring_play_mode'] = int(params.get('ring_play_mode', 3))
 	if params.get('ring_play_file') is None:
 		params['ring_play_file'] = ''
 	else:

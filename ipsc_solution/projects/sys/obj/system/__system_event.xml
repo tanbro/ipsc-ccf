@@ -193,18 +193,19 @@ _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
     <NodeID>1963</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 SIP 注册</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=if GetIpscID () == '0.0.0':
-	sip_accounts = [
-		(
-			'8675522730043', # display name
-			'8675522730043', #user
-			'3365984456', # password
-			'8675522730043', # auth user
-			'ngntel.852call.net', # domain
-		)
-	]
-	for sip_account in sip_accounts:
-		SipRegister(*sip_account)
+    <ExtendedProperty>ZoneType=0;ScriptContent=ini_file = '/home/hesong/ipsc/config/{}/SipReg.ini'.format(GetIpscID())
+for i in range(64):
+	section = str(i)
+	username = IniGetString(section, 'username', None, ini_file)
+	if username is None:
+		break
+	displayname = IniGetString(section, 'displayname', '', ini_file)
+	psw = IniGetString(section, 'psw', '', ini_file)
+	authorusername = IniGetString(section, 'authorusername', '', ini_file)
+	domain = IniGetString(section, 'domain', '', ini_file)
+	expires = IniGetInt(section, 'expires', 3600, ini_file)
+	remotesipport = IniGetInt(section, 'remotesipport', 5060, ini_file)
+	SipRegister(displayname, username, psw, authorusername, domain, expires, remotesipport)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
