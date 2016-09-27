@@ -75,7 +75,10 @@ try:
 		params['play_file'] = str(params.get('play_file'))
 	# parse numbers
 	to1_user, to1_host, to1_port = utils.parse_sip_uri(params['to1_uri'])
-	from1_user, from1_host, from1_port = utils.parse_sip_uri(params['from1_uri'])
+	from1_uri = params['from1_uri']
+	if '@' not in from1_uri:
+		from1_uri = '{}@localhost'.format(from1_uri, '')
+	from1_user, from1_host, from1_port = utils.parse_sip_uri(from1_uri)
 	if to1_user:
 		final_to1 = '{}@{}:{}'.format(to1_user, to1_host, to1_port)
 	else:

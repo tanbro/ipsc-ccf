@@ -275,7 +275,10 @@ else:
 #
 # parse numbers
 to2_user, to2_host, to2_port = utils.parse_sip_uri(params['to2_uri'])
-from2_user, from2_host, from2_port = utils.parse_sip_uri(params['from2_uri'])
+from2_uri = params['from2_uri']
+if '@' not in from2_uri:
+	from2_uri = '{}@localhost'.format(from2_uri, '')
+from2_user, from2_host, from2_port = utils.parse_sip_uri(from2_uri)
 if to2_user:
 	final_to2 = '{}@{}:{}'.format(to2_user, to2_host, to2_port)
 else:
