@@ -48,7 +48,7 @@
     <NodeID>1078</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to_uri'];Ani=params['from_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=final_to;Ani=from_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -98,6 +98,14 @@ is_ignore_release = False
 try:
 	_map_ = _gd_['notify_call']
 
+	# parse numbers
+	to_user, to_host, to_port = utils.parse_sip_uri(params['to_uri'])
+	from_user, from_host, from_port = utils.parse_sip_uri(params['from_uri'])
+	if to_user:
+		final_to = '{}@{}:{}'.format(to_user, to_host, to_port)
+	else:
+		final_to = '{}:{}'.format(to_host, to_port)
+
 	play_repeat = int(params.get('play_repeat', 0))
 
 	cl = []
@@ -118,8 +126,6 @@ try:
 				cl.append([str(item[0]), int(item[1]), str(item[2])])
 			except Exception as err:
 				TraceErr('WARNING: %s' % err)
-
-	Trace('play_content: %s' % cl)
 
 	res_id = utils.make_res_id()
 	Trace('res_id: %s' % res_id)

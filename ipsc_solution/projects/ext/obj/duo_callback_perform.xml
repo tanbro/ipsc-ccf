@@ -108,7 +108,7 @@ play_file = params['play_file']
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1032</target>
+          <target>1229</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
@@ -124,7 +124,7 @@ play_file = params['play_file']
     <NodeID>1027</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号 2</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=params['to2_uri'];Ani=params['from2_uri'];OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=final_to2;Ani=from2_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -252,8 +252,36 @@ for k, v in opts_dict.items():
     <NodeName>脚本</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['state'] = 'Answered'
 res_obj['answer_time'] = now()
-
-
+#
+#
+#
+opts = ''
+opts_dict = {}
+if ring_play_mode==3:
+	opts_dict['ConnectSrcCh'] = 1
+else:
+	if ring_play_file:
+		opts_dict['PlayFileMode'] = ring_play_mode
+		if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+			opts_dict['ConnectSrcCh'] = 1
+		else:
+			opts_dict['ConnectSrcCh'] = 0
+	else:
+		opts_dict['ConnectSrcCh'] = 1
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
+#
+# parse numbers
+to2_user, to2_host, to2_port = utils.parse_sip_uri(params['to2_uri'])
+from2_user, from2_host, from2_port = utils.parse_sip_uri(params['from2_uri'])
+if to2_user:
+	final_to2 = '{}@{}:{}'.format(to2_user, to2_host, to2_port)
+else:
+	final_to2 = '{}:{}'.format(to2_host, to2_port)
+#
+#
 fail_cdr_datas = [
 	str(res_id),
 	params.get('user_data2'),
@@ -262,21 +290,6 @@ fail_cdr_datas = [
 	None,
 ]
 SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
-#
-opts = ''
-opts_dict = {}
-if ring_play_file:
-	opts_dict['PlayFileMode'] = ring_play_mode
-	if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
-		opts_dict['ConnectSrcCh'] = 1
-	else:
-		opts_dict['ConnectSrcCh'] = 0
-else:
-	opts_dict['ConnectSrcCh'] = 1
-for k, v in opts_dict.items():
-	if opts:
-		opts = opts + ';'
-	opts = opts + '{}={}'.format(k,v)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -392,6 +405,81 @@ res_obj['end_time'] = now()</ExtendedProperty>
         </ExitPort>
         <ExitPort>
           <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1229</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 ring_play_mode==3</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>ring_play_mode == 3</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1231</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1032</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1231</NodeID>
+    <NodeType>PLAY</NodeType>
+    <NodeName>放音</NodeName>
+    <ExtendedProperty>PrePromptVoice=;ChNo=;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0;Option=</ExtendedProperty>
+    <PropertySet>
+      <DynamicVoice>
+        <VarVoice>
+          <content>ring_play_file</content>
+          <type>0</type>
+          <option>
+          </option>
+        </VarVoice>
+      </DynamicVoice>
+      <SubTitle />
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1032</target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
           <targetflow>
           </targetflow>
           <target>
