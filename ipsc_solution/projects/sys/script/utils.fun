@@ -35,4 +35,6 @@ def parse_sip_uri(sip_uri):
         raise RuntimeError('Invalid number: %s' % destuser)
     if destuser.startswith('00'):
         raise RuntimeError('Invalid number: %s' % destuser)
+    if not destuser.isdigit():
+        raise RuntimeError('Invalid number: %s' % destuser)
     return destuser, destip, destport
