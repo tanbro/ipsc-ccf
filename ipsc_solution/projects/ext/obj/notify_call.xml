@@ -104,7 +104,10 @@ try:
 
 	# parse numbers
 	to_user, to_host, to_port = utils.parse_sip_uri(params['to_uri'])
-	from_user, from_host, from_port = utils.parse_sip_uri(params['from_uri'])
+	from_uri = params['from_uri']
+	if '@' not in from_uri:
+		from_uri = '{}@localhost'.format(from_uri, '')
+	from_user, from_host, from_port = utils.parse_sip_uri(from_uri)
 	if to_user:
 		final_to = '{}@{}:{}'.format(to_user, to_host, to_port)
 	else:
