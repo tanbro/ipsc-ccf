@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:05:43+08:00</CreateDate>
-    <ModifyDate>2016-09-01T10:24:17+08:00</ModifyDate>
+    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -20,7 +20,7 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1487</target>
+          <target>1977</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
@@ -112,6 +112,107 @@
           <targetflow>
           </targetflow>
           <target>1180</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1977</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=is_huapi = False
+
+fr_uri = GetOrgCallNo()
+fr_user, fr_host, fr_port = utils.parse_sip_uri(fr_uri)
+
+if fr_host == '192.168.10.88':
+	is_huapi = True
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1979</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1979</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 is_huapi</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>is_huapi</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1982</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1487</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1982</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 huapi</NodeName>
+    <ExtendedProperty>SubFlowName=huapi;InvokeType=0;ChNo=;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>fr_user</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>21</type>
+          <targetflow>huapi</targetflow>
+          <target>1000</target>
         </ExitPort>
       </Exit>
     </PropertySet>
