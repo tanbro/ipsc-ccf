@@ -31,12 +31,12 @@ def parse_sip_uri(sip_uri):
     else:
         destuser = userhost_parts[0]
         destip = userhost_parts[1]
-    if len(destuser) > 13:
-        raise RuntimeError('Invalid number: %s. Too long.' % sip_uri)
-    if  len(destuser) < 7:
-        raise RuntimeError('Invalid number: %s. Too short.' % sip_uri)
-    if destuser.startswith('00'):
-        raise RuntimeError('Invalid number: %s. Starts with "00".' % sip_uri)
-    if not destuser.isdigit():
-        raise RuntimeError('Invalid number: %s. Not digits.' % sip_uri)
+    # if len(destuser) > 13:
+    #     raise RuntimeError('Invalid number: %s. Too long.' % sip_uri)
+    # if  len(destuser) < 7:
+    #     raise RuntimeError('Invalid number: %s. Too short.' % sip_uri)
+    # if destuser.startswith('00'):
+    #     raise RuntimeError('Invalid number: %s. Starts with "00".' % sip_uri)
+    # if not destuser.isdigit():
+    #     raise RuntimeError('Invalid number: %s. Not digits.' % sip_uri)
     return destuser, destip, destport
