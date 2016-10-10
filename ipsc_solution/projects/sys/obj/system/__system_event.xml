@@ -199,13 +199,20 @@ for i in range(64):
 	username = IniGetString(section, 'username', None, ini_file)
 	if username is None:
 		break
-	displayname = IniGetString(section, 'displayname', '', ini_file)
-	psw = IniGetString(section, 'psw', '', ini_file)
+	displayname = IniGetString(section, 'displayname', username, ini_file)
+	psw = IniGetString(section, 'psw', None, ini_file)
+	if psw is None:
+		TraceErr('No psw field in sip account %d' % i)
+		continue
 	authorusername = IniGetString(section, 'authorusername', '', ini_file)
-	domain = IniGetString(section, 'domain', '', ini_file)
+	domain = IniGetString(section, 'domain', None, ini_file)
+	if domain is None:
+		TraceErr('No domain field in sip account %d' % i)
+		continue
+	proxyip = IniGetString(section, 'proxyip', domain, ini_file)
+	proxyport = IniGetInt(section, 'proxyport', 5060, ini_file)
 	expires = IniGetInt(section, 'expires', 3600, ini_file)
-	remotesipport = IniGetInt(section, 'remotesipport', 5060, ini_file)
-	SipRegister(displayname, username, psw, authorusername, domain, expires, remotesipport)
+	SipRegister(displayname, username, psw, authorusername, proxyip, proxyport, domain, expires)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
