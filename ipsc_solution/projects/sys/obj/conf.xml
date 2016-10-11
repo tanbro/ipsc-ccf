@@ -397,12 +397,13 @@ elif err != 1:
     <NodeName>脚本 conf.create ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	begin_time = now()
 	res_id = utils.make_res_id()
 	conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id, 
 		'conf_id': conf_id,
-		'begin_time': now(),
+		'begin_time': begin_time,
 		'end_time': None,
 		'parts': [],
 	}
