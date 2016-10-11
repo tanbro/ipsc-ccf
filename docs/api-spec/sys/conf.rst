@@ -91,7 +91,6 @@
     ``user_data``     与会方（呼叫）的用户数据，来源于呼叫的构造函数
     ================= ==========================================================
 
-
 删除会议
 ===============
 
@@ -102,7 +101,7 @@
 开始播放声音文件
 =================
 
-.. function:: play_start(res_id, file, repeat=0)
+.. function:: play_start(res_id, file, is_loop=False)
 
   :param str res_id: 在该会议中开始放音
 
@@ -114,7 +113,9 @@
 
         play_start("your-conf-id", "1.wav|2.wav|3.wav")
 
-  :param int repeat: 重复播放次数，默认为 `0` ，表示不重复播放。
+  :param bool is_loop: 是否循环播放。
+
+    :default: `False` 不循环播放
 
 停止播放声音文件
 =================
