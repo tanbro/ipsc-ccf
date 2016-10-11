@@ -209,11 +209,15 @@ for i in range(64):
 	if domain is None:
 		TraceErr('No domain field in sip account %d' % i)
 		continue
-	proxyip = IniGetString(section, 'proxyip', domain, ini_file)
-	proxyport = IniGetInt(section, 'proxyport', 5060, ini_file)
+	proxyip = IniGetString(section, 'proxyip', "", ini_file)
+	port = IniGetInt(section, 'port', 5060, ini_file)
 	expires = IniGetInt(section, 'expires', 3600, ini_file)
-	Trace('SipRegister(displayname=%s, username=%s, psw=%s, authorusername=%s, proxyip=%s, proxyport=%s, domain=%s, expires=%s)' % (displayname, username, psw, authorusername, proxyip, proxyport, domain, expires))
-	SipRegister(displayname, username, psw, authorusername, proxyip, proxyport, domain, expires)
+	Trace('SipRegister(displayname=%s, username=%s, psw=%s, authorusername=%s, domain=%s, port=%s, proxyip=%s, expires=%s)' % (displayname, username, psw, authorusername, domain, port, proxyip, expires))
+	sipregidx = SipRegister(displayname, username, psw, authorusername, domain, port, proxyip, expires)
+	if sipregidx &gt;= 0:
+		Trace('SipRegister =&gt; %s' % sipregidx)
+	else:
+		TraceErr('SipRegister =&gt; %s' % sipregidx)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
