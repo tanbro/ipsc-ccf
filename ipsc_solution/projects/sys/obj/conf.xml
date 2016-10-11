@@ -503,7 +503,7 @@ try:
 		StartConfPlay(
 			conf_id,
 			params['file'],
-			mode=int(params.get('is_loop', False))
+			mode=int(bool(params.get('is_loop', False)))
 		)
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
