@@ -685,7 +685,6 @@
     **但是** 呼叫释放事件和上述操作结束事件 **不具备顺序性** 。
     也就是说，应用程序可能在收到放音结束事件之前，就收到呼叫释放事件。
 
-
 拨号结束
 -----------
 在外呼拨号失败、超时或者被接听时发生
@@ -704,10 +703,26 @@
 
   :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 
+应答结束
+----------
+应答来电后，该事件返回其应答结果
+
+.. function:: on_answer_completed(res_id, error, begin_time, end_time, user_data)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
+  :param int begin_time: 本次应答的开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+
+  :param int end_time: 本次应答的结束时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+
+    .. note:: 这个时间只是应答的结束时间，不是整个呼叫的结束时间。
+
+  :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
+
 放音结束
 -------------
 
-.. function:: on_play_completed(res_id, error, begin_time, end_time, finish_key, user_data)
+.. function:: on_play_completed(res_id, error, begin_time, end_time, user_data)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。如果播放失败，该参数记录错误信息；否则该参数的值是 ``null``。
