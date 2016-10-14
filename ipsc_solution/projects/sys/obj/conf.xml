@@ -261,7 +261,9 @@ elif err != 1:
     <NodeID>1416</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 parse data</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)</ExtendedProperty>
+    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)
+if method.startswith('conf.'):
+	method = method[4:]</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -406,10 +408,10 @@ try:
 		'begin_time': begin_time,
 		'end_time': None,
 		'parts': [],
+		'user_data': params.get('user_data'),
 	}
 	jsonrpc.send_result(sender, id_, {
-		'res_id': res_id,
-		'user_data': params.get('user_data'),
+		'res_id': res_id
 	})
 except IvrError as err:
 	TraceErr(err)
