@@ -196,7 +196,9 @@ except IvrError as err:
     <NodeID>1383</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, False, 0, -1, "BusNotifyTitle=%s" % res_id))
+    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('&gt;&gt;&gt; AsynchDelay(title=%s)' % res_id)
+ret_val = AsynchInvoke(Delay(15000, False, 0, -1, "BusNotifyTitle=%s" % res_id))
+Trace('&lt;&lt;&lt; AsynchDelay(title=%s)' % res_id)
 err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
@@ -262,7 +264,7 @@ elif err != 1:
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 parse data</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)
-if method.startswith('conf.'):
+if method.startswith('sys.'):
 	method = method[4:]</ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -609,7 +611,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		jsonrpc.send_result(sender, id_, params['res_id'] in call_map_r)
+		jsonrpc.send_result(sender, id_, params['res_id'] in conf_map_r)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise

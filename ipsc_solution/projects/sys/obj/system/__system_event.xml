@@ -194,14 +194,18 @@ _gd_['conf_map_r'] = {} # res_id -&gt; conf_info
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 SIP 注册</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=ini_file = '/home/hesong/ipsc/config/{}/SipReg.ini'.format(GetIpscID())
+Trace('SipReg fil=%s' % ini_file)
 for i in range(64):
+	Trace('SipReg [%d]' % i)
 	section = str(i)
 	username = IniGetString(section, 'username', None, ini_file)
 	if username is None:
+		Trace('SipReg [%d]: username is None' % i)
 		break
 	displayname = IniGetString(section, 'displayname', username, ini_file)
 	psw = IniGetString(section, 'psw', None, ini_file)
 	if psw is None:
+		Trace('SipReg [%d]: psw is None' % i)
 		TraceErr('No psw field in sip account %d' % i)
 		continue
 	authorusername = IniGetString(section, 'authorusername', '', ini_file)
