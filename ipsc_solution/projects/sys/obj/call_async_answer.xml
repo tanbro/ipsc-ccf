@@ -65,9 +65,11 @@ chan = call_info['chan']
 org_state = call_info['state']
 call_info['answer_time'] = now()
 call_info['state'] = 'Answer'
-#    
+#
+Trace('&gt;&gt;&gt; SendAcceptCall')
 SendAcceptCall(chan)
 ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[2,3,4]))
+Trace('&lt;&lt;&lt; WaitCallStatus -&gt; {}'.format(str(ret_val)))
 if ret_val[0] &lt; 1:
 	error = RuntimeError('WaitCallStatus(status=1xx) returns error value %s, %s' % ret_val)
 	raise error
@@ -156,13 +158,13 @@ if not isinstance(error, IvrError):
   <FlowNode>
     <NodeID>1996</NodeID>
     <NodeType>JUDGE</NodeType>
-    <NodeName>判断 ret_val[0] == 2</NodeName>
+    <NodeName>判断 ret_val[0] in (1, 2)</NodeName>
     <ExtendedProperty>
     </ExtendedProperty>
     <PropertySet>
       <switch>
         <case>
-          <expression>ret_val[0] == 2</expression>
+          <expression>ret_val[0] in (1, 2)</expression>
           <ExitType>101</ExitType>
         </case>
       </switch>

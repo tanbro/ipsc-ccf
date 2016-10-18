@@ -125,8 +125,8 @@
 fr_uri = GetOrgCallNo()
 fr_user, fr_host, fr_port = utils.parse_sip_uri(fr_uri)
 
-if fr_host == '192.168.10.88':
-	is_huapi = True
+#if fr_host == '192.168.10.88':
+#	is_huapi = True
 </ExtendedProperty>
     <PropertySet>
       <Exit>
