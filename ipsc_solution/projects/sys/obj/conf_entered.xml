@@ -64,7 +64,7 @@ try:
 	errno, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
 	if errno &lt;= 0:
 		raise RuntimeError("GetConferList(conf_id={}) returns {}".format(conf_id, errno))
-	parts = conf_info['parts']
+	parts = []
 	for i in range(len(chan_list)):
 		chan = chan_list[i]
 		call_info = call_map[chan]
@@ -74,6 +74,7 @@ try:
 			'user_data': call_info['params'].get('user_data'),
 			'voice_mode': mode_list[i],
 		})
+	conf_info['parts'] = parts
 except IvrError as err:
 	TraceErr(err)
 	last_err = err</ExtendedProperty>
