@@ -68,7 +68,7 @@ try:
 	rm_idx = []
 	for i in range(len(chan_list)):
 		chan = chan_list[i]
-		if chan = parts[i]['chan']:
+		if chan == parts[i]['chan']:
 			rm_idx.insert(0, i)
 	for i in rm_idx
 		parts.pop(i)
