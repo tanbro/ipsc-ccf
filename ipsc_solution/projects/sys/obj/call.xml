@@ -2329,6 +2329,8 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		params['max_seconds'] = int(params['max_seconds'])
+		params['volume'] = int(params.get('volume', 0)
 		conf_res_id = params['conf_res_id']
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
