@@ -91,7 +91,6 @@
     ``user_data``     与会方（呼叫）的用户数据，来源于呼叫的构造函数
     ================= ==========================================================
 
-
 删除会议
 ===============
 
@@ -102,7 +101,7 @@
 开始播放声音文件
 =================
 
-.. function:: play_start(res_id, file, repeat=0)
+.. function:: play_start(res_id, file, is_loop=False)
 
   :param str res_id: 在该会议中开始放音
 
@@ -114,7 +113,9 @@
 
         play_start("your-conf-id", "1.wav|2.wav|3.wav")
 
-  :param int repeat: 重复播放次数，默认为 `0` ，表示不重复播放。
+  :param bool is_loop: 是否循环播放。
+
+    :default: `False` 不循环播放
 
 停止播放声音文件
 =================
@@ -175,27 +176,26 @@
 会议被删除
 ============
 
-.. function:: on_released(res_id， begin_time, end_time)
+.. function:: on_released(res_id， begin_time, end_time, user_data)
 
   :param str res_id: 触发事件的会议资源 `ID`。
   :param int begin_time: 该会议的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
     如果会议没有被成功建立，该参数的值是 ``null``。
   :param int end_time: 该会议的结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 文件放音结束
 =============
 
-.. function:: on_play_completed(res_id, begin_time, end_time)
+.. function:: on_play_completed(res_id, user_data)
 
   :param str res_id: 触发事件的会议资源 `ID`。
-  :param int begin_time: 放音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param int end_time: 放音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 录音结束
 =============
 
-.. function:: on_record_completed(res_id, begin_time, end_time)
+.. function:: on_record_completed(res_id, user_data)
 
   :param str res_id: 触发事件的会议资源 `ID`。
-  :param int begin_time: 录音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param int end_time: 录音束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数

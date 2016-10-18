@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <FlowItem>
+    <FlowID>huapi</FlowID>
+    <FlowName>huapi</FlowName>
+    <FlowDesc />
+    <FlowVer>1.0</FlowVer>
+    <CreateDate>2016-09-30T14:33:39+08:00</CreateDate>
+    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
+    <DesignVer>2.0</DesignVer>
+  </FlowItem>
+  <FlowNode>
+    <NodeID>1981</NodeID>
+    <NodeType>SUBSTART</NodeType>
+    <NodeName>子流程开始</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <AffectList>
+        <varlist>
+          <var>fr_user</var>
+        </varlist>
+      </AffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1986</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1985</NodeID>
+    <NodeType>DIALEX</NodeType>
+    <NodeName>拨号</NodeName>
+    <ExtendedProperty>WorkCh=;Dnis=to_uri;Ani=fr_user;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=;RingTimeout=50;IsStopPlay=1;IsCheckDialTone=0;OutChNo=dial_chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>6</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1990</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1986</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 1xx</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=to_uri = '{}@{}'.format(GetCalledNo(), '192.168.10.53')
+curr_chan = GetCurrentCh()
+
+#
+SendAcceptCall(curr_chan)
+ret_val = AsynchInvoke(WaitCallStatus(curr_chan,5000,0,[2,3,4]))
+if ret_val[0] &lt; 1:
+	error = RuntimeError('WaitCallStatus(status=1xx) returns error value %s, %s' % ret_val)
+	raise error
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1985</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1989</NodeID>
+    <NodeType>CONNECT</NodeType>
+    <NodeName>连接</NodeName>
+    <ExtendedProperty>ChNo1=curr_chan;Volum1=;ChNo2=dial_chan;Volum2=;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=;OutExitCh=;IsRecord=0;RecordFile=;RecordFormat=6;EndCloseCh=1;EndBeepTime=;Option=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1990</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 2xx</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=#
+SendANS(curr_chan, 1)
+ret_val = AsynchInvoke(WaitCallStatus(curr_chan,5000,0,[3,4]))
+if ret_val[0] &lt; 1:
+	error = RuntimeError('WaitCallStatus(states=2xx) returns error value  %s, %s' % ret_val)
+	raise error
+#
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1989</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+</root>

@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-09-01T10:24:17+08:00</ModifyDate>
+    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -501,7 +501,7 @@ elif err != 1:
     <NodeID>1192</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option="SipProxy=120.31.128.49";WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -681,13 +681,13 @@ except IvrError as err:
 try:
 	org_from_uri = params.get('from_uri')
 	if bool(org_from_uri):
-		user, host, port = utils.parse_sip_uri(org_from_uri)
-		if user:
-			from_uri = '{0}@{1}:{2}'.format(user, host, port)
+		if '@' in org_from_uri:
+			from_uri = org_from_uri
 		else:
-			from_uri = '{1}:{2}'.format(user, host, port)
+			from_uri = '{}@localhost'.format(org_from_uri)
+		from_user, from_host, from_port = utils.parse_sip_uri(from_uri)
 	else:
-		from_uri = ''
+		from_uri = from_user = ''
 	user, host, port = utils.parse_sip_uri(params['to_uri'])
 	if user:
 		to_uri = '{0}@{1}:{2}'.format(user, host, port)

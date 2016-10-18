@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-12T14:00:57+08:00</CreateDate>
-    <ModifyDate>2016-09-01T10:24:17+08:00</ModifyDate>
+    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -196,7 +196,9 @@ except IvrError as err:
     <NodeID>1383</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=ret_val = AsynchInvoke(Delay(15000, False, 0, -1, "BusNotifyTitle=%s" % res_id))
+    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('&gt;&gt;&gt; AsynchDelay(title=%s)' % res_id)
+ret_val = AsynchInvoke(Delay(15000, False, 0, -1, "BusNotifyTitle=%s" % res_id))
+Trace('&lt;&lt;&lt; AsynchDelay(title=%s)' % res_id)
 err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
@@ -261,7 +263,9 @@ elif err != 1:
     <NodeID>1416</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 parse data</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)</ExtendedProperty>
+    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)
+if method.startswith('sys.'):
+	method = method[4:]</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -397,18 +401,19 @@ elif err != 1:
     <NodeName>脚本 conf.create ok return</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	begin_time = now()
 	res_id = utils.make_res_id()
 	conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id, 
 		'conf_id': conf_id,
-		'begin_time': now(),
+		'begin_time': begin_time,
 		'end_time': None,
 		'parts': [],
+		'user_data': params.get('user_data'),
 	}
 	jsonrpc.send_result(sender, id_, {
-		'res_id': res_id,
-		'user_data': params.get('user_data'),
+		'res_id': res_id
 	})
 except IvrError as err:
 	TraceErr(err)
@@ -503,9 +508,9 @@ try:
 		StartConfPlay(
 			conf_id,
 			params['file'],
-			mode=int(params.get('is_loop', False))
+			mode=int(bool(params.get('is_loop', False)))
 		)
-		jsonrpc.send_result(sender, id_, params.get('record_file'))
+		jsonrpc.send_result(sender, id_)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
@@ -606,7 +611,7 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
-		jsonrpc.send_result(sender, id_, params['res_id'] in call_map_r)
+		jsonrpc.send_result(sender, id_, params['res_id'] in conf_map_r)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
 		raise
