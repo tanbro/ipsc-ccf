@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-25T15:33:37+08:00</CreateDate>
-    <ModifyDate>2016-09-01T10:24:17+08:00</ModifyDate>
+    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -67,43 +67,10 @@ call_info['answer_time'] = now()
 call_info['state'] = 'Answer'
 #    
 SendAcceptCall(chan)
-ret_val = AsynchInvoke(WaitCallStatus(chan,5000,0,[2,3,4]))
+ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[2,3,4]))
 if ret_val[0] &lt; 1:
 	error = RuntimeError('WaitCallStatus(status=1xx) returns error value %s, %s' % ret_val)
 	raise error
-if ret_val[0] == 2:
-	SendANS(chan, 1)
-	ret_val = AsynchInvoke(WaitCallStatus(chan,5000,0,[3,4]))
-	if ret_val[0] &lt; 1:
-		error = RuntimeError('WaitCallStatus(states=2xx) returns error value  %s, %s' % ret_val)
-		raise error
-
-try:
-# set cdr info
-	cdr_datas = [
-		str(res_id),
-		params.get('user_data'),
-		None,
-		None,
-		None,
-	]
-	SetCdrAdditionalInfo(chan, *cdr_datas)
-# Answer OK!!!
-	call_info['state'] = 'Idle'
-# return !
-	jsonrpc.send_event(
-		method='call.on_answer_completed',
-		params={
-			'res_id': res_id,
-			'error': None,
-			'begin_time': begin_time,
-			'end_time': now(),
-			'user_data': call_info['params'].get('user_data'),
-		}
-	)
-except IvrError as err:
-	error = err
-	TraceErr(err)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -117,7 +84,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1848</target>
+          <target>1996</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -176,6 +143,95 @@ if not isinstance(error, IvrError):
           </targetflow>
           <target>
           </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1848</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1996</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 ret_val[0] == 2</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>ret_val[0] == 2</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1853</target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1999</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1848</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1999</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=SendANS(chan, 1)
+ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[3,4]))
+if ret_val[0] &lt; 1:
+	error = RuntimeError('WaitCallStatus(states=2xx) returns error value  %s, %s' % ret_val)
+	raise error
+
+try:
+# set cdr info
+	cdr_datas = [
+		str(res_id),
+		params.get('user_data'),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan, *cdr_datas)
+# Answer OK!!!
+	call_info['state'] = 'Idle'
+# return !
+	jsonrpc.send_event(
+		method='call.on_answer_completed',
+		params={
+			'res_id': res_id,
+			'error': None,
+			'begin_time': begin_time,
+			'end_time': now(),
+			'user_data': call_info['params'].get('user_data'),
+		}
+	)
+except IvrError as err:
+	error = err
+	TraceErr(err)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1853</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
