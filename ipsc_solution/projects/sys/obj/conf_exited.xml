@@ -70,6 +70,7 @@ try:
 		call_info = call_map[chan]
 		parts.append({
 			'res_id': call_info['res_id'],
+			'chan': chan,
 			'user_data': call_info['params'].get('user_data'),
 			'voice_mode': mode_list[i],
 		})
