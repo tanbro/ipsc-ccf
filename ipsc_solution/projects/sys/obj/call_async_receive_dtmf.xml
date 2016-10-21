@@ -85,7 +85,7 @@
 			including_finish_key = False
 		else:
 			including_finish_key = False
-	else
+	else:
 		including_finish_key = bool(including_finish_key)
 	max_keys = int(params.get('max_keys', 11))
 	play_repeat = int(params.get('play_repeat', 0))
