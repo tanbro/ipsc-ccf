@@ -522,7 +522,7 @@
   :param int max_seconds: 最大双通道连接时间长度（秒）。
   :param str call_res_id: 双通道连接的第二方
 
-  :param int connect_mode: 连接模式。
+  :param int connect_mode: 连接模式。(**尚未实现**)
 
     ====== =====================
     值     说明
@@ -532,7 +532,7 @@
     ``3``  仅连接的第一方可以听到第二方;第二方听不到第一方
     ====== =====================
 
-  :param str record_file: 录音文件。如果该参数不为 `None` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
+  :param str record_file: 录音文件。如果该参数不为 `None` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。(**尚未实现**)
 
     :default: `None`
 
