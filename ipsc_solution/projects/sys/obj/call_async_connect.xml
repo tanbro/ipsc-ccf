@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-24T17:30:41+08:00</CreateDate>
-    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
+    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -55,33 +55,41 @@
 
 last_err = None
 
-call_map = _gd_['call_map'] # chan =&gt; call_info
-conf_map = _gd_['conf_map'] # res_id =&gt; call_info
-
-call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
-conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
-
-#
-call_info = call_map_r[res_id]
-chan = call_info['chan']
-
-#
-begin_time = now()
-
-#
-call_res_id = params['call_res_id']
-bridge_call_info = call_map_r[call_res_id]
-bridge_chan = bridge_call_info['chan']
-
-#
-call_info['state'] = 'Connect'
-bridge_call_info['state'] = 'Connect'
-
 #
 try:
-	schedule_play_loop = int(params['schedule_play_loop'])
-except:
-	schedule_play_loop = 0
+	call_map = _gd_['call_map'] # chan =&gt; call_info
+	conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+
+	call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
+	conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+
+	#
+	call_info = call_map_r[res_id]
+	chan = call_info['chan']
+
+	#
+	begin_time = now()
+
+	#
+	call_res_id = params['call_res_id']
+	bridge_call_info = call_map_r[call_res_id]
+	bridge_chan = bridge_call_info['chan']
+
+	#
+	call_info['state'] = 'Connect'
+	bridge_call_info['state'] = 'Connect'
+
+
+	local_volume = int(params.get('local_volume', 0))
+	remote_volume = int(params.get('remote_volume', 0))
+	max_seconds = int(params['max_seconds'])
+	schedule_play_file = params.get('schedule_play_file', None)
+	schedule_play_time = int(params.get('schedule_play_time', None))
+	schedule_play_loop = int(params.get('schedule_play_loop', 0))
+
+except Exception as excp:
+	error = '%s' % excp
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -89,7 +97,8 @@ except:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1803</target>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -248,42 +257,10 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1803</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 error</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>error</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>'unknown'</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
     <NodeID>1804</NodeID>
     <NodeType>CONNECT</NodeType>
     <NodeName>连接</NodeName>
-    <ExtendedProperty>ChNo1=chan;Volum1=params.get('local_volume');ChNo2=bridge_chan;Volum2=params.get('remote_volume');ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=params['max_seconds'];OutExitCh=;IsRecord=1;RecordFile=params.get('schedule_play_file');RecordFormat=6;EndCloseCh=0;EndBeepTime=params.get('schedule_play_time');Option='IsPlayLoop=%d' % schedule_play_loop</ExtendedProperty>
+    <ExtendedProperty>ChNo1=chan;Volum1=local_volume;ChNo2=bridge_chan;Volum2=remote_volume;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=max_seconds;OutExitCh=;IsRecord=1;RecordFile=schedule_play_file;RecordFormat=6;EndCloseCh=0;EndBeepTime=schedule_play_time;Option='IsPlayLoop=%d' % schedule_play_loop</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
