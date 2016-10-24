@@ -84,7 +84,7 @@ try:
 	remote_volume = int(params.get('remote_volume', 0))
 	max_seconds = int(params['max_seconds'])
 	schedule_play_file = params.get('schedule_play_file', None)
-	schedule_play_time = int(params.get('schedule_play_time', None))
+	schedule_play_time = int(params.get('schedule_play_time', 0))
 	schedule_play_loop = int(params.get('schedule_play_loop', 0))
 
 except Exception as excp:

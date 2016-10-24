@@ -536,31 +536,31 @@
 
     :default: `None`
 
-  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。
+  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。(**尚未实现**)
 
     :default: `2`
 
-  :param int local_volume: 双通道连接建立后的发起方音量。
+  :param int local_volume: 双通道连接建立后的发起方音量。 (**尚未实现**)
 
-    :default: `None` 表示默认音量
-
-
-  :param int remote_volume: 双通道连接建立后的发起方音量。
-
-    :default: `None` 表示默认音量
+    :default: `0` 表示默认音量
 
 
-  :param int schedule_play_time: 当本次双通道连接通话进行到这个 :term:`Unix time` 时间点播放声音。
+  :param int remote_volume: 双通道连接建立后的发起方音量。(**尚未实现**)
 
-    :default: `None` 表示无定时放音
+    :default: `0` 表示默认音量
 
 
-  :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。
+  :param int schedule_play_time: 当本次双通道连接通话进行到这个 :term:`Unix time` 时间点播放声音。(**尚未实现**)
+
+    :default: `0` 表示无定时放音
+
+
+  :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。(**尚未实现**)
 
     :default: `None ` 表示无定时放音
 
 
-  :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。
+  :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。(**尚未实现**)
 
     :default: `0` 表示不播放
 
