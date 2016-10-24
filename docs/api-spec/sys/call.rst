@@ -399,7 +399,7 @@
 
     :default: `True`
 
-  :param int record_format: 录音文件格式枚举值
+  :param int record_format: 录音文件格式枚举值 (**尚未实现**)
 
     ====== ===========
     枚举值  说明
@@ -417,7 +417,7 @@
   :param str finish_keys: 录音打断按键码串。
     在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
 
-    :default: `None` 无打断按键
+    :default: `""` (空字符串) 无打断按键
 
   :rtype: str
   :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
@@ -557,7 +557,7 @@
 
   :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。(**尚未实现**)
 
-    :default: `None ` 表示无定时放音
+    :default: `None` 表示无定时放音
 
 
   :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。(**尚未实现**)
