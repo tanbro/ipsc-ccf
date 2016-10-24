@@ -2109,7 +2109,7 @@ except IvrError as err:
     <NodeID>1772</NodeID>
     <NodeType>INVOKESUB</NodeType>
     <NodeName>调子流程 async connect</NodeName>
-    <ExtendedProperty>SubFlowName=call_async_bridge;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <ExtendedProperty>SubFlowName=call_async_connect;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
     <PropertySet>
       <AffectList />
       <EffectList>
@@ -2141,7 +2141,7 @@ except IvrError as err:
         </ExitPort>
         <ExitPort>
           <type>22</type>
-          <targetflow>call_async_bridge</targetflow>
+          <targetflow>call_async_connect</targetflow>
           <target>1000</target>
         </ExitPort>
       </Exit>
