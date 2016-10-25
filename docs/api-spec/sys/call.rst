@@ -395,7 +395,7 @@
   :param str res_id: 要操作的呼叫资源的ID
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
 
-  :param bool beep: 是否在录音之前播放“嘀”的一声。
+  :param bool beep: 是否在录音之前播放“嘀”的一声。 (**尚未实现**)
 
     :default: `True`
 
