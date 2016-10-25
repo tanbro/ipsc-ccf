@@ -1263,8 +1263,8 @@ try:
 			if not k in call_info['params']:
 				call_info['params'][k] = v
 		#
-		max_answer_seconds = params['max_answer_seconds']
-		release_delay = params.get('release_delay', 1)
+		max_answer_seconds = int(params['max_answer_seconds'])
+		release_delay = int(params.get('release_delay', 1))
 		vch = NewVCh()
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
