@@ -202,18 +202,21 @@ for i in range(64):
 	if username is None:
 		Trace('SipReg [%d]: username is None' % i)
 		break
-	displayname = IniGetString(section, 'displayname', username, ini_file)
+	username=username.strip()
+	displayname = IniGetString(section, 'displayname', username, ini_file).strip()
 	psw = IniGetString(section, 'psw', None, ini_file)
 	if psw is None:
 		Trace('SipReg [%d]: psw is None' % i)
 		TraceErr('No psw field in sip account %d' % i)
 		continue
-	authorusername = IniGetString(section, 'authorusername', '', ini_file)
-	domain = IniGetString(section, 'domain', None, ini_file)
+	authorusername = IniGetString(section, 'authorusername', '', ini_file).strip()
+	if not authorusername:
+		authorusername = username
+	domain = IniGetString(section, 'domain', None, ini_file).strip()
 	if domain is None:
 		TraceErr('No domain field in sip account %d' % i)
 		continue
-	proxyip = IniGetString(section, 'proxyip', "", ini_file)
+	proxyip = IniGetString(section, 'proxyip', "", ini_file).strip()
 	port = IniGetInt(section, 'port', 5060, ini_file)
 	expires = IniGetInt(section, 'expires', 3600, ini_file)
 	Trace('SipRegister(displayname=%s, username=%s, psw=%s, authorusername=%s, domain=%s, port=%s, proxyip=%s, expires=%s)' % (displayname, username, psw, authorusername, domain, port, proxyip, expires))
