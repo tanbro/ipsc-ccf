@@ -137,7 +137,7 @@
 
   :param int record_format: 录音文件格式枚举值。见 :func:`sys.call.record_start` 的同名参数。
 
-    :default: `2`
+    :default: `3`
 
   :rtype: str
   :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
