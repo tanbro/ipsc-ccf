@@ -261,7 +261,7 @@ except IvrError as err:
     <NodeID>1804</NodeID>
     <NodeType>CONNECT</NodeType>
     <NodeName>连接</NodeName>
-    <ExtendedProperty>ChNo1=chan;Volum1=local_volume;ChNo2=bridge_chan;Volum2=remote_volume;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=max_seconds;OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=6;EndCloseCh=0;EndBeepTime=schedule_play_time;Option='IsPlayLoop=%d' % schedule_play_loop</ExtendedProperty>
+    <ExtendedProperty>ChNo1=chan;Volum1=local_volume;ChNo2=bridge_chan;Volum2=remote_volume;ConnectType=0;IsWait=1;ExitDtmfStr=;Timeout=max_seconds;OutExitCh=;IsRecord=1;RecordFile=record_file;RecordFormat=3;EndCloseCh=0;EndBeepTime=schedule_play_time;Option='IsPlayLoop=%d' % schedule_play_loop</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>

@@ -401,18 +401,18 @@
 
   :param int record_format: 录音文件格式枚举值 (**尚未实现**)
 
-    ====== ===========
-    枚举值  说明
-    ====== ===========
-    ``1``  PCM liner 8k/8bit
-    ``2``  CCITT a-law 8k/8bit
-    ``3``  CCITT mu-law 8k/8bit
-    ``4``  IMA ADPCM
-    ``5``  GSM
-    ``6``  MP3
-    ====== ===========
+    ======== ===========
+    枚举值    说明
+    ======== ===========
+    ``0x01``  OKI ADPCM
+    ``0x03``  CCITT a-law 8k/8bit
+    ``0x04``  g.726
+    ``0x07``  CCITT µ-law 8k/8bit
+    ``0x08``  PCM liner 8k/8bit
+    ``0x15``  g.721
+    ======== ===========
 
-    :default: `2`
+    :default: `3`
 
   :param str finish_keys: 录音打断按键码串。
     在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
