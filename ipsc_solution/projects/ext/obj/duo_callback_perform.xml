@@ -124,7 +124,7 @@ play_file = params['play_file']
     <NodeID>1027</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号 2</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=final_to2;Ani=from2_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts+";SipProxy=120.31.128.49";WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=final_to2;Ani=from2_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>

@@ -74,7 +74,7 @@
 ==========
 
 .. function::
-  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, ring_play_file, user_data)
+  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, ring_play_file, ring_play_mode, user_data)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
 
@@ -114,6 +114,19 @@
     如果指定了 ``parent_call_res_id`` 参数，且本参数为 ``null`` 或者空字符串，则在拨号时向父呼叫透传原始的线路拨号提示音。
 
     :default: `None`
+
+  :param int ring_play_mode: 回铃音文件 ``ring_play_file`` 播放模式
+
+    ========= ================================================
+    枚举值     说明
+    ========= ================================================
+    ``0``     收到对端回铃后开始播放。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
+    ``1``     拨号时即开始播放，收到对端回铃后停止播放，并透传回铃音。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
+    ``2``     拨号时即开始播放，对端接听或者挂机后停止播放。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
+    ``3``     拨号之前播放回铃音文件，播放完毕后再拨号，拨号时透传对方的回铃音。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
+    ========= ================================================
+
+    :default: `0`
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
