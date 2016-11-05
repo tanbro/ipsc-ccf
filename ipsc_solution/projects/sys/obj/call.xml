@@ -611,9 +611,12 @@ except IvrError as err:
 	else:
 		err_msg = ''
 
-	jsonrpc.send_error(sender, id_, message=err_msg, data={
-		'ipsc_info': call_info['ipsc_info']
-	})
+	if IsVar('call_info'):
+		jsonrpc.send_error(sender, id_, message=err_msg, data={
+			'ipsc_info': call_info['ipsc_info']
+		})
+	else:
+		jsonrpc.send_error(sender, id_, message=err_msg)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -701,12 +704,12 @@ try:
 	ring_play_file = params.get('ring_play_file')
 	if parent_call_res_id:
 		parent_call_info = call_map_r[parent_call_res_id]
+		if parent_call_info['state'] not in ['Idle']:
+			raise RuntimeError('Can not construct a call with parent call''s state is "%s"' % (parent_call_info['state']))
 		parent_call_info['state'] = 'Dial'
 		dial_chan = parent_call_info['chan']
 		opts = ''
 		opts_dict = {}
-		if parent_call_info['state'] not in ['Idle']:
-			raise RuntimeError('Can not perform method "%s" on a call whose parent call''s state is "%s"' % (method, call_info['state']))
 		ring_play_mode = int(params.get('ring_play_mode', 0))
 		if ring_play_mode==3:
 			opts_dict['ConnectSrcCh'] = 1
@@ -739,6 +742,11 @@ try:
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
+
+except Exception as err:
+	last_err = str(err)
+	raise
+
 </ExtendedProperty>
     <PropertySet>
       <Exit>
