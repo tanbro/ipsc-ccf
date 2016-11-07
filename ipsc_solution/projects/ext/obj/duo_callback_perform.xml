@@ -256,7 +256,7 @@ res_obj['answer_time'] = now()
 #
 #
 opts = ''
-opts_dict = {}
+opts_dict = {'AudioCodec1': 0x00}
 if ring_play_mode==3:
 	opts_dict['ConnectSrcCh'] = 1
 else:

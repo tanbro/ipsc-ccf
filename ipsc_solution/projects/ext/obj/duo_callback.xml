@@ -83,6 +83,13 @@ try:
 		final_to1 = '{}@{}:{}'.format(to1_user, to1_host, to1_port)
 	else:
 		final_to1 = '{}:{}'.format(to1_host, to1_port)
+	#
+	opts = ''
+	opts_dict = {'AudioCodec1': 0x00}
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
 except Exception as err:
 	last_err = err
 	raise

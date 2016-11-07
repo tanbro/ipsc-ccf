@@ -115,6 +115,14 @@ try:
 
 	play_repeat = int(params.get('play_repeat', 0))
 
+	#
+	opts = ''
+	opts_dict = {'AudioCodec1': 0x00}
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
+	#
 	cl = []
 	content = params['play_content']
 	if isinstance(content, str):

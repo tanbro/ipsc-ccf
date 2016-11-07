@@ -699,6 +699,12 @@ try:
 	release_delay = params.get('release_delay', 1)
 	max_answer_seconds = float(params['max_answer_seconds'])
 	max_ring_seconds = int(params.get('max_ring_seconds', 50))
+	#
+	opts = ''
+	opts_dict = {'AudioCodec1': 0x00}
+	parent_call_info = None
+	ring_play_file = None
+	#
 	# for SUBCALL
 	parent_call_res_id = params.get('parent_call_res_id')
 	ring_play_file = params.get('ring_play_file')
@@ -708,8 +714,6 @@ try:
 			raise RuntimeError('Can not construct a call with parent call''s state is "%s"' % (parent_call_info['state']))
 		parent_call_info['state'] = 'Dial'
 		dial_chan = parent_call_info['chan']
-		opts = ''
-		opts_dict = {}
 		ring_play_mode = int(params.get('ring_play_mode', 0))
 		if ring_play_mode==3:
 			opts_dict['ConnectSrcCh'] = 1
@@ -722,14 +726,14 @@ try:
 					opts_dict['ConnectSrcCh'] = 0
 			else:
 				opts_dict['ConnectSrcCh'] = 1
-			for k, v in opts_dict.items():
-				if opts:
-					opts = opts + ';'
-				opts = opts + '{}={}'.format(k,v)
+
 	else:
-		parent_call_info = None
 		dial_chan = GetCurrentCh()
-		ring_play_file = None
+	# dial opts
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
 	##################################
 	# new call-info
 	##################################
