@@ -74,7 +74,7 @@
 ==========
 
 .. function::
-  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, ring_play_file, user_data)
+  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, ring_play_file, ring_play_mode, user_data)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
 
@@ -114,6 +114,19 @@
     如果指定了 ``parent_call_res_id`` 参数，且本参数为 ``null`` 或者空字符串，则在拨号时向父呼叫透传原始的线路拨号提示音。
 
     :default: `None`
+
+  :param int ring_play_mode: 回铃音文件 ``ring_play_file`` 播放模式
+
+    ========= ================================================
+    枚举值     说明
+    ========= ================================================
+    ``0``     收到对端回铃后开始播放。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
+    ``1``     拨号时即开始播放，收到对端回铃后停止播放，并透传回铃音。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
+    ``2``     拨号时即开始播放，对端接听或者挂机后停止播放。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
+    ``3``     拨号之前播放回铃音文件，播放完毕后再拨号，拨号时透传对方的回铃音。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
+    ========= ================================================
+
+    :default: `0`
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
@@ -395,29 +408,29 @@
   :param str res_id: 要操作的呼叫资源的ID
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
 
-  :param bool beep: 是否在录音之前播放“嘀”的一声。
+  :param bool beep: 是否在录音之前播放“嘀”的一声。 (**尚未实现**)
 
     :default: `True`
 
-  :param int record_format: 录音文件格式枚举值
+  :param int record_format: 录音文件格式枚举值 (**尚未实现**)
 
-    ====== ===========
-    枚举值  说明
-    ====== ===========
-    ``1``  PCM liner 8k/8bit
-    ``2``  CCITT a-law 8k/8bit
-    ``3``  CCITT mu-law 8k/8bit
-    ``4``  IMA ADPCM
-    ``5``  GSM
-    ``6``  MP3
-    ====== ===========
+    ======== ===========
+    枚举值    说明
+    ======== ===========
+    ``0x01``  OKI ADPCM
+    ``0x03``  CCITT a-law 8k/8bit
+    ``0x04``  g.726
+    ``0x07``  CCITT µ-law 8k/8bit
+    ``0x08``  PCM liner 8k/8bit
+    ``0x15``  g.721
+    ======== ===========
 
-    :default: `2`
+    :default: `3`
 
   :param str finish_keys: 录音打断按键码串。
     在录音过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止录音。
 
-    :default: `None` 无打断按键
+    :default: `""` (空字符串) 无打断按键
 
   :rtype: str
   :return: 完整的录音文件路径。见 http://cf.liushuixingyun.com/pages/viewpage.action?pageId=1803077
@@ -522,7 +535,7 @@
   :param int max_seconds: 最大双通道连接时间长度（秒）。
   :param str call_res_id: 双通道连接的第二方
 
-  :param int connect_mode: 连接模式。
+  :param int connect_mode: 连接模式。(**尚未实现**)
 
     ====== =====================
     值     说明
@@ -536,31 +549,31 @@
 
     :default: `None`
 
-  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。
+  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。(**尚未实现**)
 
     :default: `2`
 
-  :param int local_volume: 双通道连接建立后的发起方音量。
+  :param int local_volume: 双通道连接建立后的发起方音量。 (**尚未实现**)
 
-    :default: `None` 表示默认音量
-
-
-  :param int remote_volume: 双通道连接建立后的发起方音量。
-
-    :default: `None` 表示默认音量
+    :default: `0` 表示默认音量
 
 
-  :param int schedule_play_time: 当本次双通道连接通话进行到这个 :term:`Unix time` 时间点播放声音。
+  :param int remote_volume: 双通道连接建立后的发起方音量。(**尚未实现**)
+
+    :default: `0` 表示默认音量
+
+
+  :param int schedule_play_time: 当本次双通道连接通话进行到这个 :term:`Unix time` 时间点播放声音。(**尚未实现**)
+
+    :default: `0` 表示无定时放音
+
+
+  :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。(**尚未实现**)
 
     :default: `None` 表示无定时放音
 
 
-  :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。
-
-    :default: `None ` 表示无定时放音
-
-
-  :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。
+  :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。(**尚未实现**)
 
     :default: `0` 表示不播放
 

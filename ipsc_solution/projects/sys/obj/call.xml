@@ -501,7 +501,7 @@ elif err != 1:
     <NodeID>1192</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option="SipProxy=120.31.128.49";WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_user;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -611,9 +611,12 @@ except IvrError as err:
 	else:
 		err_msg = ''
 
-	jsonrpc.send_error(sender, id_, message=err_msg, data={
-		'ipsc_info': call_info['ipsc_info']
-	})
+	if IsVar('call_info'):
+		jsonrpc.send_error(sender, id_, message=err_msg, data={
+			'ipsc_info': call_info['ipsc_info']
+		})
+	else:
+		jsonrpc.send_error(sender, id_, message=err_msg)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -696,19 +699,41 @@ try:
 	release_delay = params.get('release_delay', 1)
 	max_answer_seconds = float(params['max_answer_seconds'])
 	max_ring_seconds = int(params.get('max_ring_seconds', 50))
+	#
+	opts = ''
+	opts_dict = {'AudioCodec1': 0x00}
+	parent_call_info = None
+	ring_play_file = None
+	#
 	# for SUBCALL
 	parent_call_res_id = params.get('parent_call_res_id')
+	ring_play_file = params.get('ring_play_file')
 	if parent_call_res_id:
 		parent_call_info = call_map_r[parent_call_res_id]
 		if parent_call_info['state'] not in ['Idle']:
-			raise RuntimeError('Can not perform method "%s" on a call whose parent call''s state is "%s"' % (method, call_info['state']))
+			raise RuntimeError('Can not construct a call with parent call''s state is "%s"' % (parent_call_info['state']))
 		parent_call_info['state'] = 'Dial'
 		dial_chan = parent_call_info['chan']
-		ring_play_file = params.get('ring_play_file')
+		ring_play_mode = int(params.get('ring_play_mode', 0))
+		if ring_play_mode==3:
+			opts_dict['ConnectSrcCh'] = 1
+		else:
+			if ring_play_file:
+				opts_dict['PlayFileMode'] = ring_play_mode
+				if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+					opts_dict['ConnectSrcCh'] = 1
+				else:
+					opts_dict['ConnectSrcCh'] = 0
+			else:
+				opts_dict['ConnectSrcCh'] = 1
+
 	else:
-		parent_call_info = None
 		dial_chan = GetCurrentCh()
-		ring_play_file = None
+	# dial opts
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
 	##################################
 	# new call-info
 	##################################
@@ -721,6 +746,11 @@ try:
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
+
+except Exception as err:
+	last_err = str(err)
+	raise
+
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -862,9 +892,10 @@ try:
 	chan = GetCurrentCh()
 	from_uri = 'sip:{}'.format(GetOrgCallNo())
 	if GetCalledNo():
-		to_uri = 'sip:{}'.format(GetCalledNo())
+		# to_uri = 'sip:{}'.format(GetCalledNo())
+		to_uri = GetCalledNo()
 	else:
-		to_uri = None
+		to_uri = ""
 	params = dict(
 		res_id = res_id,
 		from_uri = from_uri,
@@ -1263,8 +1294,8 @@ try:
 			if not k in call_info['params']:
 				call_info['params'][k] = v
 		#
-		max_answer_seconds = params['max_answer_seconds']
-		release_delay = params.get('release_delay', 1)
+		max_answer_seconds = int(params['max_answer_seconds'])
+		release_delay = int(params.get('release_delay', 1))
 		vch = NewVCh()
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
@@ -2109,7 +2140,7 @@ except IvrError as err:
     <NodeID>1772</NodeID>
     <NodeType>INVOKESUB</NodeType>
     <NodeName>调子流程 async connect</NodeName>
-    <ExtendedProperty>SubFlowName=call_async_bridge;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <ExtendedProperty>SubFlowName=call_async_connect;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
     <PropertySet>
       <AffectList />
       <EffectList>
@@ -2141,7 +2172,7 @@ except IvrError as err:
         </ExitPort>
         <ExitPort>
           <type>22</type>
-          <targetflow>call_async_bridge</targetflow>
+          <targetflow>call_async_connect</targetflow>
           <target>1000</target>
         </ExitPort>
       </Exit>

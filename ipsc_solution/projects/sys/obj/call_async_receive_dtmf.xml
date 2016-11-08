@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-23T13:52:27+08:00</CreateDate>
-    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
+    <ModifyDate>2016-10-21T13:59:39+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -51,25 +51,64 @@
     <NodeID>1716</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=error = None
-keys = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	error = None
+	keys = None
 
-last_err = None
+	last_err = None
 
-call_map = _gd_['call_map'] # chan =&gt; call_info
-conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+	call_map = _gd_['call_map'] # chan =&gt; call_info
+	conf_map = _gd_['conf_map'] # res_id =&gt; call_info
 
-call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
-conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+	call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
+	conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
-#
-call_info = call_map_r[res_id]
-chan = call_info['chan']
+	#
+	call_info = call_map_r[res_id]
+	chan = call_info['chan']
 
-#
-begin_time = now()
-call_info['async_work_ch'] = GetCurrentCh()
-call_info['state'] = 'ReceiveDtmf'
+	#
+	begin_time = now()
+	call_info['async_work_ch'] = GetCurrentCh()
+	call_info['state'] = 'ReceiveDtmf'
+
+	### parameters
+	first_key_timeout = int(params.get('first_key_timeout', 45))
+	continues_keys_timeout = int(params.get('continues_keys_timeout', 30))
+	valid_keys = params.get('valid_keys', "0123456789*#ABCD")
+	finish_keys = params.get('finish_keys', '#')
+	including_finish_key = params.get('including_finish_key', False)
+	if isinstance(including_finish_key, str):
+		if including_finish_key.upper() in ('TRUE', 'T', '1'):
+			including_finish_key = True
+		elif including_finish_key.upper() in ('FALSE', 'F', '0'):
+			including_finish_key = False
+		else:
+			including_finish_key = False
+	else:
+		including_finish_key = bool(including_finish_key)
+	max_keys = int(params.get('max_keys', 11))
+	play_repeat = int(params.get('play_repeat', 0)) + 1
+
+	cl = []
+	content = params['play_content']
+	if isinstance(content, str):
+		cl.append([content, 0, ''])
+	elif isinstance(content, (list,tuple)):
+		for item in content[:30]:
+			if len(item) == 1:
+				item.extend([0, ''])
+			elif len(item) == 2:
+				item.append('')
+			elif item[2] is None:
+				item[2] = ''
+			cl.append([str(item[0]), int(item[1]), str(item[2])])
+
+	Trace('cl={}'.format(str(cl)))
+
+except Exception as err:
+	error = '{}'.format(err)
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -77,7 +116,8 @@ call_info['state'] = 'ReceiveDtmf'
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1740</target>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -236,51 +276,12 @@ except IvrError as err:
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1740</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 error</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>error</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>'unknown'</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
     <NodeID>1741</NodeID>
     <NodeType>DTMFINPUT</NodeType>
     <NodeName>数据输入</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=chan;Timeout=params.get('first_key_timeout', 45);IsBreak=1;ValidDtmfStr=params.get('valid_keys', "0123456789*#ABCD");InvalidProcType=0;OutData=keys;DtmfLen=params.get('max_keys', 11);EndExpression=params.get('finish_keys', '#');IsIncludeEnd=;ClearDtmfBufType=1;RepeatNum=params.get('play_repeat', 0);IntervalTimeout=params.get('continues_keys_timeout', 30);SaveEndDtmf=params.get('including_finish_key', False);IsRegex=0;TimeoutIsPlayEnd=1;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsDtmfEcho=0;DtmfEchoFontSize=16;DtmfEchoFontStyle=0;DtmfEchoColor="255:255:255:0";DtmfEchoLeft=0;DtmfEchoTop=120;DtmfEchoDir=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=;LogoAlphaBlending=0;Option=;DtmfEchoMask=</ExtendedProperty>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;Timeout=first_key_timeout;IsBreak=1;ValidDtmfStr=valid_keys;InvalidProcType=0;OutData=keys;DtmfLen=max_keys;EndExpression=finish_keys;IsIncludeEnd=;ClearDtmfBufType=1;RepeatNum=play_repeat;IntervalTimeout=continues_keys_timeout;SaveEndDtmf=including_finish_key;IsRegex=0;TimeoutIsPlayEnd=1;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsDtmfEcho=0;DtmfEchoFontSize=16;DtmfEchoFontStyle=0;DtmfEchoColor="255:255:255:0";DtmfEchoLeft=0;DtmfEchoTop=120;DtmfEchoDir=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=;LogoAlphaBlending=0;Option=PlayList=cl;DtmfEchoMask=</ExtendedProperty>
     <PropertySet>
-      <DynamicVoice>
-        <VarVoice>
-          <content>params.get('play_content')</content>
-          <type>0</type>
-          <option>
-          </option>
-        </VarVoice>
-      </DynamicVoice>
+      <DynamicVoice />
       <SubTitle />
       <Exit>
         <ExitPort>
@@ -311,8 +312,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>2003</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -361,6 +361,38 @@ except IvrError as err:
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
           <Value>"receiving demf invalid"</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2003</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>None</Value>
         </let>
       </letlist>
       <Exit>

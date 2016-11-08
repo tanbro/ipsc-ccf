@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-17T16:38:47+08:00</CreateDate>
-    <ModifyDate>2016-06-27T03:17:59+08:00</ModifyDate>
+    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -56,20 +56,30 @@ finish_key = None
 
 last_err = None
 
-call_map = _gd_['call_map'] # chan =&gt; call_info
-conf_map = _gd_['conf_map'] # res_id =&gt; call_info
+try:
 
-call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
-conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+	call_map = _gd_['call_map'] # chan =&gt; call_info
+	conf_map = _gd_['conf_map'] # res_id =&gt; call_info
 
-#
-call_info = call_map_r[res_id]
-chan = call_info['chan']
+	call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
+	conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
-#
-begin_time = now()
-call_info['async_work_ch'] = GetCurrentCh()
-call_info['state'] = 'Record'
+	#
+	call_info = call_map_r[res_id]
+	chan = call_info['chan']
+
+	#
+	begin_time = now()
+	call_info['async_work_ch'] = GetCurrentCh()
+	call_info['state'] = 'Record'
+
+	#
+	max_seconds = int(params['max_seconds'])
+	record_file = str(params['record_file'])
+	finish_keys = str(params.get('finish_keys', ''))
+except Exception as excp:
+	error = '%s' % excp
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -77,7 +87,8 @@ call_info['state'] = 'Record'
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1643</target>
+          <target>
+          </target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -175,7 +186,7 @@ except IvrError as err:
     <NodeID>1565</NodeID>
     <NodeType>RECORD</NodeType>
     <NodeName>录音</NodeName>
-    <ExtendedProperty>Format=3;ChNo=chan;BreaktDtmfStr=params.get('finish_keys', None);OutKey=finish_key;Timeout=params['max_seconds'];FileName=params['record_file'];IsPlayBeep=1;TruncateTail=0;RecordVolume=;PlayFile=;MediaType=0;Option=</ExtendedProperty>
+    <ExtendedProperty>Format=3;ChNo=chan;BreaktDtmfStr=finish_keys;OutKey=finish_key;Timeout=max_seconds;FileName=record_file;IsPlayBeep=1;TruncateTail=0;RecordVolume=;PlayFile=;MediaType=0;Option=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -201,40 +212,7 @@ except IvrError as err:
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1643</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 error</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>error</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>'unknown'</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
+          <target>2006</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -283,6 +261,38 @@ except IvrError as err:
           <VarName>error</VarName>
           <ZoneType>0</ZoneType>
           <Value>"hungup while recording"</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2006</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>"record timeout"</Value>
         </let>
       </letlist>
       <Exit>
