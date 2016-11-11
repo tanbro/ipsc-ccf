@@ -195,7 +195,10 @@
 录音结束
 =============
 
-.. function:: on_record_completed(res_id, user_data)
+.. function:: on_record_completed(res_id, begin_time, end_time, record_file, user_data)
 
   :param str res_id: 触发事件的会议资源 `ID`。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+  :param int begin_time: 该录音的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 该录音的结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str record_file: 录音文件路径，与 :func:`record_start` 的 ``record_file`` 参数相同。
+  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数。

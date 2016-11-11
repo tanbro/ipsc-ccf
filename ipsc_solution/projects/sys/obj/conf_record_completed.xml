@@ -62,17 +62,22 @@ try:
 	except KeyError as e:
 		TraceErr('conference id &lt;%s&gt; NOT existed!' % e)
 	if conf_info:
+		conf_info['recording'] = False
 		res_id = conf_info['res_id']
 		jsonrpc.send_event(
 			method='conf.on_record_completed',
 			params={
 				'res_id': res_id,
+				'begin_time': conf_info['record_begin_time'],
+				'end_time': now(),
+				'record_file': conf_info['record_file'],
 				'user_data': conf_info['user_data'],
 			}
 		)
 except IvrError as err:
 	TraceErr(err)
-	last_err = err</ExtendedProperty>
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>

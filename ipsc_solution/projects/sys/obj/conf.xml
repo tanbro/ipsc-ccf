@@ -64,6 +64,14 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <ExitType>103</ExitType>
         </case>
         <case>
+          <expression>method == 'conf.record_start'</expression>
+          <ExitType>107</ExitType>
+        </case>
+        <case>
+          <expression>method == 'conf.record_stop'</expression>
+          <ExitType>108</ExitType>
+        </case>
+        <case>
           <expression>method == 'conf.set_part_voice_mode'</expression>
           <ExitType>104</ExitType>
         </case>
@@ -103,6 +111,18 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <target>1440</target>
         </ExitPort>
         <ExitPort>
+          <type>107</type>
+          <targetflow>
+          </targetflow>
+          <target>2009</target>
+        </ExitPort>
+        <ExitPort>
+          <type>108</type>
+          <targetflow>
+          </targetflow>
+          <target>2015</target>
+        </ExitPort>
+        <ExitPort>
           <type>104</type>
           <targetflow>
           </targetflow>
@@ -135,7 +155,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <NodeName>脚本 invalid method</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_, message='invalid method')
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -503,7 +523,7 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1432</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf.start_play</NodeName>
+    <NodeName>脚本 conf.play_start</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
@@ -543,11 +563,88 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1440</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf.stop_play</NodeName>
+    <NodeName>脚本 conf.play_stop</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
 		StopConfPlay(conf_id)
+		jsonrpc.send_result(sender, id_)
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2009</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.record_start</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if conf_info['recording']:
+			raise RuntimeError('Can not StartConfRecord while another recording is active.')
+		record_file = str(params['file'])
+		StartConfPlay(
+			conf_id,
+			record_file,
+			reclen=int(params['max_seconds']),
+			0
+		)
+		conf_info['recording'] = True
+		conf_info['record_file'] = record_file
+		conf_info['record_begin_time'] = now()
+		jsonrpc.send_result(sender, id_)
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2015</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.record_stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		StopConfRecord(conf_id)
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
