@@ -410,6 +410,8 @@ try:
 		'begin_time': begin_time,
 		'end_time': None,
 		'parts': [],
+		'playing': False,
+		'recording': False,
 		'user_data': params.get('user_data'),
 	}
 	jsonrpc.send_result(sender, id_, {
@@ -505,11 +507,14 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if conf_info['playing']:
+			raise RuntimeError('Can not StartConfPlay while another playing is active.')
 		StartConfPlay(
 			conf_id,
 			params['file'],
 			mode=int(bool(params.get('is_loop', False)))
 		)
+		conf_info['playing'] = True
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))

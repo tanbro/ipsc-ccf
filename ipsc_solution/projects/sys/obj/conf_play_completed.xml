@@ -62,6 +62,7 @@ try:
 	except KeyError as e:
 		TraceErr('conference id &lt;%s&gt; NOT existed!' % e)
 	if conf_info:
+		conf_info['playing'] = False
 		res_id = conf_info['res_id']
 		jsonrpc.send_event(
 			method='conf.on_play_completed',
