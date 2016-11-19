@@ -41,7 +41,7 @@ extensions = [
     # 'sphinx.ext.intersphinx',
     'sphinx.ext.autosectionlabel',
     'sphinx.ext.todo',
-    'sphinx.ext.mathjax',
+    # 'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.graphviz',
 ]

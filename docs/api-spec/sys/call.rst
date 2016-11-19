@@ -271,7 +271,7 @@
 开始放音
 ------------
 
-.. function:: play_start(res_id, content, finish_keys)
+.. function:: play_start(res_id, content, finish_keys, repeat)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -390,6 +390,10 @@
     在播放过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止播放。
 
     :default: `None` 无打断按键
+
+  :param int repeat: 重复播放次数。重复1次，即表示播放2次。
+
+    :default: `0`
 
 停止放音
 -------------
@@ -697,6 +701,21 @@
 
     **但是** 呼叫释放事件和上述操作结束事件 **不具备顺序性** 。
     也就是说，应用程序可能在收到放音结束事件之前，就收到呼叫释放事件。
+
+呼叫振铃
+----------
+拨号时，收到了对端的回铃。
+
+.. warning::
+
+  此时，拨号尚未结束！
+  :func:`on_dial_completed` 事件还没有被触发。
+
+.. function:: on_ringing(res_id, ring_time, user_data)
+
+ :param str res_id: 触发事件的呼叫资源 `ID`。
+ :param int ring_time: 振铃的开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+ :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 拨号结束
 -----------
