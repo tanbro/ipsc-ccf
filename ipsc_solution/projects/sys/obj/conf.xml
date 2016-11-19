@@ -488,7 +488,7 @@ except IvrError as err:
     <NodeID>2023</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 创建会议</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = ''
 try:
 	max_seconds = int(params['max_seconds'])
 	bg_file = str(params.get('bg_file') or '')
