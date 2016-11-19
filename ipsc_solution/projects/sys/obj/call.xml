@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-03T18:04:14+08:00</CreateDate>
-    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
+    <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -556,6 +556,7 @@ try:
 		'from_uri': from_uri,
 		'to_uri': to_uri,
 		'begin_time': begin_time,
+		'ring_time': None,
 		'answer_time': None,
 		'end_time': None,
 		'dropped_by': None,
@@ -729,11 +730,6 @@ try:
 
 	else:
 		dial_chan = GetCurrentCh()
-	# dial opts
-	for k, v in opts_dict.items():
-		if opts:
-			opts = opts + ';'
-		opts = opts + '{}={}'.format(k,v)
 	##################################
 	# new call-info
 	##################################
@@ -742,6 +738,20 @@ try:
 	process_id = GetProcessID()
 	ipsc_info = dict(process_id=process_id)
 	begin_time = now()
+
+	#######################################
+	# Ringing Event
+	#######################################
+	opts_dict['AlertingFlow'] = 'call_ringing'
+	opts_dict['AlertingParam'] = res_id
+
+	#######################################
+	# dial opts
+	#######################################
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
 
 except IvrError as err:
 	TraceErr(err)
@@ -915,6 +925,7 @@ try:
 		'to_uri': to_uri,
 		'begin_time': begin_time,
 		'answer_time': None,
+		'ring_time': None,
 		'end_time': None,
 		'dropped_by': None,
 		'reason': None,
@@ -1511,6 +1522,10 @@ try:
 	try:
 		if call_info['state'] not in ['Idle']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#
+		params['repeat'] = int(params.get('repeat', 0))
+		if params['repeat'] &lt; 0:
+			raise RuntimeError('Argument "repeat" must be greater than "0"')
 		#
 		vch = NewVCh()
 	except Exception as err:
