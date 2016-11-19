@@ -38,7 +38,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1372</target>
+          <target>2023</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -345,7 +345,7 @@ if method.startswith('sys.'):
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=int(params['max_seconds']);ReallocResNum=0;PlayFile=str(params.get('bg_file') or '');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=int(params.get('parts_threshold', 1))</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=max_seconds;ReallocResNum=0;PlayFile=bg_file;PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=parts_threshold</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
@@ -462,12 +462,10 @@ except IvrError as err:
     <NodeID>1374</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.create error result</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	jsonrpc.send_error(sender, id_)
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	jsonrpc.send_error(sender, id_, message='{}'.format(last_err))
 except IvrError as err:
 	TraceErr(err)
-	last_err = err
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -482,6 +480,36 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2023</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 创建会议</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	max_seconds = int(params['max_seconds'])
+	bg_file = str(params.get('bg_file') or '')
+	parts_threshold = int(params.get('parts_threshold', 1))
+except Exception as err:
+	last_err = err
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1374</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1372</target>
         </ExitPort>
       </Exit>
     </PropertySet>
