@@ -28,14 +28,17 @@
 
     Start [shape=point, color=blue, fontcolor=blue];
     Initiated [color=blue, fontcolor=blue];
+    Ring [color=gray, fontcolor=gray];
     Answer [color=olive, fontcolor=olive];
     Idle [color=green, fontcolor=green];
     Released [shape=doublecircle, color=red, fontcolor=red];
 
     Start -> Initiated[label="呼入/呼出", color=blue];
     Initiated -> Released [label="呼入被拒绝/未被接听", color=red];
+    Initiated -> Ring[label="呼出振铃", fontcolor=blue];
     Initiated -> Answer[label="呼入接听", fontcolor=blue];
     Initiated -> Idle [label="呼出被接听", color=green];
+    Ring -> Idle [label="呼出被接听", color=green];
     Answer -> Idle [label="接听成功", color=green];
     Answer -> Released [label="接听失败/挂断", color=red];
     Idle -> Released [label="挂断", color=red];
@@ -59,8 +62,6 @@
     Connect -> Idle [color=orange];
     Idle -> Connect;
 
-    Idle -> Conf;
-    Conf -> Idle;
   }
 
 .. attention::
@@ -74,7 +75,7 @@
 ==========
 
 .. function::
-  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, ring_play_file, ring_play_mode, user_data)
+  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, parent_conf_res_id, ring_play_file, ring_play_mode, user_data)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
 
@@ -104,6 +105,13 @@
 
     如果该参数不为 `None` ，系统将在此参数指定父呼叫资源上进行拨号。
     拨号期间，父呼叫可以听到拨号提示音。
+
+    :default: `None`
+
+  :param str parent_conf_res_id: 父会议资源ID。
+
+    如果该参数不为 `None` ，系统将在此参数指定父会议资源上进行拨号。
+    拨号期间，父会议中的呼叫可以听到拨号提示音。
 
     :default: `None`
 
@@ -168,6 +176,13 @@
 
   .. warning::
     如果指定了 ``parent_call_res_id`` 参数，其对应的父呼叫状态 **必须** 为 ``Idle``。
+
+  .. note::
+    ``parent_call_res_id`` 和 ``parent_conf_res_id`` 参数不可同时使用。
+
+  .. note::
+    * 即使指定了 ``parent_call_res_id`` 参数，新呼叫也不会在接通后自动连接父呼叫。
+    * 即使指定了 ``parent_conf_res_id`` 参数，新呼叫也不会在接通后自动加入父会议。
 
 方法
 =========
