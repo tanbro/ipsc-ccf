@@ -33,15 +33,15 @@
     Idle [color=green, fontcolor=green];
     Released [shape=doublecircle, color=red, fontcolor=red];
 
-    Start -> Initiated[label="呼入/呼出", color=blue];
-    Initiated -> Released [label="呼入被拒绝/未被接听", color=red];
-    Initiated -> Ring[label="呼出振铃", fontcolor=blue];
-    Initiated -> Answer[label="呼入接听", fontcolor=blue];
-    Initiated -> Idle [label="呼出被接听", color=green];
-    Ring -> Idle [label="呼出被接听", color=green];
-    Answer -> Idle [label="接听成功", color=green];
-    Answer -> Released [label="接听失败/挂断", color=red];
-    Idle -> Released [label="挂断", color=red];
+    Start -> Initiated[label="呼入/呼出", color=blue, fontcolor=blue];
+    Initiated -> Released [label="呼入/呼出未接听", color=red,  fontcolor=red];
+    Initiated -> Ring[label="呼出振铃", fontcolor=blue, color=blue];
+    Initiated -> Answer[label="呼入接听", fontcolor=green, color=green];
+    Ring -> Idle [label="接听成功", color=green, fontcolor=green];
+    Ring -> Released [label="呼出未接听", color=red, fontcolor=red];
+    Answer -> Idle [label="接听成功", color=green, fontcolor=green];
+    Answer -> Released [label="接听失败/挂断", color=red, fontcolor=red];
+    Idle -> Released [label="挂断", color=red, fontcolor=red];
 
     Idle -> Play;
     Play -> Idle;
@@ -634,6 +634,10 @@
   :param str play_file: 该呼叫加入后，对会议播放的声音文件
 
     :default: `None` 表示不播放
+
+.. important::
+  只有处于 ``Ring``, ``Idle``, ``Play``, ``Dial`` 状态的呼叫才可进入会议。
+
 
 退出会议
 -------------

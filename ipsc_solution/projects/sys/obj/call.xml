@@ -2405,7 +2405,7 @@ try:
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
 		#
-		if call_info['state'] in ['Initiated', 'Released', 'SendDtmf', 'ReceiveDtmf', 'Record', 'Connect']:
+		if call_info['state'] in ['Initiated', 'Answer', 'Released', 'SendDtmf', 'ReceiveDtmf', 'Record', 'Connect']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
 		vch = NewVCh()
