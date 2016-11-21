@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project>
-  <MaxNodeID>2026</MaxNodeID>
+  <MaxNodeID>2032</MaxNodeID>
   <MachineOut>1</MachineOut>
   <ProjectInfo>
     <ProjectID>sys</ProjectID>
@@ -96,6 +96,12 @@
   </ProjectFlow>
   <ProjectFlow>
     <ProjectID>sys</ProjectID>
+    <FlowID>call_ringing</FlowID>
+    <FlowFidPath>.\projects\sys\src\call_ringing.fid</FlowFidPath>
+    <FlowXmaPath>.\projects\sys\src\call_ringing.xma</FlowXmaPath>
+  </ProjectFlow>
+  <ProjectFlow>
+    <ProjectID>sys</ProjectID>
     <FlowID>call_aync_dial</FlowID>
     <FlowFidPath>.\projects\sys\src\call_aync_dial.fid</FlowFidPath>
     <FlowXmaPath>.\projects\sys\src\call_aync_dial.xma</FlowXmaPath>
@@ -177,17 +183,5 @@
     <FlowID>conf_exited</FlowID>
     <FlowFidPath>.\projects\sys\src\conf_exited.fid</FlowFidPath>
     <FlowXmaPath>.\projects\sys\src\conf_exited.xma</FlowXmaPath>
-  </ProjectFlow>
-  <ProjectFlow>
-    <ProjectID>sys</ProjectID>
-    <FlowID>huapi</FlowID>
-    <FlowFidPath>.\projects\sys\src\huapi.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\huapi.xma</FlowXmaPath>
-  </ProjectFlow>
-  <ProjectFlow>
-    <ProjectID>sys</ProjectID>
-    <FlowID>call_ringing</FlowID>
-    <FlowFidPath>.\projects\sys\src\call_ringing.fid</FlowFidPath>
-    <FlowXmaPath>.\projects\sys\src\call_ringing.xma</FlowXmaPath>
   </ProjectFlow>
 </Project>
