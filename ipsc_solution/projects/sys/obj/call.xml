@@ -705,29 +705,53 @@ try:
 	opts_dict = {'AudioCodec1': 0x00}
 	parent_call_info = None
 	ring_play_file = None
-	#
-	# for SUBCALL
-	parent_call_res_id = params.get('parent_call_res_id')
-	ring_play_file = params.get('ring_play_file')
-	if parent_call_res_id:
-		parent_call_info = call_map_r[parent_call_res_id]
-		if parent_call_info['state'] not in ['Idle']:
-			raise RuntimeError('Can not construct a call with parent call''s state is "%s"' % (parent_call_info['state']))
-		parent_call_info['state'] = 'Dial'
-		dial_chan = parent_call_info['chan']
-		ring_play_mode = int(params.get('ring_play_mode', 0))
-		if ring_play_mode==3:
-			opts_dict['ConnectSrcCh'] = 1
-		else:
-			if ring_play_file:
-				opts_dict['PlayFileMode'] = ring_play_mode
-				if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
-					opts_dict['ConnectSrcCh'] = 1
-				else:
-					opts_dict['ConnectSrcCh'] = 0
-			else:
-				opts_dict['ConnectSrcCh'] = 1
 
+	####################################################
+	# 拨号通道
+	parent_call_res_id = params.get('parent_call_res_id')
+	parent_conf_res_id = params.get('parent_conf_res_id')
+	if parent_call_res_id and parent_conf_res_id:
+		raise RuntimeError('Arguments "parent_call_res_id" and "parent_conf_res_id" can not be assigned both.')
+	elif parent_call_res_id or parent_conf_res_id:
+		############################################
+		# SUBCALL
+		ring_play_file = params.get('ring_play_file')
+		# 在呼叫中播放拨号音 
+		if parent_call_res_id:
+			parent_call_info = call_map_r[parent_call_res_id]
+			if parent_call_info['state'] not in ['Idle']:
+				raise RuntimeError('Can not construct a call with parent call''s state is "%s"' % (parent_call_info['state']))
+			parent_call_info['state'] = 'Dial'
+			dial_chan = parent_call_info['chan']
+			ring_play_mode = int(params.get('ring_play_mode', 0))
+			if ring_play_mode==3:
+				opts_dict['ConnectSrcCh'] = 1
+			else:
+				if ring_play_file:
+					opts_dict['PlayFileMode'] = ring_play_mode
+					if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+						opts_dict['ConnectSrcCh'] = 1
+					else:
+						opts_dict['ConnectSrcCh'] = 0
+				else:
+					opts_dict['ConnectSrcCh'] = 1
+		# 在会议中播放拨号音
+		elif parent_conf_res_id:
+			parent_conf_info = conf_map_r[parent_conf_res_id]
+			dial_chan = parent_conf_info['conf_id']
+			ring_play_mode = int(params.get('ring_play_mode', 0))
+			if ring_play_mode==3:
+				opts_dict['ConnectSrcCh'] = 1
+			else:
+				if ring_play_file:
+					opts_dict['PlayFileMode'] = ring_play_mode
+					if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+						opts_dict['ConnectSrcCh'] = 1
+					else:
+						opts_dict['ConnectSrcCh'] = 0
+				else:
+					opts_dict['ConnectSrcCh'] = 1
+	# 本通道拨号，无须播放拨号音
 	else:
 		dial_chan = GetCurrentCh()
 	##################################
@@ -2381,7 +2405,7 @@ try:
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
 		#
-		if call_info['state'] not in ['Idle']:
+		if call_info['state'] in ['Initiated', 'Answer', 'Released', 'SendDtmf', 'ReceiveDtmf', 'Record', 'Connect']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
 		vch = NewVCh()
@@ -2419,8 +2443,8 @@ try:
 		conf_res_id = params['conf_res_id']
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
-		if call_info['state'] not in ['Conf']:
-			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		#if call_info['state'] not in ['Conf']:
+		#	raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		ret_val = RemoveConfer(conf_id, chan)
 		if ret_val == 1:
 			jsonrpc.send_result(sender, id_)
