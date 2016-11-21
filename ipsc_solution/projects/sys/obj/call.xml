@@ -705,10 +705,14 @@ try:
 	opts_dict = {'AudioCodec1': 0x00}
 	parent_call_info = None
 	ring_play_file = None
-	#
-	# for SUBCALL
-	parent_call_res_id = params.get('parent_call_res_id')
+	############################################
+	# SUBCALL
 	ring_play_file = params.get('ring_play_file')
+	# SUBCALL to Call
+	parent_call_res_id = params.get('parent_call_res_id')
+	parent_conf_res_id = params.get('parent_conf_res_id')
+	if parent_call_res_id and parent_conf_res_id:
+		raise RuntimeError('Arguments "parent_call_res_id" and "parent_conf_res_id" can not be assigned both.')
 	if parent_call_res_id:
 		parent_call_info = call_map_r[parent_call_res_id]
 		if parent_call_info['state'] not in ['Idle']:
