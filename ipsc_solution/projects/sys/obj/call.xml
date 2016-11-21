@@ -2405,8 +2405,8 @@ try:
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
 		#
-		#if call_info['state'] not in ['Idle', 'Initiated']:
-		#	raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+		if call_info['state'] in ['Initiated']:
+			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
 		vch = NewVCh()
 	except Exception as err:
