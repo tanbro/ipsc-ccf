@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <FlowItem>
-    <FlowID>conf_play_completed</FlowID>
-    <FlowName>conf_play_completed</FlowName>
+    <FlowID>call_ringing</FlowID>
+    <FlowName>call_ringing</FlowName>
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
-    <CreateDate>2016-06-18T10:26:34+08:00</CreateDate>
+    <CreateDate>2016-11-19T13:34:17+08:00</CreateDate>
     <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
-    <NodeID>1585</NodeID>
+    <NodeID>2026</NodeID>
     <NodeType>SUBSTART</NodeType>
     <NodeName>子流程开始</NodeName>
     <ExtendedProperty>
@@ -18,13 +18,10 @@
     <PropertySet>
       <AffectList>
         <varlist>
-          <var>conf_id</var>
+          <var>chan</var>
         </varlist>
         <varlist>
-          <var>action_type_id</var>
-        </varlist>
-        <varlist>
-          <var>pr_index</var>
+          <var>res_id</var>
         </varlist>
       </AffectList>
       <Exit>
@@ -39,41 +36,42 @@
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1591</target>
+          <target>2027</target>
         </ExitPort>
       </Exit>
     </PropertySet>
   </FlowNode>
   <FlowNode>
-    <NodeID>1591</NodeID>
+    <NodeID>2027</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf play completed</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=call_map = _gd_['call_map'] # chan =&gt; call_info
-conf_map = _gd_['conf_map'] # res_id =&gt; conf_info
+    <NodeName>脚本</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=error = None
+last_err = None
+
+call_map = _gd_['call_map'] # chan =&gt; call_info
+conf_map = _gd_['conf_map'] # res_id =&gt; call_info
 
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
-last_err = None
-try:
-	conf_info = None
-	try:
-		conf_info = conf_map.get(conf_id)
-	except KeyError as e:
-		TraceErr('conference id &lt;%s&gt; NOT existed!' % e)
-	if conf_info:
-		conf_info['playing'] = False
-		res_id = conf_info['res_id']
-		jsonrpc.send_event(
-			method='conf.on_play_completed',
-			params={
-				'res_id': res_id,
-				'user_data': conf_info['user_data'],
-			}
-		)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err</ExtendedProperty>
+#
+call_info = call_map_r[res_id]
+chan = call_info['chan']
+
+call_info['ring_time'] = now()
+call_info['answer_time'] = None
+call_info['state'] = 'Ring'
+
+params={
+	'res_id': res_id,
+	'ring_time': call_info['ring_time'],
+	'user_data': call_info['params'].get('user_data'),	
+}
+jsonrpc.send_event(
+	method='call.on_ringing',
+	params=params,
+)
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>

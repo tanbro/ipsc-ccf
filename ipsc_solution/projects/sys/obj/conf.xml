@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-12T14:00:57+08:00</CreateDate>
-    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
+    <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -24,6 +24,7 @@ conf_map = _gd_['conf_map'] # conf_id =&gt; conf_info
 
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -38,7 +39,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1372</target>
+          <target>2023</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -62,6 +63,14 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
         <case>
           <expression>method == 'conf.play_stop'</expression>
           <ExitType>103</ExitType>
+        </case>
+        <case>
+          <expression>method == 'conf.record_start'</expression>
+          <ExitType>107</ExitType>
+        </case>
+        <case>
+          <expression>method == 'conf.record_stop'</expression>
+          <ExitType>108</ExitType>
         </case>
         <case>
           <expression>method == 'conf.set_part_voice_mode'</expression>
@@ -103,6 +112,18 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
           <target>1440</target>
         </ExitPort>
         <ExitPort>
+          <type>107</type>
+          <targetflow>
+          </targetflow>
+          <target>2009</target>
+        </ExitPort>
+        <ExitPort>
+          <type>108</type>
+          <targetflow>
+          </targetflow>
+          <target>2015</target>
+        </ExitPort>
+        <ExitPort>
           <type>104</type>
           <targetflow>
           </targetflow>
@@ -135,7 +156,7 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <NodeName>脚本 invalid method</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	jsonrpc.send_error(id_)
+	jsonrpc.send_error(sender, id_, message='invalid method')
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
@@ -325,7 +346,7 @@ if method.startswith('sys.'):
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=int(params['max_seconds']);ReallocResNum=0;PlayFile=str(params.get('bg_file') or '');PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=int(params.get('parts_threshold', 1))</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=max_seconds;ReallocResNum=0;PlayFile=bg_file;PlayMode=1;IsRecord=0;RecordFile=;RecFormat=3;Option=;OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=parts_threshold</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
@@ -402,7 +423,7 @@ if method.startswith('sys.'):
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	begin_time = now()
-	res_id = utils.make_res_id()
+	res_id = '%s.%s' % (utils.make_res_id(), str(conf_id))
 	conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id, 
@@ -410,8 +431,11 @@ try:
 		'begin_time': begin_time,
 		'end_time': None,
 		'parts': [],
+		'playing': False,
+		'recording': False,
 		'user_data': params.get('user_data'),
 	}
+
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id
 	})
@@ -440,12 +464,10 @@ except IvrError as err:
     <NodeID>1374</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.create error result</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	jsonrpc.send_error(sender, id_)
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	jsonrpc.send_error(sender, id_, message='{}'.format(last_err))
 except IvrError as err:
 	TraceErr(err)
-	last_err = err
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -460,6 +482,36 @@ except IvrError as err:
           <targetflow>
           </targetflow>
           <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2023</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 创建会议</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = ''
+try:
+	max_seconds = int(params['max_seconds'])
+	bg_file = str(params.get('bg_file') or '')
+	parts_threshold = int(params.get('parts_threshold', 1))
+except Exception as err:
+	last_err = err
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1374</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1372</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -501,15 +553,18 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1432</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf.start_play</NodeName>
+    <NodeName>脚本 conf.play_start</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
+		if conf_info['playing']:
+			raise RuntimeError('Can not StartConfPlay while another playing is active.')
 		StartConfPlay(
 			conf_id,
 			params['file'],
 			mode=int(bool(params.get('is_loop', False)))
 		)
+		conf_info['playing'] = True
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
@@ -538,11 +593,88 @@ except IvrError as err:
   <FlowNode>
     <NodeID>1440</NodeID>
     <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 conf.stop_play</NodeName>
+    <NodeName>脚本 conf.play_stop</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	try:
 		StopConfPlay(conf_id)
+		jsonrpc.send_result(sender, id_)
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2009</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.record_start</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		if conf_info['recording']:
+			raise RuntimeError('Can not StartConfRecord while another recording is active.')
+		record_file = str(params['file'])
+		StartConfPlay(
+			conf_id,
+			record_file,
+			reclen=int(params['max_seconds']),
+			0
+		)
+		conf_info['recording'] = True
+		conf_info['record_file'] = record_file
+		conf_info['record_begin_time'] = now()
+		jsonrpc.send_result(sender, id_)
+	except Exception as err:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+		raise
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1427</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2015</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 conf.record_stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	try:
+		StopConfRecord(conf_id)
 		jsonrpc.send_result(sender, id_)
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))

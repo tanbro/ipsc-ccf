@@ -28,17 +28,20 @@
 
     Start [shape=point, color=blue, fontcolor=blue];
     Initiated [color=blue, fontcolor=blue];
+    Ring [color=gray, fontcolor=gray];
     Answer [color=olive, fontcolor=olive];
     Idle [color=green, fontcolor=green];
     Released [shape=doublecircle, color=red, fontcolor=red];
 
-    Start -> Initiated[label="呼入/呼出", color=blue];
-    Initiated -> Released [label="呼入被拒绝/未被接听", color=red];
-    Initiated -> Answer[label="呼入接听", fontcolor=blue];
-    Initiated -> Idle [label="呼出被接听", color=green];
-    Answer -> Idle [label="接听成功", color=green];
-    Answer -> Released [label="接听失败/挂断", color=red];
-    Idle -> Released [label="挂断", color=red];
+    Start -> Initiated[label="呼入/呼出", color=blue, fontcolor=blue];
+    Initiated -> Released [label="呼入/呼出未接听", color=red,  fontcolor=red];
+    Initiated -> Ring[label="呼出振铃", fontcolor=blue, color=blue];
+    Initiated -> Answer[label="呼入接听", fontcolor=green, color=green];
+    Ring -> Idle [label="接听成功", color=green, fontcolor=green];
+    Ring -> Released [label="呼出未接听", color=red, fontcolor=red];
+    Answer -> Idle [label="接听成功", color=green, fontcolor=green];
+    Answer -> Released [label="接听失败/挂断", color=red, fontcolor=red];
+    Idle -> Released [label="挂断", color=red, fontcolor=red];
 
     Idle -> Play;
     Play -> Idle;
@@ -59,8 +62,6 @@
     Connect -> Idle [color=orange];
     Idle -> Connect;
 
-    Idle -> Conf;
-    Conf -> Idle;
   }
 
 .. attention::
@@ -74,7 +75,7 @@
 ==========
 
 .. function::
-  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, ring_play_file, ring_play_mode, user_data)
+  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, parent_conf_res_id, ring_play_file, ring_play_mode, user_data)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
 
@@ -104,6 +105,13 @@
 
     如果该参数不为 `None` ，系统将在此参数指定父呼叫资源上进行拨号。
     拨号期间，父呼叫可以听到拨号提示音。
+
+    :default: `None`
+
+  :param str parent_conf_res_id: 父会议资源ID。
+
+    如果该参数不为 `None` ，系统将在此参数指定父会议资源上进行拨号。
+    拨号期间，父会议中的呼叫可以听到拨号提示音。
 
     :default: `None`
 
@@ -168,6 +176,13 @@
 
   .. warning::
     如果指定了 ``parent_call_res_id`` 参数，其对应的父呼叫状态 **必须** 为 ``Idle``。
+
+  .. note::
+    ``parent_call_res_id`` 和 ``parent_conf_res_id`` 参数不可同时使用。
+
+  .. note::
+    * 即使指定了 ``parent_call_res_id`` 参数，新呼叫也不会在接通后自动连接父呼叫。
+    * 即使指定了 ``parent_conf_res_id`` 参数，新呼叫也不会在接通后自动加入父会议。
 
 方法
 =========
@@ -271,7 +286,7 @@
 开始放音
 ------------
 
-.. function:: play_start(res_id, content, finish_keys)
+.. function:: play_start(res_id, content, finish_keys, repeat)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -390,6 +405,10 @@
     在播放过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止播放。
 
     :default: `None` 无打断按键
+
+  :param int repeat: 重复播放次数。重复1次，即表示播放2次。
+
+    :default: `0`
 
 停止放音
 -------------
@@ -616,6 +635,10 @@
 
     :default: `None` 表示不播放
 
+.. important::
+  只有处于 ``Ring``, ``Idle``, ``Play``, ``Dial`` 状态的呼叫才可进入会议。
+
+
 退出会议
 -------------
 
@@ -697,6 +720,21 @@
 
     **但是** 呼叫释放事件和上述操作结束事件 **不具备顺序性** 。
     也就是说，应用程序可能在收到放音结束事件之前，就收到呼叫释放事件。
+
+呼叫振铃
+----------
+拨号时，收到了对端的回铃。
+
+.. warning::
+
+  此时，拨号尚未结束！
+  :func:`on_dial_completed` 事件还没有被触发。
+
+.. function:: on_ringing(res_id, ring_time, user_data)
+
+ :param str res_id: 触发事件的呼叫资源 `ID`。
+ :param int ring_time: 振铃的开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+ :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 拨号结束
 -----------
