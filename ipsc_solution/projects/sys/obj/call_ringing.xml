@@ -65,7 +65,7 @@ call_info['state'] = 'Ring'
 params={
 	'res_id': res_id,
 	'ring_time': call_info['ring_time'],
-	'user_data': call_info['params'].get('user_data'),
+	'user_data': call_info['params'].get('user_data'),	
 }
 jsonrpc.send_event(
 	method='call.on_ringing',
