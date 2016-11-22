@@ -423,7 +423,7 @@ if method.startswith('sys.'):
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	begin_time = now()
-	res_id = utils.make_res_id() + str(conf_id)
+	res_id = '%s.%s' % (utils.make_res_id(), str(conf_id))
 	conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
 		'id': id_,
 		'res_id': res_id, 
