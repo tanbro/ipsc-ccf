@@ -501,7 +501,7 @@ elif err != 1:
     <NodeID>1192</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_user;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -683,15 +683,7 @@ except IvrError as err:
     <NodeName>脚本 call dial parse</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	org_from_uri = params.get('from_uri')
-	if bool(org_from_uri):
-		if '@' in org_from_uri:
-			from_uri = org_from_uri
-		else:
-			from_uri = '{}@localhost'.format(org_from_uri)
-		from_user, from_host, from_port = utils.parse_sip_uri(from_uri)
-	else:
-		from_uri = from_user = ''
+	from_uri = params.get('from_uri', '')
 	user, host, port = utils.parse_sip_uri(params['to_uri'])
 	if user:
 		to_uri = '{0}@{1}:{2}'.format(user, host, port)
