@@ -48,7 +48,7 @@
     <NodeID>1078</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=final_to;Ani=from_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=final_to;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -105,9 +105,6 @@ try:
 	# parse numbers
 	to_user, to_host, to_port = utils.parse_sip_uri(params['to_uri'])
 	from_uri = params['from_uri']
-	if '@' not in from_uri:
-		from_uri = '{}@localhost'.format(from_uri)
-	from_user, from_host, from_port = utils.parse_sip_uri(from_uri)
 	if to_user:
 		final_to = '{}@{}:{}'.format(to_user, to_host, to_port)
 	else:
