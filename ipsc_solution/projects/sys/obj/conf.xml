@@ -218,7 +218,7 @@ except IvrError as err:
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 Delay</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=Trace('&gt;&gt;&gt; AsynchDelay(title=%s)' % res_id)
-ret_val = AsynchInvoke(Delay(15000, False, 0, -1, "BusNotifyTitle=%s" % res_id))
+ret_val = AsynchInvoke(Delay(15000, False, GetCurrentCh(), -1, "BusNotifyTitle=%s" % res_id))
 Trace('&lt;&lt;&lt; AsynchDelay(title=%s)' % res_id)
 err, data = ret_val
 if err == -8:
