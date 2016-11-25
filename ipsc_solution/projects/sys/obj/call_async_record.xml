@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-17T16:38:47+08:00</CreateDate>
-    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
+    <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -154,6 +154,7 @@ try:
 			'error': error,
 			'begin_time': begin_time,
 			'end_time': now(),
+			'record_file': record_file,
 			'finish_key': finish_key,
 			'user_data': call_info['params'].get('user_data'),
 		}
