@@ -167,13 +167,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -275,7 +275,7 @@ elif err != 1:
           <type>100</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -301,43 +301,6 @@ if method.startswith('sys.'):
           <targetflow>
           </targetflow>
           <target>1404</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1427</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 is conf exists</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>IsExistConf(conf_id)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1383</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -449,13 +412,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -475,13 +438,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -538,7 +501,7 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -579,13 +542,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -612,13 +575,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -656,13 +619,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -689,13 +652,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -725,13 +688,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -757,13 +720,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -785,13 +748,13 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1427</target>
+          <target>1383</target>
         </ExitPort>
       </Exit>
     </PropertySet>
