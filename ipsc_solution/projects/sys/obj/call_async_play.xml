@@ -73,7 +73,11 @@
 	call_info['state'] = 'Play'
 
 	#
-	cl = []
+	opts_dict = {}
+	opts = ''
+
+	#
+	cl = opts_dict['PlayList'] = []
 	content = params['content']
 	if isinstance(content, str):
 		cl.append([content, 0, ''])
@@ -90,7 +94,17 @@
 			cl.append([str(item[0]), int(item[1]), str(item[2])])
 	
 	# RepeatNum
-	repeat_num = params['repeat'] + 1
+	opts_dict['RepeatNum'] = params['repeat'] + 1
+
+	#######################################
+	# dial opts
+	#######################################
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
+
+	Trace('opts: %s' % opts)
 
 except Exception as err:
 	error = str(err)
@@ -266,7 +280,7 @@ except IvrError as err:
     <NodeID>1962</NodeID>
     <NodeType>PLAY</NodeType>
     <NodeName>放音</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=params.get('finish_keys');Mode=0;OutKey=finish_key;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0;Option=PlayList=cl;RepeatNum=repeat_num</ExtendedProperty>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=params.get('finish_keys');Mode=0;OutKey=finish_key;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0;Option=opts</ExtendedProperty>
     <PropertySet>
       <DynamicVoice />
       <SubTitle />
