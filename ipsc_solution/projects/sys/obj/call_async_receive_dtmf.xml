@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-23T13:52:27+08:00</CreateDate>
-    <ModifyDate>2016-10-21T13:59:39+08:00</ModifyDate>
+    <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -72,6 +72,10 @@
 	call_info['async_work_ch'] = GetCurrentCh()
 	call_info['state'] = 'ReceiveDtmf'
 
+	# 
+	opts_dict = {}
+	opts = ''
+
 	### parameters
 	first_key_timeout = int(params.get('first_key_timeout', 45))
 	continues_keys_timeout = int(params.get('continues_keys_timeout', 30))
@@ -90,7 +94,7 @@
 	max_keys = int(params.get('max_keys', 11))
 	play_repeat = int(params.get('play_repeat', 0)) + 1
 
-	cl = []
+	cl = opts_dict['PlayList'] = []
 	content = params['play_content']
 	if isinstance(content, str):
 		cl.append([content, 0, ''])
@@ -104,7 +108,15 @@
 				item[2] = ''
 			cl.append([str(item[0]), int(item[1]), str(item[2])])
 
-	Trace('cl={}'.format(str(cl)))
+	#######################################
+	# opts
+	#######################################
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
+
+	Trace('opts: %s' % opts)
 
 except Exception as err:
 	error = '{}'.format(err)
@@ -279,7 +291,7 @@ except IvrError as err:
     <NodeID>1741</NodeID>
     <NodeType>DTMFINPUT</NodeType>
     <NodeName>数据输入</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=chan;Timeout=first_key_timeout;IsBreak=1;ValidDtmfStr=valid_keys;InvalidProcType=0;OutData=keys;DtmfLen=max_keys;EndExpression=finish_keys;IsIncludeEnd=;ClearDtmfBufType=1;RepeatNum=play_repeat;IntervalTimeout=continues_keys_timeout;SaveEndDtmf=including_finish_key;IsRegex=0;TimeoutIsPlayEnd=1;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsDtmfEcho=0;DtmfEchoFontSize=16;DtmfEchoFontStyle=0;DtmfEchoColor="255:255:255:0";DtmfEchoLeft=0;DtmfEchoTop=120;DtmfEchoDir=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=;LogoAlphaBlending=0;Option=PlayList=cl;DtmfEchoMask=</ExtendedProperty>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;Timeout=first_key_timeout;IsBreak=1;ValidDtmfStr=valid_keys;InvalidProcType=0;OutData=keys;DtmfLen=max_keys;EndExpression=finish_keys;IsIncludeEnd=;ClearDtmfBufType=1;RepeatNum=play_repeat;IntervalTimeout=continues_keys_timeout;SaveEndDtmf=including_finish_key;IsRegex=0;TimeoutIsPlayEnd=1;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsDtmfEcho=0;DtmfEchoFontSize=16;DtmfEchoFontStyle=0;DtmfEchoColor="255:255:255:0";DtmfEchoLeft=0;DtmfEchoTop=120;DtmfEchoDir=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=;LogoAlphaBlending=0;Option=opts;DtmfEchoMask=</ExtendedProperty>
     <PropertySet>
       <DynamicVoice />
       <SubTitle />
