@@ -183,6 +183,53 @@
 事件
 ***********
 
+第一方呼叫结束
+================
+
+.. function:: on_dial1_completed(res_id, error, begin_time, answer_time, end_time, user_data1, user_data2)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
+  :param int begin_time: 本次拨号的开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+  :param int answer_time: 本次拨号的被应答时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+    如果外呼拨号没有被应答，则该参数的值是 ``null``。
+
+  :param int end_time: 本次拨号的结束时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+
+    .. note:: 这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
+
+  :param str user_data1: 用户数据，来源于 :func:`construct` 的 ``user_data1`` 参数，它同时也在将在第一方的 CDR 数据中出现。
+  :param str user_data2: 用户数据，来源于 :func:`construct` 的 ``user_data2`` 参数，它同时也在将在第二方的 CDR 数据中出现。
+
+第二方呼叫开始
+================
+
+.. function:: on_dial2_started(res_id, begin_time, auser_data1, user_data2)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
+  :param int begin_time: 本次拨号的开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+  :param str user_data1: 用户数据，来源于 :func:`construct` 的 ``user_data1`` 参数，它同时也在将在第一方的 CDR 数据中出现。
+  :param str user_data2: 用户数据，来源于 :func:`construct` 的 ``user_data2`` 参数，它同时也在将在第二方的 CDR 数据中出现。
+
+第二方呼叫结束
+================
+
+.. function:: on_dial2_completed(res_id, error, begin_time, answer_time, end_time, user_data1, user_data2)
+
+  :param str res_id: 触发事件的呼叫资源 `ID`。
+  :param error: 错误信息。如果拨号失败，该参数记录错误信息。如果拨号成功的被接听，该参数的值是 ``null``。
+  :param int begin_time: 本次拨号的开始时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+  :param int answer_time: 本次拨号的被应答时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+    如果外呼拨号没有被应答，则该参数的值是 ``null``。
+
+  :param int end_time: 本次拨号的结束时间（ :term:`CTI` 服务器的 :term:`Unix time` ）。
+
+    .. note:: 这个时间只是拨号的结束时间，不是整个呼叫的结束时间。
+
+  :param str user_data1: 用户数据，来源于 :func:`construct` 的 ``user_data1`` 参数，它同时也在将在第一方的 CDR 数据中出现。
+  :param str user_data2: 用户数据，来源于 :func:`construct` 的 ``user_data2`` 参数，它同时也在将在第二方的 CDR 数据中出现。
+
 结束
 ===========
 
