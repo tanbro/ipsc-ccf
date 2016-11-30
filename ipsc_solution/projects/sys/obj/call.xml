@@ -1543,6 +1543,10 @@ try:
 		if params['repeat'] &lt; 0:
 			raise RuntimeError('Argument "repeat" must be greater than "0"')
 		#
+		params['content'] = params['content']
+		params['finish_keys'] = str(params.get('finish_keys', ''))
+		params['repeat'] = int(params.get('repeat', 0))
+		#
 		vch = NewVCh()
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))

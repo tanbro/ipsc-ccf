@@ -81,8 +81,6 @@
 	content = params['content']
 	if isinstance(content, str):
 		cl.append([content, 0, ''])
-	elif cl is None:
-		cl = []
 	elif isinstance(content, (list,tuple)):
 		for item in content[:30]:
 			if len(item) == 1:
