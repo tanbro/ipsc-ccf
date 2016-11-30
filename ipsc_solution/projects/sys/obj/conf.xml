@@ -402,6 +402,8 @@ try:
 	jsonrpc.send_result(sender, id_, {
 		'res_id': res_id
 	})
+
+	Trace('conf res_id: %s' % res_id)
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
