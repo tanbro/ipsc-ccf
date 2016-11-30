@@ -431,6 +431,8 @@
 
     :default: `True`
 
+  :param str record_file: 录音文件名，应使用绝对路径。
+
   :param int record_format: 录音文件格式枚举值 (**尚未实现**)
 
     ======== ===========
