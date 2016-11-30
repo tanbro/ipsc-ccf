@@ -1712,6 +1712,10 @@ try:
 		if call_info['state'] not in ['Idle']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
+		params['max_seconds'] = int(params['max_seconds'])
+		params['record_file'] = str(params['record_file'])
+		params['finish_keys'] = str(params.get('finish_keys', ''))
+		#
 		vch = NewVCh()
 	except Exception as err:
 		jsonrpc.send_error(sender, id_, message='{}'.format(err))
