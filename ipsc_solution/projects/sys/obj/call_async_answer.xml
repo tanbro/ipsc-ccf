@@ -73,7 +73,7 @@ SendAcceptCall(chan, codec)
 ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[2,3,4]))
 Trace('&lt;&lt;&lt; WaitCallStatus -&gt; {}'.format(str(ret_val)))
 if ret_val[0] &lt; 1:
-	error = IvrError('WaitCallStatus(status=1xx) returns error value %s, %s' % ret_val)
+	error = IvrError(0, 'WaitCallStatus(status=1xx) returns error value %s, %s' % ret_val)
 	TraceErr('%s', % error)
 	raise error
 
@@ -85,7 +85,7 @@ SendANS(chan, 1)
 ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[3,4]))
 Trace('&gt;&gt;&gt; SendANS(chan={0}); WaitCallStatus(chan={0}) -&gt; %s'.format(chan, str(ret_val)))
 if ret_val[0] &lt; 1:
-	error = IvrError('WaitCallStatus(states=2xx) returns error value  %s, %s' % ret_val)
+	error = IvrError(0, 'WaitCallStatus(states=2xx) returns error value  %s, %s' % ret_val)
 	TraceErr('%s', % error)
 	raise error
 
