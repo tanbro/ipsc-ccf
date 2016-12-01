@@ -74,9 +74,10 @@ ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[2,3,4]))
 Trace('&lt;&lt;&lt; WaitCallStatus -&gt; {}'.format(str(ret_val)))
 if ret_val[0] &lt; 1:
 	error = IvrError('WaitCallStatus(status=1xx) returns error value %s, %s' % ret_val)
+	TraceErr('%s', % error)
 	raise error
 
-if ret_val[0] not in (1, 2): # 正常退出节点，待平台下一次触发该流程
+if ret_val[0] not in (1, 2):
 	raise ReturnExit()
 
 Trace('&gt;&gt;&gt; SendANS(chan={0}); WaitCallStatus(chan={0}) ...'.format(chan))
@@ -85,6 +86,7 @@ ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[3,4]))
 Trace('&gt;&gt;&gt; SendANS(chan={0}); WaitCallStatus(chan={0}) -&gt; %s'.format(chan, str(ret_val)))
 if ret_val[0] &lt; 1:
 	error = IvrError('WaitCallStatus(states=2xx) returns error value  %s, %s' % ret_val)
+	TraceErr('%s', % error)
 	raise error
 
 answered = True
@@ -103,7 +105,7 @@ try:
 	SetCdrAdditionalInfo(chan, *cdr_datas)
 # Answer OK!!!
 	call_info['state'] = 'Idle'
-# event notification !
+# return !
 	jsonrpc.send_event(
 		method='call.on_answer_completed',
 		params={
