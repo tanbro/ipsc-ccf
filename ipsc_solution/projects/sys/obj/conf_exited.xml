@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-18T10:25:27+08:00</CreateDate>
-    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
+    <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -60,10 +60,10 @@ try:
 	try:
 		conf_info = conf_map[conf_id]
 	except KeyError as e:
-		raise KeyError('conference id &lt;%s&gt; NOT existed' % conf_id)
+		raise IvrError('conference id &lt;%s&gt; NOT existed' % conf_id)
 	errno, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
 	if errno &lt;= 0:
-		raise RuntimeError("GetConferList(conf_id={}) returns {}".format(conf_id, errno))
+		raise IvrError("GetConferList(conf_id={}) returns {}".format(conf_id, errno))
 	parts = []
 	for i in range(len(chan_list)):
 		chan = chan_list[i]
@@ -77,7 +77,8 @@ try:
 	conf_info['parts'] = parts
 except IvrError as err:
 	TraceErr(err)
-	last_err = err</ExtendedProperty>
+	last_err = err
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
