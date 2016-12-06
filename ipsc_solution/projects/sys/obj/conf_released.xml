@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-13T18:16:37+08:00</CreateDate>
-    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
+    <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -48,12 +48,38 @@ conf_map = _gd_['conf_map'] # res_id =&gt; call_info
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
-last_err = None
-try:
-	conf_info = conf_map.pop(conf_id)
-	res_id = conf_info['res_id']
-	conf_map_r.pop(res_id)
+conf_info = conf_map.pop(conf_id)
+res_id = conf_info['res_id']
+conf_map_r.pop(res_id)
 
+try:
+	if conf_info['playing']:
+		jsonrpc.send_event(
+			method='conf.on_play_completed',
+			params={
+				'res_id': res_id,
+				'user_data': conf_info['user_data'],
+			}
+		)
+except IvrError as err:
+	TraceErr(err)
+
+try:
+	if conf_info['recording']:
+		jsonrpc.send_event(
+			method='conf.on_record_completed',
+			params={
+				'res_id': res_id,
+				'begin_time': conf_info.get('record_begin_time'),
+				'end_time': now(),
+				'record_file': conf_info.get('record_file'),
+				'user_data': conf_info['user_data'],
+			}
+		)
+except IvrError as err:
+	TraceErr(err)
+
+try:
 	jsonrpc.send_event(
 		method='conf.on_released',
 		params={
@@ -66,7 +92,8 @@ try:
 	)
 except IvrError as err:
 	TraceErr(err)
-	last_err = err</ExtendedProperty>
+	
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
