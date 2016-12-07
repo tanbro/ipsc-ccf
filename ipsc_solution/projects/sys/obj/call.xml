@@ -600,16 +600,12 @@ if last_err:
 else:
 	err_msg = ''
 
-try:
-	if IsVar('call_info'):
-		jsonrpc.send_error(sender, id_, message=err_msg, data={
-			'ipsc_info': call_info['ipsc_info']
-		})
-	else:
-		jsonrpc.send_error(sender, id_, message=err_msg)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+if IsVar('call_info'):
+	jsonrpc.send_error(sender, id_, message=err_msg, data={
+		'ipsc_info': call_info['ipsc_info']
+	})
+else:
+	jsonrpc.send_error(sender, id_, message=err_msg)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
