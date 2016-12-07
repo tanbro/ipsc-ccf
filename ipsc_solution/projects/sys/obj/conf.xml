@@ -154,12 +154,8 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
     <NodeID>1406</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 invalid method</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	jsonrpc.send_error(sender, id_, message='invalid method')
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_, message='invalid method')
+
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -383,35 +379,31 @@ if method.startswith('sys.'):
     <NodeID>1373</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.create ok return</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	begin_time = now()
-	res_id = '%s.%s' % (utils.make_res_id(), str(conf_id))
-	conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
-		'id': id_,
-		'res_id': res_id, 
-		'conf_id': conf_id,
-		'begin_time': begin_time,
-		'end_time': None,
-		'parts': [],
-		'playing': False,
-		'recording': False,
-		'user_data': params.get('user_data'),
-	}
+    <ExtendedProperty>ZoneType=0;ScriptContent=begin_time = now()
 
-	if record_file:
-		conf_info['recording'] = True
-		conf_info['record_file'] = record_file
-		conf_info['record_begin_time'] = now()
+res_id = '%s.%s' % (utils.make_res_id(), str(conf_id))
+Trace('conf res_id: %s' % res_id)
 
-	jsonrpc.send_result(sender, id_, {
-		'res_id': res_id
-	})
+conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
+	'id': id_,
+	'res_id': res_id, 
+	'conf_id': conf_id,
+	'begin_time': begin_time,
+	'end_time': None,
+	'parts': [],
+	'playing': False,
+	'recording': False,
+	'user_data': params.get('user_data'),
+}
 
-	Trace('conf res_id: %s' % res_id)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+if record_file:
+	conf_info['recording'] = True
+	conf_info['record_file'] = record_file
+	conf_info['record_begin_time'] = now()
+
+jsonrpc.send_result(sender, id_, {
+	'res_id': res_id
+})
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -434,10 +426,7 @@ except IvrError as err:
     <NodeID>1374</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.create error result</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=try:
-	jsonrpc.send_error(sender, id_, message='{}'.format(last_err))
-except IvrError as err:
-	TraceErr(err)
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_, message='{}'.format(last_err))
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -491,17 +480,14 @@ except Exception as err:
     <NodeID>1389</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.release</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	DeleConf(conf_id)
 	try:
-		DeleConf(conf_id)
 		jsonrpc.send_result(sender, id_)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -525,24 +511,24 @@ except IvrError as err:
     <NodeID>1432</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.play_start</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if conf_info['playing']:
+		raise IvrError(0, 'Can not StartConfPlay while another playing is active.')
+
+	StartConfPlay(
+		conf_id,
+		params['file'],
+		mode=int(bool(params.get('is_loop', False)))
+	)
+	conf_info['playing'] = True
+
 	try:
-		if conf_info['playing']:
-			raise RuntimeError('Can not StartConfPlay while another playing is active.')
-		StartConfPlay(
-			conf_id,
-			params['file'],
-			mode=int(bool(params.get('is_loop', False)))
-		)
-		conf_info['playing'] = True
 		jsonrpc.send_result(sender, id_)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -565,17 +551,15 @@ except IvrError as err:
     <NodeID>1440</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.play_stop</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	StopConfPlay(conf_id)
 	try:
-		StopConfPlay(conf_id)
 		jsonrpc.send_result(sender, id_)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -598,28 +582,32 @@ except IvrError as err:
     <NodeID>2009</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.record_start</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=
 try:
+	if conf_info['recording']:
+		raise IvrError(0, 'Can not StartConfRecord while another recording is active.')
+
+	record_file = str(params['file'])
+
+	StartConfPlay(
+		conf_id,
+		record_file,
+		reclen=int(params['max_seconds']),
+		0
+	)
+
+	conf_info['recording'] = True
+	conf_info['record_file'] = record_file
+	conf_info['record_begin_time'] = now()
+
 	try:
-		if conf_info['recording']:
-			raise RuntimeError('Can not StartConfRecord while another recording is active.')
-		record_file = str(params['file'])
-		StartConfPlay(
-			conf_id,
-			record_file,
-			reclen=int(params['max_seconds']),
-			0
-		)
-		conf_info['recording'] = True
-		conf_info['record_file'] = record_file
-		conf_info['record_begin_time'] = now()
 		jsonrpc.send_result(sender, id_)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	except IvrError as err:
+		TraceErr(err)
+
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -642,18 +630,17 @@ except IvrError as err:
     <NodeID>2015</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.record_stop</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=
 try:
-	try:
-		StopConfRecord(conf_id)
-		conf_info['recording'] = False
+	StopConfRecord(conf_id)
+	conf_info['recording'] = False
+	try:	
 		jsonrpc.send_result(sender, id_)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -676,20 +663,21 @@ except IvrError as err:
     <NodeID>1902</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>set_part_voice_mode</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=
 try:
+	call_info = call_map_r[params['call_res_id']]
+	chan = call_info['chan']
+	voice_mode = params['mode']
+	ChangeConfer(conf_id, chan, voice_mode)
+
 	try:
-		call_info = call_map_r[params['call_res_id']]
-		chan = call_info['chan']
-		voice_mode = params['mode']
-		ChangeConfer(conf_id, chan, voice_mode)
 		jsonrpc.send_result(sender, id_)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	except IvrError as err:
+		TraceErr(err)
+
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -714,14 +702,14 @@ except IvrError as err:
     <NodeName>exists</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	result = params['res_id'] in conf_map_r
 	try:
-		jsonrpc.send_result(sender, id_, params['res_id'] in conf_map_r)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+		jsonrpc.send_result(sender, id_, result)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -744,12 +732,16 @@ except IvrError as err:
     <NodeID>1957</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>get_parts</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=
 try:
-    jsonrpc.send_result(sender, id_, conf_info['parts'])
-except IvrError as err:
-    TraceErr(err)
-    last_err = err
+	result = conf_info['parts']
+	try:
+		jsonrpc.send_result(sender, id_, result)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
