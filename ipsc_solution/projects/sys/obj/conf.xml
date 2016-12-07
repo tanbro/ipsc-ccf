@@ -219,6 +219,8 @@ Trace('&lt;&lt;&lt; AsynchDelay(title=%s)' % res_id)
 err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
+elif err == -61:
+	Trace('DELAY: conf no-logner exits')
 elif err != 1:
 	TraceErr('Delay error %s: %s' % (err, data))
 </ExtendedProperty>
@@ -252,6 +254,10 @@ elif err != 1:
           <expression>err == 1</expression>
           <ExitType>101</ExitType>
         </case>
+        <case>
+          <expression>err == -61</expression>
+          <ExitType>102</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -266,6 +272,12 @@ elif err != 1:
           <targetflow>
           </targetflow>
           <target>1416</target>
+        </ExitPort>
+        <ExitPort>
+          <type>102</type>
+          <targetflow>
+          </targetflow>
+          <target>2035</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -297,6 +309,31 @@ if method.startswith('sys.'):
           <targetflow>
           </targetflow>
           <target>1404</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2035</NodeID>
+    <NodeType>SUBEND</NodeType>
+    <NodeName>子流程结束</NodeName>
+    <ExtendedProperty>IsHangup=</ExtendedProperty>
+    <PropertySet>
+      <EffectList />
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -480,14 +517,18 @@ except Exception as err:
     <NodeID>1389</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.release</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=try:
-	DeleConf(conf_id)
+    <ExtendedProperty>ZoneType=0;ScriptContent=
+try:
+	result = DeleConf(conf_id)
+	if result &lt; 1:
+		raise IvrError(0, 'DeleConf(%s) error %d' % (conf_id, result))
 	try:
 		jsonrpc.send_result(sender, id_)
 	except IvrError as err:
 		TraceErr(err)
 except Exception as err:
 	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
