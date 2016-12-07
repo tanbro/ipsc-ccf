@@ -1501,6 +1501,12 @@ try:
 	params['finish_keys'] = str(params.get('finish_keys', ''))
 	params['repeat'] = int(params.get('repeat', 0))
 	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (method, call_info['chan']))
+	#
 	vch = NewVCh()
 except Exception as err:
 	jsonrpc.send_error(sender, id_, message='{}'.format(err))
@@ -1659,6 +1665,12 @@ try:
 	params['record_file'] = str(params['record_file'])
 	params['finish_keys'] = str(params.get('finish_keys', ''))
 	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (method, call_info['chan']))
+	#
 	vch = NewVCh()
 except Exception as err:
 	jsonrpc.send_error(sender, id_, message='{}'.format(err))
@@ -1812,6 +1824,12 @@ except Exception as err:
 	if call_info['state'] not in ['Idle']:
 		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (method, call_info['chan']))
+	#
 	vch = NewVCh()
 except Exception as err:
 	jsonrpc.send_error(sender, id_, message='{}'.format(err))
@@ -1963,6 +1981,12 @@ except Exception as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=try:
 	if call_info['state'] not in ['Idle']:
 		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (method, call_info['chan']))
 	#
 	vch = NewVCh()
 except Exception as err:
@@ -2119,6 +2143,12 @@ except Exception as err:
 	bridge_call_info = call_map_r[call_res_id]
 	if bridge_call_info['state'] not in ['Idle']:
 		raise IvrError(0, 'Can not perform method "%s" on a bridge call whose state is "%s"' % (method, call_info['state']))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (method, call_info['chan']))
 	#
 	vch = NewVCh()
 except Exception as err:
@@ -2277,17 +2307,19 @@ try:
 	conf_info = conf_map_r[conf_res_id]
 	conf_id = conf_info['conf_id']
 	#
-	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
-	if ret &lt; 0:
-		raise IvrError(0, 'GetChActStatus(%s) error %s'.format(call_info['chan'], ret))
-	if conf_state:
-		raise IvrError(0, 'Can not perform method "%s" on a call in Conf' % (method))
-	if play_state or rec_state 
+	if call_info['state'] not in ['Ring', 'Idle', 'SendDtmf', 'ReceiveDtmf', 'Record', 'Play']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	# 
+	if call_info['state'] in ['SendDtmf', 'ReceiveDtmf', 'Record', 'Play']:
+		Trace('call(%s) state=%s, BreakPlayRec(%s)' % (call_info['chan'], call_info['state'], call_info['async_work_ch']))
 		BreakPlayRec(call_info['async_work_ch'])
 		call_info['async_work_ch'] = None
 	#
-	if call_info['state'] not in ['Ring', 'Idle', 'SendDtmf', 'ReceiveDtmf', 'Record', 'Play']:
-		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (method, call_info['chan']))
 	#
 	vch = NewVCh()
 except Exception as err:
