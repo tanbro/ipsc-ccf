@@ -421,7 +421,7 @@ if answer_time:
 		if residual_seconds &lt; default_delay_seconds:
 			expect_delay_seconds = residual_seconds
 	else:
-		TraceErr('call answer time expired: max_answer_seconds=%s, residual_seconds=%s, answer_time=%s, now_time=%s' % (max_answer_seconds, residual_seconds, answer_time, now_time))
+		TraceErr('call\'s talking time expired: max_answer_seconds=%s, residual_seconds=%s, answer_time=%s, now_time=%s' % (max_answer_seconds, residual_seconds, answer_time, now_time))
 		Hangup(chan, 603)
 #
 ret_val = AsynchInvoke(Delay(int(expect_delay_seconds * 1000), 2, chan, -1, "BusNotifyTitle=%s" % res_id))
@@ -2405,7 +2405,11 @@ try:
 		conf_info = conf_map_r[conf_res_id]
 		conf_id = conf_info['conf_id']
 		#
-		if call_info['state'] in ['Initiated', 'Answer', 'Released', 'SendDtmf', 'ReceiveDtmf', 'Record', 'Connect']:
+		#if call_info['state'] in ['Record', 'Play']:
+		#	BreakPlayRec(call_info['async_work_ch'])
+		#	call_info['async_work_ch'] = None
+		#
+		if call_info['state'] not in ['Ring', 'Idle']:
 			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 		#
 		vch = NewVCh()
