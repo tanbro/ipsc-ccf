@@ -117,7 +117,6 @@ try:
 		}
 	)
 except IvrError as err:
-	error = err
 	TraceErr(err)
 </ExtendedProperty>
     <PropertySet>
@@ -167,22 +166,19 @@ except IvrError as err:
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=call_info['state'] = org_state
-try:
-	if not answered:
-		if not error:
-			error = 'Un-catchable answer error.'
-		jsonrpc.send_event(
-			method='call.on_answer_completed',
-			params={
-				'res_id': res_id,
-				'error': str(error),
-				'begin_time': begin_time,
-				'end_time': now(),
-				'user_data': call_info['params'].get('user_data'),
-			}
-		)
-except IvrError as err:
-	TraceErr(err)
+if not answered:
+	if not error:
+		error = 'Un-catchable answer error.'
+	jsonrpc.send_event(
+		method='call.on_answer_completed',
+		params={
+			'res_id': res_id,
+			'error': str(error),
+			'begin_time': begin_time,
+			'end_time': now(),
+			'user_data': call_info['params'].get('user_data'),
+		}
+	)
 </ExtendedProperty>
     <PropertySet>
       <Exit>

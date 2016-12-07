@@ -186,25 +186,20 @@ except Exception as err:
     <NodeID>1723</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call on receive dtmf completed</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	call_info['async_work_ch'] = None
-	call_info['state'] = 'Idle'
-	params = {
-			'res_id': res_id,
-			'error': error,
-			'begin_time': begin_time,
-			'end_time': now(),
-			'keys': keys,
-			'user_data': call_info['params'].get('user_data'),
-		}
-	jsonrpc.send_event(
-		method='call.on_receive_dtmf_completed',
-		params=params
-	)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+    <ExtendedProperty>ZoneType=0;ScriptContent=call_info['async_work_ch'] = None
+call_info['state'] = 'Idle'
+params = {
+		'res_id': res_id,
+		'error': error,
+		'begin_time': begin_time,
+		'end_time': now(),
+		'keys': keys,
+		'user_data': call_info['params'].get('user_data'),
+	}
+jsonrpc.send_event(
+	method='call.on_receive_dtmf_completed',
+	params=params
+)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
