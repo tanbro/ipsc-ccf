@@ -42,15 +42,13 @@
     <NodeID>1424</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf released</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('*'*10 + 'conf-released: start')
-
+    <ExtendedProperty>ZoneType=0;ScriptContent=
 call_map = _gd_['call_map'] # chan =&gt; call_info
 conf_map = _gd_['conf_map'] # res_id =&gt; call_info
 
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
-Trace('*'*10 + 'conf-released: remove from global map')
 
 conf_info = conf_map.pop(conf_id)
 res_id = conf_info['res_id']
@@ -58,7 +56,6 @@ conf_map_r.pop(res_id)
 
 try:
 	if conf_info['playing']:
-		Trace('*'*10 + 'conf-released: play completed event')
 		jsonrpc.send_event(
 			method='conf.on_play_completed',
 			params={
@@ -71,7 +68,6 @@ except IvrError as err:
 
 try:
 	if conf_info['recording']:
-		Trace('*'*10 + 'conf-released: record completed event')
 		jsonrpc.send_event(
 			method='conf.on_record_completed',
 			params={
@@ -85,7 +81,6 @@ try:
 except IvrError as err:
 	TraceErr(err)
 
-Trace('*'*10 + 'conf-released: release event')
 
 jsonrpc.send_event(
 	method='conf.on_released',
@@ -97,8 +92,6 @@ jsonrpc.send_event(
 		# 'parts': conf_info['parts'],
 	}
 )
-
-Trace('*'*10 + 'conf-released: OK')
 </ExtendedProperty>
     <PropertySet>
       <Exit>
