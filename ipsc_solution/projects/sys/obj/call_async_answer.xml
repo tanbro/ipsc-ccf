@@ -94,6 +94,7 @@ if ret_val[0] &lt; 1:
 
 answered = True
 
+Trace('sys.call.answer: ok')
 #########################################################################################
 
 # set cdr info
@@ -135,7 +136,7 @@ except IvrError as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1853</target>
+          <target>1848</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -170,12 +171,12 @@ except IvrError as err:
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=call_info['state'] = org_state
-if answered:
-	Trace('sys.call.answer: ok')
-else:
+
+TraceErr('sys.call.answer: error={}'.format(error))
+
+if not answered:
 	if not error:
 		error = 'Un-catchable answer error.'
-	TraceErr('sys.call.answer: error={}'.format(error))
 	jsonrpc.send_event(
 		method='call.on_answer_completed',
 		params={
