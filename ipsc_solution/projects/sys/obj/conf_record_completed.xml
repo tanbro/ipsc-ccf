@@ -55,28 +55,25 @@ call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
 last_err = None
+
+conf_info = None
 try:
-	conf_info = None
-	try:
-		conf_info = conf_map.get(conf_id)
-	except KeyError as e:
-		TraceErr('conference id &lt;%s&gt; NOT existed!' % e)
-	if conf_info:
-		conf_info['recording'] = False
-		res_id = conf_info['res_id']
-		jsonrpc.send_event(
-			method='conf.on_record_completed',
-			params={
-				'res_id': res_id,
-				'begin_time': conf_info['record_begin_time'],
-				'end_time': now(),
-				'record_file': conf_info['record_file'],
-				'user_data': conf_info['user_data'],
-			}
-		)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	conf_info = conf_map.get(conf_id)
+except KeyError as e:
+	TraceErr('conference id &lt;%s&gt; NOT existed!' % e)
+if conf_info:
+	conf_info['recording'] = False
+	res_id = conf_info['res_id']
+	jsonrpc.send_event(
+		method='conf.on_record_completed',
+		params={
+			'res_id': res_id,
+			'begin_time': conf_info['record_begin_time'],
+			'end_time': now(),
+			'record_file': conf_info['record_file'],
+			'user_data': conf_info['user_data'],
+		}
+	)
 </ExtendedProperty>
     <PropertySet>
       <Exit>

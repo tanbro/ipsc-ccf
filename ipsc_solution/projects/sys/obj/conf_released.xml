@@ -42,11 +42,13 @@
     <NodeID>1424</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf released</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=call_map = _gd_['call_map'] # chan =&gt; call_info
+    <ExtendedProperty>ZoneType=0;ScriptContent=
+call_map = _gd_['call_map'] # chan =&gt; call_info
 conf_map = _gd_['conf_map'] # res_id =&gt; call_info
 
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+
 
 conf_info = conf_map.pop(conf_id)
 res_id = conf_info['res_id']
@@ -79,20 +81,17 @@ try:
 except IvrError as err:
 	TraceErr(err)
 
-try:
-	jsonrpc.send_event(
-		method='conf.on_released',
-		params={
-			'res_id': res_id,
-			'begin_time': conf_info['begin_time'],
-			'end_time': conf_info['end_time'],
-			'user_data': conf_info['user_data'],
-			# 'parts': conf_info['parts'],
-		}
-	)
-except IvrError as err:
-	TraceErr(err)
-	
+
+jsonrpc.send_event(
+	method='conf.on_released',
+	params={
+		'res_id': res_id,
+		'begin_time': conf_info['begin_time'],
+		'end_time': conf_info['end_time'],
+		'user_data': conf_info['user_data'],
+		# 'parts': conf_info['parts'],
+	}
+)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
