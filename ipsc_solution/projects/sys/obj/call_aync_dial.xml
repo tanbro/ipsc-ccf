@@ -63,6 +63,8 @@ chan = call_info['chan']
 
 call_info['begin_time'] = begin_time = now()
 call_info['answer_time'] = None
+
+Trace('sys.call.dial: begin')
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -120,9 +122,12 @@ call_info['answer_time'] = None
     <NodeID>1464</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call dial completed</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=if not error:
+    <ExtendedProperty>ZoneType=0;ScriptContent=if error:
+	TraceErr('sys.call.dial: error={}'.format(error))
+else:
 	call_info['answer_time'] = now()
 	call_info['state'] = 'Idle'
+	Trace('sys.call.dial: ok')
 params={
 	'res_id': res_id,
 	'begin_time': begin_time,

@@ -120,10 +120,13 @@
     <NodeID>1977</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=is_huapi = False
+    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('sys.call.incoming: from={} to={}'.format(GetOrgCallNo(), GetCalledNo))
 
-fr_uri = GetOrgCallNo()
-fr_user, fr_host, fr_port = utils.parse_sip_uri(fr_uri)
+
+is_huapi = False
+
+#fr_uri = GetOrgCallNo()
+#fr_user, fr_host, fr_port = utils.parse_sip_uri(fr_uri)
 
 #if fr_host == '192.168.10.88':
 #	is_huapi = True

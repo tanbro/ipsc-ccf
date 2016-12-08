@@ -600,6 +600,8 @@ if last_err:
 else:
 	err_msg = ''
 
+TraceErr('sys.call.construct: error={}'.format(err_msg))
+
 if IsVar('call_info'):
 	jsonrpc.send_error(sender, id_, message=err_msg, data={
 		'ipsc_info': call_info['ipsc_info']
@@ -668,6 +670,7 @@ else:
     <NodeName>脚本 call dial parse</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	Trace('sys.call.construct: params={}'.format(params))
 	from_uri = params.get('from_uri', '')
 	user, host, port = utils.parse_sip_uri(params['to_uri'])
 	if user:
