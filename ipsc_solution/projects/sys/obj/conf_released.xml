@@ -54,6 +54,8 @@ conf_info = conf_map.pop(conf_id)
 res_id = conf_info['res_id']
 conf_map_r.pop(res_id)
 
+Trace('sys.conf.released: res_id=%s' % res_id)
+
 try:
 	if conf_info['playing']:
 		jsonrpc.send_event(

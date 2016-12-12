@@ -25,6 +25,7 @@ conf_map = _gd_['conf_map'] # conf_id =&gt; conf_info
 call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
+Trace('sys.conf.initiated')
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -419,7 +420,7 @@ if method.startswith('sys.'):
     <ExtendedProperty>ZoneType=0;ScriptContent=begin_time = now()
 
 res_id = '%s.%s' % (utils.make_res_id(), str(conf_id))
-Trace('conf res_id: %s' % res_id)
+Trace('sys.conf.construct: ok res_id=%s' % res_id)
 
 conf_info = conf_map[conf_id] = conf_map_r[res_id] = {
 	'id': id_,
@@ -463,7 +464,8 @@ jsonrpc.send_result(sender, id_, {
     <NodeID>1374</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 conf.create error result</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_, message='{}'.format(last_err))
+    <ExtendedProperty>ZoneType=0;ScriptContent=TraceErr('sys.call.construct: error={}'.format(last_err))
+jsonrpc.send_error(sender, id_, message='{}'.format(last_err))
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -488,6 +490,7 @@ jsonrpc.send_result(sender, id_, {
     <NodeName>脚本 创建会议</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = ''
 try:
+	Trace('sys.conf.construct: params={}'.format(params))
 	max_seconds = int(params['max_seconds'])
 	record_file = str(params.get('record_file') or '')
 	bg_file = str(params.get('bg_file') or '')

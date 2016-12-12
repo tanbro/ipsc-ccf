@@ -62,6 +62,8 @@ conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
 parent_call_info = None
 release_delay = None
+
+Trace('sys.call.initiated')
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -1037,7 +1039,9 @@ finally:
     <NodeID>1911</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call.on_released</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_event(
+    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('sys.call.released')
+
+jsonrpc.send_event(
 	method='call.on_released',
 	params={
 		'res_id': call_info['res_id'],

@@ -120,7 +120,7 @@
     <NodeID>1977</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('sys.call.incoming: from={} to={}'.format(GetOrgCallNo(), GetCalledNo))
+    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('sys.call.incoming: from={} to={}'.format(GetOrgCallNo(), GetCalledNo()))
 
 
 is_huapi = False
