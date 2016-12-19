@@ -633,11 +633,11 @@ try:
 
 	record_file = str(params['file'])
 
-	StartConfPlay(
-		conf_id,
-		record_file,
+	StartConfRecord(
+		confid=conf_id,
+		rec_file=record_file,
 		reclen=int(params['max_seconds']),
-		0
+		pindex=0
 	)
 
 	conf_info['recording'] = True
