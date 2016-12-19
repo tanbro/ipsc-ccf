@@ -631,11 +631,12 @@ try:
 	if conf_info['recording']:
 		raise IvrError(0, 'Can not StartConfRecord while another recording is active.')
 
-	record_file = str(params['file'])
+	record_file = str(params['record_file'])
 
 	StartConfRecord(
 		confid=conf_id,
 		rec_file=record_file,
+		format=3,
 		reclen=int(params['max_seconds']),
 		pindex=0
 	)
