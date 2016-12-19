@@ -1006,44 +1006,16 @@ except Exception as err:
     <NodeID>1129</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call released</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('sys.call.released')
+
+try:
 	call_info['end_time'] = now()
 	call_info['state'] = 'Released'
 	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
-
 	if parent_call_info:
 		parent_call_info['state'] = 'Idle'
-
-finally:
-	call_map.pop(chan)
-	call_map_r.pop(res_id)
-</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1918</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1918</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1911</NodeID>
-    <NodeType>SCRIPT</NodeType>
-    <NodeName>脚本 call.on_released</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('sys.call.released')
-
-jsonrpc.send_event(
-	method='call.on_released',
-	params={
+	_method = 'call.on_released'
+	_params = {
 		'res_id': call_info['res_id'],
 		'error': None,
 		'call_dir': call_info['call_dir'],
@@ -1057,7 +1029,17 @@ jsonrpc.send_event(
 		'user_data': call_info['params'].get('user_data'),
 		'ipsc_info': call_info['ipsc_info'],
 	}
-)
+finally:
+	call_map.pop(chan)
+	call_map_r.pop(res_id)
+
+if not bool(release_delay):
+	jsonrpc.send_event(method=_method, params=_params)
+	raise ReturnExit()
+
+ret_val = AsynchInvoke(Delay(int(release_delay * 1000), 0, GetCurrentCh(), -1, ""))
+
+jsonrpc.send_event(method=_method, params=_params)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -1074,69 +1056,6 @@ jsonrpc.send_event(
           </targetflow>
           <target>
           </target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1912</NodeID>
-    <NodeType>DELAY</NodeType>
-    <NodeName>延时</NodeName>
-    <ExtendedProperty>IsCheckHangup=0;Delay=release_delay * 1000;Contect=;WorkCh=;OutData=;Option=</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1911</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1911</target>
-        </ExitPort>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1911</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1918</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 release_delay</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>bool(release_delay)</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1911</target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1912</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1911</target>
         </ExitPort>
       </Exit>
     </PropertySet>

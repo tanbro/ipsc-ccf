@@ -83,10 +83,10 @@ if ret_val[0] &lt; 1:
 if ret_val[0] not in (1, 2):
 	raise ReturnExit()
 
-Trace('&gt;&gt;&gt; SendANS(chan={0}); WaitCallStatus(chan={0}) ...'.format(chan))
+Trace('&gt;&gt;&gt; SendANS(chan=%s); WaitCallStatus ...' % chan)
 SendANS(chan, 1)
 ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[3,4]))
-Trace('&gt;&gt;&gt; SendANS(chan={0}); WaitCallStatus(chan={0}) -&gt; %s'.format(chan, str(ret_val)))
+Trace('&gt;&gt;&gt; SendANS(chan=%s); WaitCallStatus -&gt; %s' % (chan, str(ret_val)))
 if ret_val[0] &lt; 1:
 	error = IvrError(0, 'WaitCallStatus(states=2xx) returns error value  %s, %s' % ret_val)
 	TraceErr('%s' % error)
