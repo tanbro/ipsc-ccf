@@ -94,7 +94,7 @@ if ret_val[0] &lt; 1:
 
 answered = True
 
-Trace('sys.call.answer: ok')
+Trace('sys.call.answer: ok. delay={}'.format(now() - call_info['begin_time']))
 #########################################################################################
 
 # set cdr info
@@ -172,7 +172,7 @@ except IvrError as err:
     <NodeName>脚本 error</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=call_info['state'] = org_state
 
-TraceErr('sys.call.answer: error={}'.format(error))
+TraceErr('sys.call.answer: error={}. delay={}'.format(error, now() - call_info['begin_time']))
 
 if not answered:
 	if not error:
