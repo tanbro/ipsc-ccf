@@ -9,4 +9,2334 @@
     <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
+  <FlowNode>
+    <NodeID>1021</NodeID>
+    <NodeType>SUBSTART</NodeType>
+    <NodeName>子流程开始</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <AffectList>
+        <varlist>
+          <var>sender</var>
+        </varlist>
+        <varlist>
+          <var>id_</var>
+        </varlist>
+        <varlist>
+          <var>params</var>
+        </varlist>
+      </AffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1074</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1074</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call init</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+
+res_id = None
+chan = None
+conf_id = None
+
+call_map = _gd_['call_map'] # chan =&gt; call_info
+conf_map = _gd_['conf_map'] # conf_id =&gt; conf_info
+
+call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
+conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+
+parent_call_info = None
+release_delay = None
+
+Trace('sys.call.initiated')
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1181</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1122</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 operation method</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>method == 'call.drop'</expression>
+          <ExitType>104</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.redirect'</expression>
+          <ExitType>102</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.answer'</expression>
+          <ExitType>103</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.play_start'</expression>
+          <ExitType>101</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.play_stop'</expression>
+          <ExitType>105</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.record_start'</expression>
+          <ExitType>108</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.record_stop'</expression>
+          <ExitType>109</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.send_dtmf_start'</expression>
+          <ExitType>110</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.send_dtmf_stop'</expression>
+          <ExitType>111</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.receive_dtmf_start'</expression>
+          <ExitType>112</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.receive_dtmf_stop'</expression>
+          <ExitType>113</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.connect_start'</expression>
+          <ExitType>114</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.connect_stop'</expression>
+          <ExitType>115</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.conf_enter'</expression>
+          <ExitType>106</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.conf_exit'</expression>
+          <ExitType>107</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.get'</expression>
+          <ExitType>116</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.reject'</expression>
+          <ExitType>117</ExitType>
+        </case>
+        <case>
+          <expression>method == 'call.exists'</expression>
+          <ExitType>118</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>104</type>
+          <targetflow>
+          </targetflow>
+          <target>1273</target>
+        </ExitPort>
+        <ExitPort>
+          <type>102</type>
+          <targetflow>
+          </targetflow>
+          <target>1226</target>
+        </ExitPort>
+        <ExitPort>
+          <type>103</type>
+          <targetflow>
+          </targetflow>
+          <target>1845</target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1824</target>
+        </ExitPort>
+        <ExitPort>
+          <type>105</type>
+          <targetflow>
+          </targetflow>
+          <target>1290</target>
+        </ExitPort>
+        <ExitPort>
+          <type>108</type>
+          <targetflow>
+          </targetflow>
+          <target>1827</target>
+        </ExitPort>
+        <ExitPort>
+          <type>109</type>
+          <targetflow>
+          </targetflow>
+          <target>1599</target>
+        </ExitPort>
+        <ExitPort>
+          <type>110</type>
+          <targetflow>
+          </targetflow>
+          <target>1828</target>
+        </ExitPort>
+        <ExitPort>
+          <type>111</type>
+          <targetflow>
+          </targetflow>
+          <target>1690</target>
+        </ExitPort>
+        <ExitPort>
+          <type>112</type>
+          <targetflow>
+          </targetflow>
+          <target>1829</target>
+        </ExitPort>
+        <ExitPort>
+          <type>113</type>
+          <targetflow>
+          </targetflow>
+          <target>1747</target>
+        </ExitPort>
+        <ExitPort>
+          <type>114</type>
+          <targetflow>
+          </targetflow>
+          <target>1830</target>
+        </ExitPort>
+        <ExitPort>
+          <type>115</type>
+          <targetflow>
+          </targetflow>
+          <target>1819</target>
+        </ExitPort>
+        <ExitPort>
+          <type>106</type>
+          <targetflow>
+          </targetflow>
+          <target>1898</target>
+        </ExitPort>
+        <ExitPort>
+          <type>107</type>
+          <targetflow>
+          </targetflow>
+          <target>1348</target>
+        </ExitPort>
+        <ExitPort>
+          <type>116</type>
+          <targetflow>
+          </targetflow>
+          <target>1907</target>
+        </ExitPort>
+        <ExitPort>
+          <type>117</type>
+          <targetflow>
+          </targetflow>
+          <target>1932</target>
+        </ExitPort>
+        <ExitPort>
+          <type>118</type>
+          <targetflow>
+          </targetflow>
+          <target>1941</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1398</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1181</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 call in/out</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>(id_ is None) and (params is None)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1216</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1232</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1398</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 invalid method</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_, message='invalid method')
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1907</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 get</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_result(sender, id_, call_info)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1139</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 parse data</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=sender, id_, method, params = json.loads(data)
+if method.startswith('sys.'):
+	method = method[4:]
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1122</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1142</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 Delay</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=answer_time = call_info.get('answer_time')
+expect_delay_seconds = default_delay_seconds = 60
+if answer_time:
+	now_time = now()
+	residual_seconds = max_answer_seconds - (now_time - answer_time)
+	if residual_seconds &gt; 0:
+		if residual_seconds &lt; default_delay_seconds:
+			expect_delay_seconds = residual_seconds
+	else:
+		TraceErr('call\'s talking time expired: max_answer_seconds=%s, residual_seconds=%s, answer_time=%s, now_time=%s' % (max_answer_seconds, residual_seconds, answer_time, now_time))
+		Hangup(chan, 603)
+#
+ret_val = AsynchInvoke(Delay(int(expect_delay_seconds * 1000), 2, chan, -1, "BusNotifyTitle=%s" % res_id))
+err, data = ret_val
+if err == -8:
+	Trace('DELAY: timeout')
+elif err == -61:
+	TraceErr('DELAY: channle closed')
+elif err != 1:
+	TraceErr('Delay: error %s: %s' % (err, data))
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1143</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1143</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 Delay returns</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>err == 1</expression>
+          <ExitType>101</ExitType>
+        </case>
+        <case>
+          <expression>err == -61</expression>
+          <ExitType>103</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1139</target>
+        </ExitPort>
+        <ExitPort>
+          <type>103</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1192</NodeID>
+    <NodeType>DIALEX</NodeType>
+    <NodeName>拨号</NodeName>
+    <ExtendedProperty>WorkCh=dial_chan;Dnis=to_uri;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=1;RingVoice=ring_play_file;RingTimeout=max_ring_seconds;IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>6</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1194</target>
+        </ExitPort>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1194</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call out initiated</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	# call info
+	call_info = call_map[chan] = call_map_r[res_id] = {
+		'id': id_,
+		'res_id': res_id,
+		'params': params,
+		'state': 'Initiated',
+		'bus_addr': sender,
+		'chan': chan,
+		'ipsc_info': ipsc_info,
+		'call_dir': 'outbound',
+		'from_uri': from_uri,
+		'to_uri': to_uri,
+		'begin_time': begin_time,
+		'ring_time': None,
+		'answer_time': None,
+		'end_time': None,
+		'dropped_by': None,
+		'reason': None,
+		'cause': None,
+	}
+	# set cdr info
+	cdr_datas = [
+		str(res_id),
+		params.get('user_data'),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan, *cdr_datas)
+	# RPC Result:
+	try:
+		jsonrpc.send_result(sender, id_, {
+			'res_id': res_id,
+			'user_data': params.get('user_data'),
+			'ipsc_info': ipsc_info,
+		})
+	except IvrError as err:
+		TraceErr('%s' % str(err))
+except Exception as err:
+	last_err = str(err)
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1203</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1195</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.perform error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=call_map.pop(chan, None)
+call_map_r.pop(res_id, None)
+
+if last_err:
+	err_msg = str(last_err)
+else:
+	err_msg = ''
+
+TraceErr('sys.call.construct: error={}'.format(err_msg))
+
+if IsVar('call_info'):
+	jsonrpc.send_error(sender, id_, message=err_msg, data={
+		'ipsc_info': call_info['ipsc_info']
+	})
+else:
+	jsonrpc.send_error(sender, id_, message=err_msg)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1203</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1465</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1232</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call dial parse</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	Trace('sys.call.construct: params={}'.format(params))
+	from_uri = params.get('from_uri', '')
+	user, host, port = utils.parse_sip_uri(params['to_uri'])
+	if user:
+		to_uri = '{0}@{1}:{2}'.format(user, host, port)
+	else:
+		to_uri = '{1}:{2}'.format(user, host, port)
+	release_delay = params.get('release_delay', 1)
+	max_answer_seconds = float(params['max_answer_seconds'])
+	max_ring_seconds = int(params.get('max_ring_seconds', 50))
+	#
+	opts = ''
+	opts_dict = {'AudioCodec1': 0x00}
+	parent_call_info = None
+	ring_play_file = None
+
+	####################################################
+	# 拨号通道
+	parent_call_res_id = params.get('parent_call_res_id')
+	parent_conf_res_id = params.get('parent_conf_res_id')
+	if parent_call_res_id and parent_conf_res_id:
+		raise IvrError(0, 'Arguments "parent_call_res_id" and "parent_conf_res_id" can not be assigned both.')
+	elif parent_call_res_id or parent_conf_res_id:
+		############################################
+		# SUBCALL
+		ring_play_file = params.get('ring_play_file')
+		# 在呼叫中播放拨号音 
+		if parent_call_res_id:
+			parent_call_info = call_map_r[parent_call_res_id]
+			if parent_call_info['state'] not in ['Idle']:
+				raise IvrError(0, 'Can not construct a call with parent call''s state is "%s"' % (parent_call_info['state']))
+			parent_call_info['state'] = 'Dial'
+			dial_chan = parent_call_info['chan']
+			ring_play_mode = int(params.get('ring_play_mode', 0))
+			if ring_play_mode==3:
+				opts_dict['ConnectSrcCh'] = 1
+			else:
+				if ring_play_file:
+					opts_dict['PlayFileMode'] = ring_play_mode
+					if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+						opts_dict['ConnectSrcCh'] = 1
+					else:
+						opts_dict['ConnectSrcCh'] = 0
+				else:
+					opts_dict['ConnectSrcCh'] = 1
+		# 在会议中播放拨号音
+		elif parent_conf_res_id:
+			parent_conf_info = conf_map_r[parent_conf_res_id]
+			dial_chan = parent_conf_info['conf_id']
+			ring_play_mode = int(params.get('ring_play_mode', 0))
+			if ring_play_mode==3:
+				opts_dict['ConnectSrcCh'] = 1
+			else:
+				if ring_play_file:
+					opts_dict['PlayFileMode'] = ring_play_mode
+					if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+						opts_dict['ConnectSrcCh'] = 1
+					else:
+						opts_dict['ConnectSrcCh'] = 0
+				else:
+					opts_dict['ConnectSrcCh'] = 1
+	# 本通道拨号，无须播放拨号音
+	else:
+		dial_chan = GetCurrentCh()
+	##################################
+	# new call-info
+	##################################
+	res_id = utils.make_res_id()
+	Trace('call res_id: %s' % res_id)
+	process_id = GetProcessID()
+	ipsc_info = dict(process_id=process_id)
+	begin_time = now()
+
+	#######################################
+	# Ringing Event
+	#######################################
+	opts_dict['AlertingFlow'] = 'call_ringing'
+	opts_dict['AlertingParam'] = res_id
+
+	#######################################
+	# dial opts
+	#######################################
+	for k, v in opts_dict.items():
+		if opts:
+			opts = opts + ';'
+		opts = opts + '{}={}'.format(k,v)
+
+except Exception as err:
+	last_err = str(err)
+	raise
+
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1235</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1235</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1925</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1465</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 call async dial</NodeName>
+    <ExtendedProperty>SubFlowName=call_aync_dial;InvokeType=1;ChNo=chan;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_aync_dial</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1925</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 set fail cdr add info</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	fail_cdr_datas = [
+		str(res_id),
+		params.get('user_data'),
+		None,
+		None,
+		None,
+	]
+	SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
+except Exception as err:
+	last_err = str(err)
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1195</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1192</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1216</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 inbound</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	res_id = utils.make_res_id()
+	Trace('call res_id: %s' % res_id)
+	ipsc_info = GetProcessID()
+	ipsc_info = dict(process_id=ipsc_info)
+	# 
+	chan = GetCurrentCh()
+	from_uri = 'sip:{}'.format(GetOrgCallNo())
+	if GetCalledNo():
+		# to_uri = 'sip:{}'.format(GetCalledNo())
+		to_uri = GetCalledNo()
+	else:
+		to_uri = ""
+	params = dict(
+		res_id = res_id,
+		from_uri = from_uri,
+		to_uri = to_uri
+	)
+	begin_time = now()
+	call_info = call_map[chan] = call_map_r[res_id] = {
+		'id': id_,
+		'res_id': res_id,
+		'params': params,
+		'state': 'Initiated',
+		'chan': chan,
+		'ipsc_info': ipsc_info,
+		'call_dir': 'inbound',
+		'bus_addr': sender,
+		'from_uri': from_uri,
+		'to_uri': to_uri,
+		'begin_time': begin_time,
+		'answer_time': None,
+		'ring_time': None,
+		'end_time': None,
+		'dropped_by': None,
+		'reason': None,
+		'cause': None,
+	}
+	# trigger sys.call.on_incoming event
+	call_info['bus_addr'] = sender = jsonrpc.send_event(
+		method='call.on_incoming',
+		params=dict(
+			res_id=res_id,
+			from_uri=from_uri,
+			to_uri=to_uri,
+			begin_time=call_info['begin_time'],
+		)
+	)
+except Exception as err:
+	last_err = err
+	raise
+
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1248</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1248</NodeID>
+    <NodeType>JUDGE</NodeType>
+    <NodeName>判断 not last_err</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <switch>
+        <case>
+          <expression>not bool(last_err)</expression>
+          <ExitType>101</ExitType>
+        </case>
+      </switch>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>100</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1129</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call released</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('sys.call.released')
+
+try:
+	call_info['end_time'] = now()
+	call_info['state'] = 'Released'
+	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
+	if parent_call_info:
+		parent_call_info['state'] = 'Idle'
+	_method = 'call.on_released'
+	_params = {
+		'res_id': call_info['res_id'],
+		'error': None,
+		'call_dir': call_info['call_dir'],
+		'from_uri': call_info['from_uri'],
+		'to_uri': call_info['to_uri'],
+		'begin_time': call_info['begin_time'],
+		'answer_time': call_info['answer_time'],
+		'end_time': call_info['end_time'],
+		'dropped_by': call_info['dropped_by'],
+		'cause': call_info['cause'],
+		'user_data': call_info['params'].get('user_data'),
+		'ipsc_info': call_info['ipsc_info'],
+	}
+finally:
+	call_map.pop(chan)
+	call_map_r.pop(res_id)
+
+if not bool(release_delay):
+	jsonrpc.send_event(method=_method, params=_params)
+	raise ReturnExit()
+
+ret_val = AsynchInvoke(Delay(int(release_delay * 1000), 0, GetCurrentCh(), -1, ""))
+
+jsonrpc.send_event(method=_method, params=_params)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1226</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 redirect</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if call_info['call_dir'] == 'outbound':
+		raise IvrError(0, 'Can not perform method "%s" an outbound call.' % method)
+	if call_info['state'] not in ['Initiated']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	redirect_uri = params['redirect_uri']
+	destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
+	# set cdr info
+	cdr_datas = [
+		str(res_id),
+		str(params.get('user_data', '')),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan, *cdr_datas)
+	# make SIP redirct and then bye
+	ReadySipRedirect(chan, 302, destuser, destip, destport)
+	# return the RPC
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+		last_err = err
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1129</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1837</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.answer ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_result(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1838</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.answer error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1843</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async answer</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_answer;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1838</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1837</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_answer</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1845</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if call_info['call_dir'] == 'outbound':
+		raise IvrError(0, 'Can not perform method "%s" an outbound call.' % method)
+	if call_info['state'] not in ['Initiated']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	#
+	for k, v in params.items(): 
+		if not k in call_info['params']:
+			call_info['params'][k] = v
+	#
+	max_answer_seconds = int(params['max_answer_seconds'])
+	release_delay = int(params.get('release_delay', 1))
+	vch = NewVCh()
+except Exception as err:
+	try:
+		jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	except IvrError as err:
+		TraceErr(err)
+		last_err = err
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1843</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1932</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 reject</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if call_info['call_dir'] == 'outbound':
+		raise IvrError(0, 'Can not perform method "%s" on an outbound call.' % method)
+	if call_info['state'] not in ['Initiated']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	# set cdr info
+	cdr_datas = [
+		str(res_id),
+		params.get('user_data'),
+		None,
+		None,
+		None,
+	]
+	SetCdrAdditionalInfo(chan, *cdr_datas)
+	# hangup the incoming call!
+	Hangup(chan, params.get('cause', 603))
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1273</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 drop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if call_info['call_dir'] == 'inbound':
+		if call_info['state'] in ['Initiated', 'Answer']:
+			raise IvrError(0, 'Can not perform method "%s" on an inbound call whose state is "%s"'  % (method, call_info['state']))
+	Hangup(chan, params.get('cause', 603))
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1175</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.play_start ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_result(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1300</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.play_start error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1502</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async play</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_play;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1300</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1175</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_play</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1824</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if call_info['state'] not in ['Idle']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	#
+	params['repeat'] = int(params.get('repeat', 0))
+	if params['repeat'] &lt; 0:
+		raise IvrError(0, 'Argument "repeat" must be greater than "0"')
+	#
+	params['content'] = params['content']
+	params['finish_keys'] = str(params.get('finish_keys', ''))
+	params['repeat'] = int(params.get('repeat', 0))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	vch = NewVCh()
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1502</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1290</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 play stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if call_info['state'] not in ['Play']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	BreakPlayRec(call_info['async_work_ch'])
+	call_info['async_work_ch'] = None
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1569</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.record_start ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_result(sender, id_, params.get('record_file'))
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1570</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.record_start error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1575</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async record</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_record;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1570</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1569</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_record</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1827</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if call_info['state'] not in ['Idle']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	#
+	params['max_seconds'] = int(params['max_seconds'])
+	params['record_file'] = str(params['record_file'])
+	params['finish_keys'] = str(params.get('finish_keys', ''))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	vch = NewVCh()
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1575</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1599</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 record stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	if call_info['state'] not in ['Record']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	BreakPlayRec(call_info['async_work_ch'])
+	call_info['async_work_ch'] = None
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1657</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.send_dtmf_start ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_result(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1658</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.send_dtmf_start error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1663</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async send_dtmf</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_send_dtmf;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1658</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1657</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_send_dtmf</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1828</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if call_info['state'] not in ['Idle']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	vch = NewVCh()
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1663</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1690</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 send_dtmf stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if call_info['state'] not in ['SendDtmf']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	BreakPlayRec(call_info['async_work_ch'])
+	call_info['async_work_ch'] = None
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1704</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.receive_dtmf_start ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_result(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1705</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.receive_dtmf_start error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1710</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async receive_dtmf</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_receive_dtmf;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1705</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1704</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_receive_dtmf</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1829</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if call_info['state'] not in ['Idle']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	vch = NewVCh()
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1710</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1747</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 receive_dtmf_stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if call_info['state'] not in ['ReceiveDtmf']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	BreakPlayRec(call_info['async_work_ch'])
+	call_info['async_work_ch'] = None
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1766</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 connect_start ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_result(sender, id_)
+
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1767</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 connect_start error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_)</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1772</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async connect</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_connect;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1767</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1766</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_connect</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1830</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if call_info['state'] not in ['Idle', 'Dial']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	call_res_id = params['call_res_id']
+	bridge_call_info = call_map_r[call_res_id]
+	if bridge_call_info['state'] not in ['Idle']:
+		raise IvrError(0, 'Can not perform method "%s" on a bridge call whose state is "%s"' % (method, call_info['state']))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	vch = NewVCh()
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1772</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1819</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 bridge_stop</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	if call_info['state'] not in ['Connect']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	ret_val = BreakConnect(chan, None)
+	if ret_val != 1:
+		raise IvrError(0, 'BreakConnect(chan=%d) returns %d' % (chan, ret_val))
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1889</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.conf_enter ok return</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_result(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1890</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call.conf_enter error</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=jsonrpc.send_error(sender, id_)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1895</NodeID>
+    <NodeType>INVOKESUB</NodeType>
+    <NodeName>调子流程 async conf</NodeName>
+    <ExtendedProperty>SubFlowName=call_async_conf;InvokeType=1;ChNo=vch;Timeout=;RunMode=0</ExtendedProperty>
+    <PropertySet>
+      <AffectList />
+      <EffectList>
+        <valuelist>
+          <value>sender</value>
+        </valuelist>
+        <valuelist>
+          <value>id_</value>
+        </valuelist>
+        <valuelist>
+          <value>res_id</value>
+        </valuelist>
+        <valuelist>
+          <value>params</value>
+        </valuelist>
+      </EffectList>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1890</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1889</target>
+        </ExitPort>
+        <ExitPort>
+          <type>22</type>
+          <targetflow>call_async_conf</targetflow>
+          <target>1000</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1898</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 NewVCh and check_state</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	params['max_seconds'] = int(params['max_seconds'])
+	params['volume'] = int(params.get('volume', 0))
+	conf_res_id = params['conf_res_id']
+	conf_info = conf_map_r[conf_res_id]
+	conf_id = conf_info['conf_id']
+	#
+	if call_info['state'] not in ['Ring', 'Idle', 'SendDtmf', 'ReceiveDtmf', 'Record', 'Play']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	# 
+	if call_info['state'] in ['SendDtmf', 'ReceiveDtmf', 'Record', 'Play']:
+		Trace('call(%s) state=%s, BreakPlayRec(%s)' % (call_info['chan'], call_info['state'], call_info['async_work_ch']))
+		BreakPlayRec(call_info['async_work_ch'])
+		call_info['async_work_ch'] = None
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	vch = NewVCh()
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1895</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1348</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 exit_conf</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	conf_res_id = params['conf_res_id']
+	conf_info = conf_map_r[conf_res_id]
+	conf_id = conf_info['conf_id']
+
+	#if call_info['state'] not in ['Conf']:
+	#	raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+
+	ret_val = RemoveConfer(conf_id, chan)
+	if ret_val != 1:
+		raise IvrError(0, 'RemoveConfer(conf_id=%d, chan=%d) returns %d' % (conf_id, chan, ret_val))
+		
+	try:
+		jsonrpc.send_result(sender, id_)
+	except IvrError as err:
+		TraceErr(err)
+
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1941</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 exists</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=try:
+	res_id = params['res_id']
+	jsonrpc.send_result(sender, id_, res_id in call_map_r)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1142</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
 </root>
