@@ -464,7 +464,7 @@ else:
 			to_uri = '{0}@{1}:{2}'.format(user, host, port)
 		else:
 			to_uri = '{1}:{2}'.format(user, host, port)
-		release_delay = params.get('release_delay', 1)
+		release_delay = params.get('release_delay', 0)
 		max_answer_seconds = float(params['max_answer_seconds'])
 		max_ring_seconds = int(params.get('max_ring_seconds', 50))
 		#
