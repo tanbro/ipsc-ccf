@@ -266,7 +266,10 @@ except IvrError as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['state'] = 'Answered'
 res_obj['answer_time'] = now()
 #
-#
+
+
+call2_begin_time = now()
+
 #
 opts = ''
 opts_dict = {'AudioCodec1': 0x00}
@@ -302,9 +305,7 @@ fail_cdr_datas = [
 	None,
 	None,
 ]
-SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
-
-call2_begin_time = now()</ExtendedProperty>
+SetCallFailCdrAdditionalInfo(*fail_cdr_datas)</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
