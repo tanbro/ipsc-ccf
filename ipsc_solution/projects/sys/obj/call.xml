@@ -675,7 +675,7 @@ err, data = ret_val
 if err == -8:
 	Trace('DELAY: timeout')
 elif err == -61:
-	TraceErr('DELAY: channle closed')
+	Trace('DELAY: channle closed')
 elif err != 1:
 	TraceErr('Delay: error %s: %s' % (err, data))
 elif err == 1:
