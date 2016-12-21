@@ -537,8 +537,7 @@ else:
 		#######################################
 		# opts_dict['AlertingFlow'] = 'call_ringing'
 		# opts_dict['AlertingParam'] = res_id
-		opts_dict['AlertingFunc'] = 'callbacks.on_call_ringing'
-		opts_dict['AlertingParam'] = res_id
+		opts_dict['AlertingFunc'] = 'callbacks.on_call_ringing(res_id)'
 
 		#######################################
 		# dial opts
