@@ -944,7 +944,8 @@ else:
     <NodeID>1129</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call released</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=Trace('sys.call.released')
+    <ExtendedProperty>ZoneType=0;ScriptContent=
+Trace('sys.call.released')
 
 try:
 	call_info['end_time'] = now()
@@ -976,7 +977,6 @@ if not bool(release_delay):
 	raise ReturnExit()
 
 ret_val = AsynchInvoke(Delay(int(release_delay * 1000), 0, GetCurrentCh(), -1, ""))
-
 jsonrpc.send_event(method=_method, params=_params)
 </ExtendedProperty>
     <PropertySet>
