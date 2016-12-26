@@ -551,7 +551,8 @@ else:
 	except Exception as err:
 		last_err = str(err)
 		exit_flag = 3
-		raise ReturnExit
+		Trace('```````````````````````````````````` %s: ReturnExit' % err)
+		raise ReturnExit()
 
 	# 1235
 	if not bool(last_err):
@@ -569,7 +570,8 @@ else:
 		except Exception as err:
 			last_err = str(err)
 			exit_flag = 3
-			raise ReturnExit
+			Trace('```````````````````````````````````` %s: ReturnExit' % err)
+			raise ReturnExit()
 	exit_flag = 2
 </ExtendedProperty>
     <PropertySet>
