@@ -201,7 +201,7 @@ if 'conf_map_r' not in _gd_:
     <NodeName>脚本 SIP 注册</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=ini_file = '/home/hesong/ipsc/config/{}/SipReg.ini'.format(GetIpscID())
 Trace('SipReg fil=%s' % ini_file)
-for i in range(64):
+for i in range(255):
 	Trace('SipReg [%d]' % i)
 	section = str(i)
 	username = IniGetString(section, 'username', None, ini_file)

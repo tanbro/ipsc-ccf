@@ -374,7 +374,8 @@ Trace('sys.call.initiated')
     <NodeID>2047</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call init</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+    <ExtendedProperty>ZoneType=0;ScriptContent=
+last_err = None
 exit_flag = 0
 
 res_id = None
@@ -397,7 +398,7 @@ Trace('sys.call.initiated')
 ###########
 if (id_ is None) and (params is None):
 	# call_inbound
-	# 脚本 inbound 1216
+	# inbound 1216
 	last_err = None
 	try:
 		res_id = utils.make_res_id()
@@ -450,7 +451,7 @@ if (id_ is None) and (params is None):
 	except Exception as err:
 		last_err = err
 		exit_flag = 1
-		raise ReturnExit
+		raise
 	exit_flag = 0
 else:
 	# call_constgruct
@@ -474,7 +475,7 @@ else:
 		ring_play_file = None
 
 		####################################################
-		# 拨号通道
+		# 
 		parent_call_res_id = params.get('parent_call_res_id')
 		parent_conf_res_id = params.get('parent_conf_res_id')
 		if parent_call_res_id and parent_conf_res_id:
@@ -484,7 +485,7 @@ else:
 			############################################
 			# SUBCALL
 			ring_play_file = params.get('ring_play_file')
-			# 在呼叫中播放拨号音 
+			# 
 			if parent_call_res_id:
 				parent_call_info = call_map_r[parent_call_res_id]
 				if parent_call_info['state'] not in ['Idle']:
@@ -498,13 +499,13 @@ else:
 				else:
 					if ring_play_file:
 						opts_dict['PlayFileMode'] = ring_play_mode
-						if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+						if ring_play_mode == 1:  #
 							opts_dict['ConnectSrcCh'] = 1
 						else:
 							opts_dict['ConnectSrcCh'] = 0
 					else:
 						opts_dict['ConnectSrcCh'] = 1
-			# 在会议中播放拨号音
+			# 
 			elif parent_conf_res_id:
 				parent_conf_info = conf_map_r[parent_conf_res_id]
 				dial_chan = parent_conf_info['conf_id']
@@ -514,13 +515,13 @@ else:
 				else:
 					if ring_play_file:
 						opts_dict['PlayFileMode'] = ring_play_mode
-						if ring_play_mode == 1:  # 拨号时即开始播放，收到对端回铃后停止播放
+						if ring_play_mode == 1:  # 
 							opts_dict['ConnectSrcCh'] = 1
 						else:
 							opts_dict['ConnectSrcCh'] = 0
 					else:
 						opts_dict['ConnectSrcCh'] = 1
-		# 本通道拨号，无须播放拨号音
+		# 
 		else:
 			dial_chan = GetCurrentCh()
 		##################################
