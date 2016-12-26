@@ -382,11 +382,11 @@ res_id = None
 chan = None
 conf_id = None
 
-call_map = _gd_['call_map'] # chan =&gt; call_info
-conf_map = _gd_['conf_map'] # conf_id =&gt; conf_info
+call_map = _gd_['call_map']  # chan =&gt; call_info
+conf_map = _gd_['conf_map']  # conf_id =&gt; conf_info
 
-call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
-conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
+call_map_r = _gd_['call_map_r']  # res_id =&gt; call_info
+conf_map_r = _gd_['conf_map_r']  # res_id -&gt; conf_info
 
 parent_call_info = None
 release_delay = None
@@ -405,7 +405,7 @@ if (id_ is None) and (params is None):
 		Trace('call res_id: %s' % res_id)
 		ipsc_info = GetProcessID()
 		ipsc_info = dict(process_id=ipsc_info)
-		# 
+		#
 		chan = GetCurrentCh()
 		from_uri = 'sip:{}'.format(GetOrgCallNo())
 		if GetCalledNo():
@@ -414,9 +414,9 @@ if (id_ is None) and (params is None):
 		else:
 			to_uri = ""
 		params = dict(
-			res_id = res_id,
-			from_uri = from_uri,
-			to_uri = to_uri
+			res_id=res_id,
+			from_uri=from_uri,
+			to_uri=to_uri
 		)
 		begin_time = now()
 		call_info = call_map[chan] = call_map_r[res_id] = {
@@ -475,26 +475,28 @@ else:
 		ring_play_file = None
 
 		####################################################
-		# 
+		#
 		parent_call_res_id = params.get('parent_call_res_id')
 		parent_conf_res_id = params.get('parent_conf_res_id')
 		if parent_call_res_id and parent_conf_res_id:
 			exit_flag = 3
-			raise IvrError(0, 'Arguments "parent_call_res_id" and "parent_conf_res_id" can not be assigned both.')
+			raise IvrError(
+				0, 'Arguments "parent_call_res_id" and "parent_conf_res_id" can not be assigned both.')
 		elif parent_call_res_id or parent_conf_res_id:
 			############################################
 			# SUBCALL
 			ring_play_file = params.get('ring_play_file')
-			# 
+			#
 			if parent_call_res_id:
 				parent_call_info = call_map_r[parent_call_res_id]
 				if parent_call_info['state'] not in ['Idle']:
 					exit_flag = 3
-					raise IvrError(0, 'Can not construct a call with parent call''s state is "%s"' % (parent_call_info['state']))
+					raise IvrError(0, 'Can not construct a call with parent call''s state is "%s"' % (
+						parent_call_info['state']))
 				parent_call_info['state'] = 'Dial'
 				dial_chan = parent_call_info['chan']
 				ring_play_mode = int(params.get('ring_play_mode', 0))
-				if ring_play_mode==3:
+				if ring_play_mode == 3:
 					opts_dict['ConnectSrcCh'] = 1
 				else:
 					if ring_play_file:
@@ -505,23 +507,23 @@ else:
 							opts_dict['ConnectSrcCh'] = 0
 					else:
 						opts_dict['ConnectSrcCh'] = 1
-			# 
+			#
 			elif parent_conf_res_id:
 				parent_conf_info = conf_map_r[parent_conf_res_id]
 				dial_chan = parent_conf_info['conf_id']
 				ring_play_mode = int(params.get('ring_play_mode', 0))
-				if ring_play_mode==3:
+				if ring_play_mode == 3:
 					opts_dict['ConnectSrcCh'] = 1
 				else:
 					if ring_play_file:
 						opts_dict['PlayFileMode'] = ring_play_mode
-						if ring_play_mode == 1:  # 
+						if ring_play_mode == 1:  #
 							opts_dict['ConnectSrcCh'] = 1
 						else:
 							opts_dict['ConnectSrcCh'] = 0
 					else:
 						opts_dict['ConnectSrcCh'] = 1
-		# 
+		#
 		else:
 			dial_chan = GetCurrentCh()
 		##################################
@@ -546,7 +548,7 @@ else:
 		for k, v in opts_dict.items():
 			if opts:
 				opts = opts + ';'
-			opts = opts + '{}={}'.format(k,v)
+			opts = opts + '{}={}'.format(k, v)
 
 	except Exception as err:
 		last_err = str(err)
