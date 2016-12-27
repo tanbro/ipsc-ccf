@@ -814,6 +814,7 @@ try:
 		'state': 'Initiated',
 		'bus_addr': sender,
 		'chan': chan,
+		'sender': sender,
 		'ipsc_info': ipsc_info,
 		'call_dir': 'outbound',
 		'from_uri': from_uri,
@@ -952,6 +953,11 @@ else:
 Trace('sys.call.released')
 
 try:
+	isxno,brdno,spanno,chno,devtype,talked,endtype,ipsc_reason,callfailcause = GetChInfo(ch)
+	if endtype == 2:
+		dropped_by = 'usr'
+	else:
+		dropped_by = 'sys'
 	call_info['end_time'] = now()
 	call_info['state'] = 'Released'
 	call_info['reason'], call_info['cause'] = GetCallFailReasonAndCause(chan)
@@ -967,7 +973,7 @@ try:
 		'begin_time': call_info['begin_time'],
 		'answer_time': call_info['answer_time'],
 		'end_time': call_info['end_time'],
-		'dropped_by': call_info['dropped_by'],
+		'dropped_by': dropped_by,
 		'cause': call_info['cause'],
 		'user_data': call_info['params'].get('user_data'),
 		'ipsc_info': call_info['ipsc_info'],
@@ -976,11 +982,6 @@ finally:
 	call_map.pop(chan)
 	call_map_r.pop(res_id)
 
-if not bool(release_delay):
-	jsonrpc.send_event(method=_method, params=_params)
-	raise ReturnExit()
-
-ret_val = AsynchInvoke(Delay(int(release_delay * 1000), 0, GetCurrentCh(), -1, ""))
 jsonrpc.send_event(method=_method, params=_params)
 </ExtendedProperty>
     <PropertySet>
