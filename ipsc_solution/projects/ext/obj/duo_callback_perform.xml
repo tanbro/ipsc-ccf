@@ -225,18 +225,17 @@ for k, v in opts_dict.items():
 
 
 try:
-	params={
-		'res_id': res_id,
-		'begin_time': call2_begin_time,
-		'answer_time': now(),
-		'end_time': now(),
-		'error': None,
-		'user_data1': res_obj['params'].get('user_data1'),
-		'user_data2': res_obj['params'].get('user_data2'),
-	}
 	jsonrpc.send_event(
 		method='call.on_dial2_completed',
-		params=params
+		params={
+			'res_id': res_id,
+			'begin_time': call2_begin_time,
+			'answer_time': now(),
+			'end_time': now(),
+			'error': None,
+			'user_data1': res_obj['params'].get('user_data1'),
+			'user_data2': res_obj['params'].get('user_data2'),
+		}
 	)
 except IvrError as err:
 	TraceErr(err)
@@ -509,18 +508,17 @@ res_obj['end_time'] = now()</ExtendedProperty>
     <NodeName>脚本 call-1 OK</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
-	params={
-		'res_id': res_id,
-		'begin_time': res_obj['begin_time'],
-		'answer_time': now(),
-		'end_time': now(),
-		'error': None,
-		'user_data1': res_obj['params'].get('user_data1'),
-		'user_data2': res_obj['params'].get('user_data2'),
-	}
 	jsonrpc.send_event(
 		method='call.on_dial1_completed',
-		params=params
+		params={
+			'res_id': res_id,
+			'begin_time': res_obj['begin_time'],
+			'answer_time': now(),
+			'end_time': now(),
+			'error': None,
+			'user_data1': res_obj['params'].get('user_data1'),
+			'user_data2': res_obj['params'].get('user_data2'),
+		}
 	)
 except IvrError as err:
 	TraceErr(err)
@@ -802,20 +800,19 @@ jsonrpc.send_event(
     <NodeID>1255</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call-2 fail</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=params={
-	'res_id': res_id,
-	'begin_time': call2_begin_time,
-	'answer_time': None,
-	'end_time': now(),
-	'error': error,
-	'user_data1': res_obj['params'].get('user_data1'),
-	'user_data2': res_obj['params'].get('user_data2'),
-}
+    <ExtendedProperty>ZoneType=0;ScriptContent=
 jsonrpc.send_event(
 	method='call.on_dial2_completed',
-	params=params
+	params={
+		'res_id': res_id,
+		'begin_time': call2_begin_time,
+		'answer_time': None,
+		'end_time': now(),
+		'error': error,
+		'user_data1': res_obj['params'].get('user_data1'),
+		'user_data2': res_obj['params'].get('user_data2'),
+	}
 )
-
 </ExtendedProperty>
     <PropertySet>
       <Exit>

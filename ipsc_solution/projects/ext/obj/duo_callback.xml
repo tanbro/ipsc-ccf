@@ -50,6 +50,8 @@
     <NodeName>脚本 init</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 
+is_in_map = False
+
 try:
 	_map_ = _gd_['duo_callback']
 	#
@@ -238,6 +240,9 @@ try:
 		hangup_by=0,
 		error=None,
 	)
+	#
+	is_in_map = True
+	#
 	# set cdr info
 	cdr_datas = [
 		str(res_id),
@@ -410,10 +415,14 @@ try:
 			'user_data2': res_obj['params'].get('user_data2'),
 		}
 	)
+
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
 
+finally:
+	if is_in_map:
+		_map_.pop(res_id)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -445,8 +454,7 @@ except IvrError as err:
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1063</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -458,8 +466,7 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1063</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -609,17 +616,16 @@ if method.startswith('ext.'):
     <NodeName>脚本 cancel</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	if res_obj['state'] not in ['Initiated', 'Answered']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, res_obj['state']))
+	Hangup(chan1, params.get('cause', 603))
 	try:
-		if res_obj['state'] not in ['Initiated', 'Answered']:
-			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, res_obj['state']))
-		Hangup(chan1, params.get('cause', 603))
 		jsonrpc.send_result(sender, id_)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -627,8 +633,7 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1042</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
