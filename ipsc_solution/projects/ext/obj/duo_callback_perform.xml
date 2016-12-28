@@ -64,6 +64,8 @@ if play_mode == 3:
 else:
 	play_after_seconds = 0
 play_file = params['play_file']
+
+error = ''
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -94,28 +96,25 @@ play_file = params['play_file']
           <type>6</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1241</target>
         </ExitPort>
         <ExitPort>
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1243</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1229</target>
+          <target>1234</target>
         </ExitPort>
         <ExitPort>
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1242</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -124,22 +123,20 @@ play_file = params['play_file']
     <NodeID>1027</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号 2</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=final_to2;Ani=from2_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=final_to2;Ani=from2_uri;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=ring_play_file;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan2;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=0;IsM3G=0;OutCallID=</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
           <type>6</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1248</target>
         </ExitPort>
         <ExitPort>
           <type>4</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1254</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -151,15 +148,13 @@ play_file = params['play_file']
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1251</target>
         </ExitPort>
         <ExitPort>
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1247</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -227,6 +222,23 @@ for k, v in opts_dict.items():
 	if opts:
 		opts = opts + ';'
 	opts = opts + '{}={}'.format(k,v)
+
+
+try:
+	jsonrpc.send_event(
+		method='call.on_dial2_completed',
+		params={
+			'res_id': res_id,
+			'begin_time': call2_begin_time,
+			'answer_time': now(),
+			'end_time': now(),
+			'error': None,
+			'user_data1': res_obj['params'].get('user_data1'),
+			'user_data2': res_obj['params'].get('user_data2'),
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -253,7 +265,10 @@ for k, v in opts_dict.items():
     <ExtendedProperty>ZoneType=0;ScriptContent=res_obj['state'] = 'Answered'
 res_obj['answer_time'] = now()
 #
-#
+
+
+call2_begin_time = now()
+
 #
 opts = ''
 opts_dict = {'AudioCodec1': 0x00}
@@ -276,9 +291,6 @@ else:
 # parse numbers
 to2_user, to2_host, to2_port = utils.parse_sip_uri(params['to2_uri'])
 from2_uri = params['from2_uri']
-if '@' not in from2_uri:
-	from2_uri = '{}@localhost'.format(from2_uri)
-from2_user, from2_host, from2_port = utils.parse_sip_uri(from2_uri)
 if to2_user:
 	final_to2 = '{}@{}:{}'.format(to2_user, to2_host, to2_port)
 else:
@@ -292,8 +304,7 @@ fail_cdr_datas = [
 	None,
 	None,
 ]
-SetCallFailCdrAdditionalInfo(*fail_cdr_datas)
-</ExtendedProperty>
+SetCallFailCdrAdditionalInfo(*fail_cdr_datas)</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -483,6 +494,337 @@ res_obj['end_time'] = now()</ExtendedProperty>
         </ExitPort>
         <ExitPort>
           <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1234</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call-1 OK</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
+try:
+	jsonrpc.send_event(
+		method='call.on_dial1_completed',
+		params={
+			'res_id': res_id,
+			'begin_time': res_obj['begin_time'],
+			'answer_time': now(),
+			'end_time': now(),
+			'error': None,
+			'user_data1': res_obj['params'].get('user_data1'),
+			'user_data2': res_obj['params'].get('user_data2'),
+		}
+	)
+except IvrError as err:
+	TraceErr(err)
+	last_err = err
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1229</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1229</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1237</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call-1 fail</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=params={
+	'res_id': res_id,
+	'begin_time': res_obj['begin_time'],
+	'answer_time': None,
+	'end_time': now(),
+	'error': error,
+	'user_data1': res_obj['params'].get('user_data1'),
+	'user_data2': res_obj['params'].get('user_data2'),
+}
+jsonrpc.send_event(
+	method='call.on_dial1_completed',
+	params=params
+)
+
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1241</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial failed'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1237</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1242</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial error'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1237</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1243</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial timeout'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1237</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1247</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial failed'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1255</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1248</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial error'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1255</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1251</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial error'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1255</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1254</NodeID>
+    <NodeType>LET</NodeType>
+    <NodeName>赋值 error</NodeName>
+    <ExtendedProperty>
+    </ExtendedProperty>
+    <PropertySet>
+      <letlist>
+        <let>
+          <VarName>error</VarName>
+          <ZoneType>0</ZoneType>
+          <Value>'dial timeout'</Value>
+        </let>
+      </letlist>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1255</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>1255</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>脚本 call-2 fail</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=
+jsonrpc.send_event(
+	method='call.on_dial2_completed',
+	params={
+		'res_id': res_id,
+		'begin_time': call2_begin_time,
+		'answer_time': None,
+		'end_time': now(),
+		'error': error,
+		'user_data1': res_obj['params'].get('user_data1'),
+		'user_data2': res_obj['params'].get('user_data2'),
+	}
+)
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
           <targetflow>
           </targetflow>
           <target>

@@ -73,15 +73,14 @@
 	call_info['state'] = 'Play'
 
 	#
-	opts = ''
 	opts_dict = {}
+	opts = ''
+
 	#
-	cl = []
+	cl = opts_dict['PlayList'] = []
 	content = params['content']
 	if isinstance(content, str):
 		cl.append([content, 0, ''])
-	elif cl is None:
-		cl = []
 	elif isinstance(content, (list,tuple)):
 		for item in content[:30]:
 			if len(item) == 1:
@@ -91,8 +90,6 @@
 			elif item[2] is None:
 				item[2] = ''
 			cl.append([str(item[0]), int(item[1]), str(item[2])])
-	
-	opts_dict['PlayList'] = cl
 	
 	# RepeatNum
 	opts_dict['RepeatNum'] = params['repeat'] + 1
@@ -104,6 +101,9 @@
 		if opts:
 			opts = opts + ';'
 		opts = opts + '{}={}'.format(k,v)
+
+	Trace('opts: %s' % opts)
+
 except Exception as err:
 	error = str(err)
 	raise
@@ -173,25 +173,20 @@ except Exception as err:
     <NodeID>1503</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>脚本 call on play completed</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
-try:
-	call_info['async_work_ch'] = None
-	call_info['state'] = 'Idle'
-	params = {
-			'res_id': res_id,
-			'error': error,
-			'begin_time': begin_time,
-			'end_time': now(),
-			'finish_key': finish_key,
-			'user_data': call_info['params'].get('user_data'),
-		}
-	jsonrpc.send_event(
-		method='call.on_play_completed',
-		params=params
-	)
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+    <ExtendedProperty>ZoneType=0;ScriptContent=call_info['async_work_ch'] = None
+call_info['state'] = 'Idle'
+params = {
+		'res_id': res_id,
+		'error': error,
+		'begin_time': begin_time,
+		'end_time': now(),
+		'finish_key': finish_key,
+		'user_data': call_info['params'].get('user_data'),
+	}
+jsonrpc.send_event(
+	method='call.on_play_completed',
+	params=params
+)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -278,7 +273,7 @@ except IvrError as err:
     <NodeID>1962</NodeID>
     <NodeType>PLAY</NodeType>
     <NodeName>放音</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=params.get('finish_keys');Mode=0;OutKey=finish_key;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0;Option=PlayList=cl;RepeatNum=params['repeat']+1</ExtendedProperty>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=params.get('finish_keys');Mode=0;OutKey=finish_key;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0;Option=opts</ExtendedProperty>
     <PropertySet>
       <DynamicVoice />
       <SubTitle />

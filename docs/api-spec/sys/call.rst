@@ -431,6 +431,8 @@
 
     :default: `True`
 
+  :param str record_file: 录音文件名，应使用绝对路径。
+
   :param int record_format: 录音文件格式枚举值 (**尚未实现**)
 
     ======== ===========
@@ -785,12 +787,13 @@
 录音结束
 --------------
 
-.. function:: on_record_completed(res_id, error, begin_time, end_time, finish_key, user_data)
+.. function:: on_record_completed(res_id, error, begin_time, end_time, record_file, finish_key, user_data)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param error: 错误信息。如果录音失败，该参数记录错误信息；否则该参数的值是 ``null``。
   :param int begin_time: 录音开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param int end_time: 录音结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param str record_file: 录音文件名。
   :param str finish_key: 中断此次录音的 :term:`DTMF` 按键码。如果此次放音没有被按键中断，则该参数的值是 ``null``。
   :param str user_data: 用户数据，来源于 :func:`construct` , :func:`answer`  , :func:`redirect` , :func:`reject`  的 ``user_data`` 参数
 

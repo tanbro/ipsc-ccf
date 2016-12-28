@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-18T10:25:14+08:00</CreateDate>
-    <ModifyDate>2016-09-30T06:33:39+08:00</ModifyDate>
+    <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -55,29 +55,27 @@ call_map_r = _gd_['call_map_r'] # res_id =&gt; call_info
 conf_map_r = _gd_['conf_map_r'] # res_id -&gt; conf_info
 
 last_err = None
+
+conf_info = call_info = None
 try:
-	conf_info = call_info = None
-	try:
-		conf_info = conf_map[conf_id]
-	except KeyError as e:
-		raise KeyError('conference id &lt;%s&gt; NOT existed' % conf_id)
-	errno, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
-	if errno &lt;= 0:
-		raise RuntimeError("GetConferList(conf_id={}) returns {}".format(conf_id, errno))
-	parts = []
-	for i in range(len(chan_list)):
-		chan = chan_list[i]
-		call_info = call_map[chan]
-		parts.append({
-			'res_id': call_info['res_id'],
-			'chan': chan,
-			'user_data': call_info['params'].get('user_data'),
-			'voice_mode': mode_list[i],
-		})
-	conf_info['parts'] = parts
-except IvrError as err:
-	TraceErr(err)
-	last_err = err</ExtendedProperty>
+	conf_info = conf_map[conf_id]
+except KeyError as e:
+	raise IvrError(0, 'conference id &lt;%s&gt; NOT existed' % conf_id)
+errno, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
+if errno &lt;= 0:
+	raise IvrError(0, "GetConferList(conf_id={}) returns {}".format(conf_id, errno))
+parts = []
+for i in range(len(chan_list)):
+	chan = chan_list[i]
+	call_info = call_map[chan]
+	parts.append({
+		'res_id': call_info['res_id'],
+		'chan': chan,
+		'user_data': call_info['params'].get('user_data'),
+		'voice_mode': mode_list[i],
+	})
+conf_info['parts'] = parts
+</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>

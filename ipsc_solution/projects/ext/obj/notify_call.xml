@@ -48,7 +48,7 @@
     <NodeID>1078</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=final_to;Ani=from_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=final_to;Ani=from_uri;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -105,15 +105,10 @@ try:
 	# parse numbers
 	to_user, to_host, to_port = utils.parse_sip_uri(params['to_uri'])
 	from_uri = params['from_uri']
-	if '@' not in from_uri:
-		from_uri = '{}@localhost'.format(from_uri)
-	from_user, from_host, from_port = utils.parse_sip_uri(from_uri)
 	if to_user:
 		final_to = '{}@{}:{}'.format(to_user, to_host, to_port)
 	else:
 		final_to = '{}:{}'.format(to_host, to_port)
-
-	play_repeat = int(params.get('play_repeat', 0))
 
 	#
 	opts = ''
@@ -123,7 +118,10 @@ try:
 			opts = opts + ';'
 		opts = opts + '{}={}'.format(k,v)
 	#
-	cl = []
+	#
+	play_opts_dict = {}
+	play_opts = ''
+	cl = play_opts_dict['PlayList'] = []
 	content = params['play_content']
 	if isinstance(content, str):
 		cl.append([content, 0, ''])
@@ -141,6 +139,11 @@ try:
 				cl.append([str(item[0]), int(item[1]), str(item[2])])
 			except Exception as err:
 				TraceErr('WARNING: %s' % err)
+	play_opts_dict['RepeatNum'] = int(params.get('play_repeat', 0)) + 1
+	for k, v in play_opts_dict.items():
+		if play_opts:
+			play_opts = play_opts + ';'
+		play_opts = play_opts + '{}={}'.format(k,v)
 
 	res_id = utils.make_res_id()
 	Trace('res_id: %s' % res_id)
@@ -374,7 +377,7 @@ except Exception as err:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1222</target>
+          <target>1221</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -624,7 +627,7 @@ finally:
     <NodeID>1221</NodeID>
     <NodeType>PLAY</NodeType>
     <NodeName>放音</NodeName>
-    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0;Option=PlayList=cl</ExtendedProperty>
+    <ExtendedProperty>PrePromptVoice=;ChNo=chan;BreakDtmfStr=;Mode=0;OutKey=;VideoFile=;VideoFormat=0;PlayVideoVoice=0;PlayEndMode=0;IsHaveLogo=0;LogoFile=;LogoPosLeft=0;LogoPosTop=0;LogoWidth=0;LogoHeight=0;LogoTransYUVA=255:255:255:0;LogoAlphaBlending=0;Option=play_opts</ExtendedProperty>
     <PropertySet>
       <DynamicVoice />
       <SubTitle />
@@ -639,111 +642,13 @@ finally:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1224</target>
+          <target>1130</target>
         </ExitPort>
         <ExitPort>
           <type>5</type>
           <targetflow>
           </targetflow>
           <target>1132</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1222</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 i=0</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>i</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>0</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1221</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1224</NodeID>
-    <NodeType>JUDGE</NodeType>
-    <NodeName>判断 i &lt; play_repeat</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <switch>
-        <case>
-          <expression>i &lt; play_repeat</expression>
-          <ExitType>101</ExitType>
-        </case>
-      </switch>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>101</type>
-          <targetflow>
-          </targetflow>
-          <target>1226</target>
-        </ExitPort>
-        <ExitPort>
-          <type>100</type>
-          <targetflow>
-          </targetflow>
-          <target>1130</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1226</NodeID>
-    <NodeType>LET</NodeType>
-    <NodeName>赋值 ++i</NodeName>
-    <ExtendedProperty>
-    </ExtendedProperty>
-    <PropertySet>
-      <letlist>
-        <let>
-          <VarName>i</VarName>
-          <ZoneType>0</ZoneType>
-          <Value>i+1</Value>
-        </let>
-      </letlist>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>1221</target>
         </ExitPort>
       </Exit>
     </PropertySet>

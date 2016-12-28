@@ -50,6 +50,8 @@
     <NodeName>脚本 init</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 
+is_in_map = False
+
 try:
 	_map_ = _gd_['duo_callback']
 	#
@@ -76,9 +78,6 @@ try:
 	# parse numbers
 	to1_user, to1_host, to1_port = utils.parse_sip_uri(params['to1_uri'])
 	from1_uri = params['from1_uri']
-	if '@' not in from1_uri:
-		from1_uri = '{}@localhost'.format(from1_uri)
-	from1_user, from1_host, from1_port = utils.parse_sip_uri(from1_uri)
 	if to1_user:
 		final_to1 = '{}@{}:{}'.format(to1_user, to1_host, to1_port)
 	else:
@@ -187,7 +186,7 @@ except IvrError as err:
     <NodeID>1011</NodeID>
     <NodeType>DIALEX</NodeType>
     <NodeName>拨号</NodeName>
-    <ExtendedProperty>WorkCh=;Dnis=final_to1;Ani=from1_user;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan1;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
+    <ExtendedProperty>WorkCh=;Dnis=final_to1;Ani=from1_uri;OrDnis=;AgConnDelay=6;IsConnCh=0;RingVoice=;RingTimeout=int(params.get('max_ring_seconds', 50));IsStopPlay=1;IsCheckDialTone=0;OutChNo=chan1;OutDnis=;LinkNo=;PlayType=;CallDevGroup=;CallDev=;InteractiveMode=0;CallDevType=2;DtmfTime=10;Option=opts;WorkDev2=0;OutSessionID=;OutConnCh=;EndMode=1;IsM3G=0</ExtendedProperty>
     <PropertySet>
       <Exit>
         <ExitPort>
@@ -241,6 +240,9 @@ try:
 		hangup_by=0,
 		error=None,
 	)
+	#
+	is_in_map = True
+	#
 	# set cdr info
 	cdr_datas = [
 		str(res_id),
@@ -413,10 +415,14 @@ try:
 			'user_data2': res_obj['params'].get('user_data2'),
 		}
 	)
+
 except IvrError as err:
 	TraceErr(err)
 	last_err = err
 
+finally:
+	if is_in_map:
+		_map_.pop(res_id)
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -448,8 +454,7 @@ except IvrError as err:
           <type>5</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1063</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>
@@ -461,8 +466,7 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1063</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -612,17 +616,16 @@ if method.startswith('ext.'):
     <NodeName>脚本 cancel</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
+	if res_obj['state'] not in ['Initiated', 'Answered']:
+		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, res_obj['state']))
+	Hangup(chan1, params.get('cause', 603))
 	try:
-		if res_obj['state'] not in ['Initiated', 'Answered']:
-			raise RuntimeError('Can not perform method "%s" on a call whose state is "%s"' % (method, res_obj['state']))
-		Hangup(chan1, params.get('cause', 603))
 		jsonrpc.send_result(sender, id_)
-	except Exception as err:
-		jsonrpc.send_error(sender, id_, message='{}'.format(err))
-		raise
-except IvrError as err:
-	TraceErr(err)
-	last_err = err
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -630,8 +633,7 @@ except IvrError as err:
           <type>2</type>
           <targetflow>
           </targetflow>
-          <target>
-          </target>
+          <target>1042</target>
         </ExitPort>
         <ExitPort>
           <type>1</type>

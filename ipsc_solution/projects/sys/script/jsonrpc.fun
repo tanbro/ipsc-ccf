@@ -9,6 +9,8 @@
 #
 # @return     客户端的 unit,id,type三段地址。没有可用返回 None
 #
+
+
 def get_client(local_only=False, raise_if_empty=True):
     local_unit_id = GetServerNodeID()
     local_candidates = []
@@ -28,23 +30,26 @@ def get_client(local_only=False, raise_if_empty=True):
         return None
 
 
-## 事件通知
+# 事件通知
 def send_event(method, params=None):
     if not method.startswith('sys.'):
         method = 'sys.' + method
     data = dict(method=method, params=params or {})
     unit_id, client_id, _ = jsonrpc.get_client()
-    SmartbusSendData(unit_id, client_id, 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
+    SmartbusSendData(unit_id, client_id, 0xff, 0, 3,
+                     json.dumps(data, ensure_ascii=False))
 
 
-## 正常结果回复
+# 正常结果回复
 def send_result(to, id_, result=None):
     data = dict(id=id_, result=result)
-    SmartbusSendData(to[0], to[1], 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
+    SmartbusSendData(to[0], to[1], 0xff, 0, 3,
+                     json.dumps(data, ensure_ascii=False))
 
 
-## Error 回复
+# Error 回复
 def send_error(to, id_, code=0, message='', data=None):
     error = dict(code=code, message=message, data=data)
     data = dict(id=id_, error=error)
-    SmartbusSendData(to[0], to[1], 0xff, 0, 3, json.dumps(data, ensure_ascii=False))
+    SmartbusSendData(to[0], to[1], 0xff, 0, 3,
+                     json.dumps(data, ensure_ascii=False))

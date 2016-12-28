@@ -6,9 +6,13 @@
 构造
 ***********
 
-.. function:: construct(max_seconds, bg_file, release_threshold)
+.. function:: construct(max_seconds, record_file, bg_file, release_threshold)
 
   :param int max_seconds: 会议的最大允许时间，单位是秒。
+
+  :param str record_file: 录音文件路径。会议创建后，自动将会议的录音存放到这个文件。
+
+    :default: `None` 表示不录音
 
   :param str bg_file: 会议创建后，自动播放这个声音文件作为背景音。
 

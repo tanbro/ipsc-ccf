@@ -2,7 +2,7 @@
 // 系统呼入号码处理
 function sys_proc_callin_teleno(ch,chtype,devno,connip,connport,callingno,calledno,calledno2)
 begin
-    
+
     return callingno,calledno,calledno2
 end
 
@@ -48,7 +48,7 @@ begin
     cmdtype = 211
 #   data = """{"id":"%ld","jsonrpc":"2.0","method":"callproc","params":{"name":"","procname":"p_cc_test1","args":["%s",%d,%d,%d,"%s",%d,"%s","%s","%s","%s","%s",%d,%d,%d,%d,%d,%d,%d,%d,%d]}}"""%(MakeId(),calltime,pos,calldir,ch,devno,devtype,projectid,flowid,callingno,calledno,calledno2,all_callin,dti_callin,sip_callin,fxo_callin,all_callout,dti_callout,sip_callout,fxo_callout,fxs_offhook)
 //  SmartBusSendUserData(unitid,clientid,clienttype,cmd,cmdtype,data)
-    
+
 end
 
 // 系统呼叫结束
@@ -71,7 +71,7 @@ function sys_channel_close(id,nodeid,cdrid,processid,callid,ch,devno,ani,dnis,dn
 begin
     args = (id,nodeid,cdrid,processid,callid,ch,devno,ani,dnis,dnis2,orgcallno,dir,devtype,busitype,callstatus,endtype,ipscreason,callfailcause,callbegintime,connectbegintime,callendtime,talk_duration,projectid,flowid,additionalinfo1,additionalinfo2,additionalinfo3,additionalinfo4,additionalinfo5)
     #
-    Trace('{} {}'.format(sys_channel_close, args))
+    TraceCh(ch, '{} {}'.format(sys_channel_close, args))
     # choose the target
     local_unit_id = GetServerNodeID()
     local_candidates = []
