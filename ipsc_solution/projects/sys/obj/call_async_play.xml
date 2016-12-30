@@ -103,8 +103,6 @@
 			opts = opts + ';'
 		opts = opts + '{}={}'.format(k,v)
 
-	Trace('opts: %s' % opts)
-
 except Exception as err:
 	error = str(err)
 	raise
