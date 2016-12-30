@@ -2022,6 +2022,18 @@ except Exception as err:
 	if play_state or rec_state or dial_state or connect_state or conf_state :
 		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
 	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(bridge_call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'bridge call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
 	vch = NewVCh()
 except Exception as err:
 	jsonrpc.send_error(sender, id_, message='{}'.format(err))
