@@ -69,6 +69,7 @@ chan = call_info['chan']
 org_state = call_info['state']
 call_info['answer_time'] = now()
 call_info['state'] = 'Answer'
+Trace('set call state to "%s"' % call_info['state'])
 #
 codec = 0x00
 Trace('&gt;&gt;&gt; SendAcceptCall(chan=%s, codec=%s)' % (chan, codec))

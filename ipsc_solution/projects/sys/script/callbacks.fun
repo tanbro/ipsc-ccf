@@ -14,6 +14,8 @@ def on_call_ringing(res_id):
     call_info['answer_time'] = None
     call_info['state'] = 'Ring'
 
+    Trace('set call state to "%s"' % call_info['state'])
+
     jsonrpc.send_event(
     	method='call.on_ringing',
     	params={

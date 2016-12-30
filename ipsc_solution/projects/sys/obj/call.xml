@@ -827,6 +827,7 @@ try:
 		'reason': None,
 		'cause': None,
 	}
+	Trace('set call state to "%s"' % call_info['state'])
 	# set cdr info
 	cdr_datas = [
 		str(res_id),
@@ -978,6 +979,7 @@ try:
 		'user_data': call_info['params'].get('user_data'),
 		'ipsc_info': call_info['ipsc_info'],
 	}
+	Trace('set call state to "%s"' % call_info['state'])
 finally:
 	call_map.pop(chan)
 	call_map_r.pop(res_id)
@@ -1015,6 +1017,7 @@ try:
 		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 	redirect_uri = params['redirect_uri']
 	destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
+	Trace('set call state to "%s"' % call_info['state'])
 	# set cdr info
 	cdr_datas = [
 		str(res_id),

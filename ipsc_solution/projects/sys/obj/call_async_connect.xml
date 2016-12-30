@@ -78,6 +78,8 @@ try:
 	#
 	call_info['state'] = 'Connect'
 	bridge_call_info['state'] = 'Connect'
+	Trace('set call state to "%s"' % call_info['state'])
+	Trace('set bridge call&lt;%s&gt; state to "%s"' % (bridge_call_info['res_id'], call_info['state']))
 
 
 	local_volume = int(params.get('local_volume', 0))
@@ -159,6 +161,10 @@ except Exception as excp:
     <ExtendedProperty>ZoneType=0;ScriptContent=call_info['async_work_ch'] = None
 call_info['state'] = 'Idle'
 bridge_call_info['state'] = 'Idle'
+
+Trace('set call state to "%s"' % call_info['state'])
+Trace('set bridge call&lt;%s&gt; state to "%s"' % (bridge_call_info['res_id'], call_info['state']))
+
 params = {
 		'res_id': res_id,
 		'error': error,
