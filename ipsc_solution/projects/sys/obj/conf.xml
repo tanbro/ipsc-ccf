@@ -712,7 +712,7 @@ except Exception as err:
 try:
 	call_info = call_map_r[params['call_res_id']]
 	chan = call_info['chan']
-	voice_mode = params['mode']
+	voice_mode = int(params['mode'])
 	ChangeConferMode(conf_id, chan, voice_mode)
 
 	try:
