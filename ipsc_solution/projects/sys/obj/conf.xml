@@ -713,7 +713,7 @@ try:
 	call_info = call_map_r[params['call_res_id']]
 	chan = call_info['chan']
 	voice_mode = params['mode']
-	ChangeConfer(conf_id, chan, voice_mode)
+	ChangeConferMode(conf_id, chan, voice_mode)
 
 	try:
 		jsonrpc.send_result(sender, id_)
