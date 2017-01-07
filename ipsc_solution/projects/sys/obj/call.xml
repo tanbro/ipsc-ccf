@@ -1409,6 +1409,7 @@ except Exception as err:
 try:
 	if call_info['state'] not in ['Play']:
 		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	Trace("BreakPlayRec of async_work_ch %d" % (call_info['async_work_ch']))
 	BreakPlayRec(call_info['async_work_ch'])
 	call_info['async_work_ch'] = None
 	try:
