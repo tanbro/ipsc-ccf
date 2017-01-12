@@ -417,8 +417,8 @@ size            包体字节长度
 为了更简便的书写此种 :term:`RPC` 的定义文档，我们采用类似函数定义的方式进行描述，
 而不是具体描述如何使用 :doc:`/cti-bus/c-api` 。
 
-本文的 `CTI API` 定义采用 `单级名称空间+函数` 的格式。
-其中，名称空间对应于资源，函数对应于资源操作命令。
+本文的 :term:`CTI` `API` 定义采用 ``<名称空间>.<资源名>.<函数名>`` 的格式。
+其中，函数名对应于资源操作命令。
 作为特殊的操作，创建命令的函数名一律被描述为 ``construct``
 
 资源创建 :term:`RPC`
@@ -435,8 +435,8 @@ size            包体字节长度
 
   sys.call.construct(to_uri, from_uri)
 
-表示新建一个 ``call`` 资源。
-它对应于调用 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ，启动 `ID` 为 ``call`` 的流程。
+他们都表示表示新建一个 ``call`` 资源的接口。
+该接口的实现方法是：调用 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ，启动 `ID` 为 ``call`` 的流程。
 
 资源操作 :term:`RPC`
 ====================
@@ -452,8 +452,8 @@ size            包体字节长度
 
   sys.call.drop(res_id, reason)
 
-表示对指定的 ``call`` 资源进行挂断操作。
-它对应于调用 :c:func:`SmartBusNetCli_SendNotify` ，向指定的资源发送命令。
+他们都表示对指定的 ``call`` 资源进行挂断的接口。
+该接口的实现方法是：调用 :c:func:`SmartBusNetCli_SendNotify` ，向指定的流程发送命令。
 
 .. attention::
   所有的资源操作 :term:`RPC` 在调用 :c:func:`SmartBusNetCli_SendNotify` 时，
