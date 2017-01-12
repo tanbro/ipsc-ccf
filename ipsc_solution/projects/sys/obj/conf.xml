@@ -583,7 +583,7 @@ except Exception as err:
 
 	conf_play_mode = int(bool(params.get('is_loop', False)))
 
-	Trace("StartConfPlay".format(conf_id, playdata, conf_play_mode))
+	Trace("StartConfPlay(confid={}, playdata={}, mode={})".format(conf_id, playdata, conf_play_mode))
 	ret = StartConfPlay(conf_id, playdata, conf_play_mode)
 	if ret &lt; 0:
 		raise IvrError(0, 'StartConfPlay(%s) returns %s' % (conf_id, ret))
