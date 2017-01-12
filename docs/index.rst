@@ -1,14 +1,16 @@
-.. yunhuni-peer-comm-cti-flow documentation master file, created by
+.. oneyun-peer-comm-cti-flow documentation master file, created by
    sphinx-quickstart on Mon Jun 20 12:26:55 2016.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-:term:`云呼你` 通信部分 CTI API 文档
+:term:`壹云` :term:`CTI` API 文档
 ======================================================
 
-构建时间：|today|
+:版本:     |version|
+:发行:     |release|
+:构建时间: |today|
 
-**内容目录**
+**目录**
 
 .. toctree::
    :maxdepth: 2
@@ -19,7 +21,7 @@
    API 说明 <api-spec/index>
    术语表 <glossary>
 
-**索引与表格**
+**搜索**
 
 * :ref:`genindex`
 * :ref:`modindex`

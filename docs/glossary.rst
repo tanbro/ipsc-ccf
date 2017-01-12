@@ -3,8 +3,8 @@
 
 .. glossary::
 
-  云呼你
-    http://yunhuni.com/
+  壹云
+    http://oneyun.com/
 
   CTI
     http://wikipedia.org/wiki/Computer_telephony_integration
