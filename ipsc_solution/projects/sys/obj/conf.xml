@@ -568,7 +568,7 @@ except Exception as err:
 			content = str(params['file'])
 		except KeyError:
 			raise KeyError('"content" or "file" key not found.')
-		
+
 	if isinstance(content, str):
 		playdata.append([content, 0, ''])
 	elif isinstance(content, (list, tuple)):
@@ -579,11 +579,11 @@ except Exception as err:
 				item.append('')
 			elif item[2] is None:
 				item[2] = ''
-			cl.append([str(item[0]), int(item[1]), str(item[2])])
-	
+			playdata.append([str(item[0]), int(item[1]), str(item[2])])
+
 	ret = StartConfPlay(
 		conf_id,
-		params['file'],
+		playdata,
 		mode=int(bool(params.get('is_loop', False)))
 	)
 	if ret &lt; 0:
