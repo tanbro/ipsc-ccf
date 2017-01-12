@@ -538,9 +538,9 @@ else:
 		#######################################
 		# Ringing Event
 		#######################################
-		# opts_dict['AlertingFlow'] = 'call_ringing'
-		# opts_dict['AlertingParam'] = res_id
-		opts_dict['AlertingFunc'] = 'callbacks.on_call_ringing(res_id)'
+		opts_dict['AlertingFlow'] = 'call_ringing'
+		opts_dict['AlertingParam'] = res_id
+		# opts_dict['AlertingFunc'] = 'callbacks.on_call_ringing(res_id)'
 
 		#######################################
 		# dial opts
@@ -827,6 +827,7 @@ try:
 		'reason': None,
 		'cause': None,
 	}
+	Trace('set call state to "%s"' % call_info['state'])
 	# set cdr info
 	cdr_datas = [
 		str(res_id),
@@ -978,6 +979,7 @@ try:
 		'user_data': call_info['params'].get('user_data'),
 		'ipsc_info': call_info['ipsc_info'],
 	}
+	Trace('set call state to "%s"' % call_info['state'])
 finally:
 	call_map.pop(chan)
 	call_map_r.pop(res_id)
@@ -1015,6 +1017,7 @@ try:
 		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
 	redirect_uri = params['redirect_uri']
 	destuser, destip, destport = utils.parse_sip_uri(redirect_uri)
+	Trace('set call state to "%s"' % call_info['state'])
 	# set cdr info
 	cdr_datas = [
 		str(res_id),
@@ -1406,6 +1409,7 @@ except Exception as err:
 try:
 	if call_info['state'] not in ['Play']:
 		raise IvrError(0, 'Can not perform method "%s" on a call whose state is "%s"' % (method, call_info['state']))
+	Trace("BreakPlayRec of async_work_ch %d" % (call_info['async_work_ch']))
 	BreakPlayRec(call_info['async_work_ch'])
 	call_info['async_work_ch'] = None
 	try:
@@ -2018,6 +2022,18 @@ except Exception as err:
 		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
 	if play_state or rec_state or dial_state or connect_state or conf_state :
 		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'call\'s channel(%s) is in active statues' % (call_info['chan']))
+	#
+	ret, callin_state, callout_state, play_state, rec_state, dial_state, connect_state, conf_state = GetChActStatus(bridge_call_info['chan'])
+	if ret &lt; 0:
+		raise IvrError(0, 'GetChActStatus(%s) error %s' % (call_info['chan'], ret))
+	if play_state or rec_state or dial_state or connect_state or conf_state :
+		raise IvrError(0, 'bridge call\'s channel(%s) is in active statues' % (call_info['chan']))
 	#
 	vch = NewVCh()
 except Exception as err:

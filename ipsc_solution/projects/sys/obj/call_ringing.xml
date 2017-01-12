@@ -61,6 +61,7 @@ chan = call_info['chan']
 call_info['ring_time'] = now()
 call_info['answer_time'] = None
 call_info['state'] = 'Ring'
+Trace('set call state to "%s"' % call_info['state'])
 
 params={
 	'res_id': res_id,

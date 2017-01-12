@@ -69,6 +69,8 @@ chan = call_info['chan']
 begin_time = now()
 call_info['async_work_ch'] = GetCurrentCh()
 call_info['state'] = 'SendDtmf'
+Trace('set call state to "%s"' % call_info['state'])
+
 </ExtendedProperty>
     <PropertySet>
       <Exit>
@@ -260,6 +262,7 @@ call_info['state'] = 'SendDtmf'
     <NodeName>脚本 call.on send_dtmf_completed</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=call_info['async_work_ch'] = None
 call_info['state'] = 'Idle'
+Trace('set call state to "%s"' % call_info['state'])
 params = {
 		'res_id': res_id,
 		'error': error,
