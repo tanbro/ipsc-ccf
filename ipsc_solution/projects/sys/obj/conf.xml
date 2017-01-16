@@ -589,6 +589,7 @@ except Exception as err:
 		raise IvrError(0, 'StartConfPlay(%s) returns %s' % (conf_id, ret))
 	else:
 		conf_info['playing'] = True
+		conf_info['play_begin_time'] = now()
 
 	try:
 		jsonrpc.send_result(sender, id_)

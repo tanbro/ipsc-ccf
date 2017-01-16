@@ -62,6 +62,8 @@ try:
 			method='conf.on_play_completed',
 			params={
 				'res_id': res_id,
+				'begin_time': conf_info.get('play_begin_time'),
+				'end_time': now(),
 				'user_data': conf_info['user_data'],
 			}
 		)
