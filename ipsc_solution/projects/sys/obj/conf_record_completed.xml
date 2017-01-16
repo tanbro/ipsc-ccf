@@ -68,7 +68,7 @@ if conf_info:
 		method='conf.on_record_completed',
 		params={
 			'res_id': res_id,
-			'begin_time': conf_info['record_begin_time'],
+			'begin_time': conf_info.get('record_begin_time'),
 			'end_time': now(),
 			'record_file': conf_info['record_file'],
 			'user_data': conf_info['user_data'],
