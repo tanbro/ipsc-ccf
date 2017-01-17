@@ -283,10 +283,10 @@ else:
 			opts_dict['ConnectSrcCh'] = 0
 	else:
 		opts_dict['ConnectSrcCh'] = 1
-	for k, v in opts_dict.items():
-		if opts:
-			opts = opts + ';'
-		opts = opts + '{}={}'.format(k,v)
+for k, v in opts_dict.items():
+	if opts:
+		opts = opts + ';'
+	opts = opts + '{}={}'.format(k,v)
 #
 # parse numbers
 to2_user, to2_host, to2_port = utils.parse_sip_uri(params['to2_uri'])
