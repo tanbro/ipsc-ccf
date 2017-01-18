@@ -102,14 +102,28 @@
 
   :param str res_id: 要删除的会议
 
-开始播放声音文件
-=================
+开始播放
+========
 
-.. function:: play_start(res_id, file, is_loop=False)
+在会议中播放声音，会议中所有具有“听”模式的呼叫都可以听到。
+
+.. function:: play_start(res_id, content, file="", is_loop=False)
 
   :param str res_id: 在该会议中开始放音
 
+  :param content: 待播放内容
+
+    .. versionadded:: 1.2.1b3
+
+      用这个参数取代 ``file`` 参数。
+
+    参数格式定义见 :func:`sys.call.play_start` 的同名参数
+
   :param str file: 要播放的文件名
+
+    .. deprecated:: 1.3
+
+      使用 ``content`` 参数，不要继续使用这个参数！
 
     .. tip:: 使用 ``|`` 分隔的多文件名字符串，可以一次性的按顺序播放多个文件。
 
@@ -121,8 +135,8 @@
 
     :default: `False` 不循环播放
 
-停止播放声音文件
-=================
+停止播放
+========
 
 .. function:: play_stop(res_id)
 
@@ -191,9 +205,11 @@
 文件放音结束
 =============
 
-.. function:: on_play_completed(res_id, user_data)
+.. function:: on_play_completed(res_id, begin_time, end_time, user_data)
 
   :param str res_id: 触发事件的会议资源 `ID`。
+  :param int begin_time: 该录音的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
+  :param int end_time: 该录音的结束时间(:term:`CTI` 服务器的 :term:`Unix time`)。
   :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
 
 录音结束

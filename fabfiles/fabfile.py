@@ -8,7 +8,7 @@ env.roledefs = {
     'test': ['root@192.168.22.10'],
     'docs': ['bind@101.200.220.202:21210'],
 }
-env.password = "DO7fuhj29ohlshdf"
+env.password = "fDS653A3Ufjwoi"
 
 
 import ipsc

@@ -55,7 +55,7 @@
 local_clientid  应用服务使用其服务进程中 :doc:`/cti-bus/index` 客户端 ID 是该参数值的客户端发送命令。
 server_unitid   `IPSC` 所在物理服务器的 :doc:`/cti-bus/index` 节点 ID。
 ipscindex       `IPSC` 服务进程在该 :doc:`/cti-bus/index` 节点下的序号。
-projectid       `IPSC` 流程项目 ID 。在 :term:`云呼你` 的区域数据中心，我们统一使用 ID 为 ``sys`` 的流程项目 。
+projectid       `IPSC` 流程项目 ID 。在 :term:`壹云` 的区域数据中心，我们统一使用 ID 为 ``sys`` 的流程项目 。
 
 flowid          使用不同的流程建立不同的资源。目前，流程 `ID` 和资源的对应关系是：
 
@@ -247,7 +247,7 @@ size            包体字节长度
 local_clientid  应用服务使用其服务进程中 :doc:`/cti-bus/index` 客户端 ID 是该参数值的客户端发送命令。
 server_unitid   `IPSC` 所在物理服务器的 :doc:`/cti-bus/index` 节点 ID。
 ipscindex       `IPSC` 服务进程在该 :doc:`/cti-bus/index` 节点下的序号。
-projectid       `IPSC` 流程项目 ID 。在 :term:`云呼你` 的区域数据中心，我们统一使用 ID 为 ``sys`` 的流程项目 。
+projectid       `IPSC` 流程项目 ID 。在 :term:`壹云` 的区域数据中心，我们统一使用 ID 为 ``sys`` 的流程项目 。
 title           `IPSC` 的资源流程在其整个生命周期内，持续监听向该资源 `ID` 发送的通知消息。
                 **该参数填写要操作的资源的 ID** ，即可将控制命令发送给资源所对应的流程实例。
 mode            该参数无意义，填写 ``0`` 即可 。
@@ -417,8 +417,8 @@ size            包体字节长度
 为了更简便的书写此种 :term:`RPC` 的定义文档，我们采用类似函数定义的方式进行描述，
 而不是具体描述如何使用 :doc:`/cti-bus/c-api` 。
 
-本文的 `CTI API` 定义采用 `单级名称空间+函数` 的格式。
-其中，名称空间对应于资源，函数对应于资源操作命令。
+本文的 :term:`CTI` `API` 定义采用 ``<名称空间>.<资源名>.<函数名>`` 的格式。
+其中，函数名对应于资源操作命令。
 作为特殊的操作，创建命令的函数名一律被描述为 ``construct``
 
 资源创建 :term:`RPC`
@@ -435,8 +435,8 @@ size            包体字节长度
 
   sys.call.construct(to_uri, from_uri)
 
-表示新建一个 ``call`` 资源。
-它对应于调用 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ，启动 `ID` 为 ``call`` 的流程。
+他们都表示表示新建一个 ``call`` 资源的接口。
+该接口的实现方法是：调用 :c:func:`SmartBusNetCli_RemoteInvokeFlow` ，启动 `ID` 为 ``call`` 的流程。
 
 资源操作 :term:`RPC`
 ====================
@@ -452,8 +452,8 @@ size            包体字节长度
 
   sys.call.drop(res_id, reason)
 
-表示对指定的 ``call`` 资源进行挂断操作。
-它对应于调用 :c:func:`SmartBusNetCli_SendNotify` ，向指定的资源发送命令。
+他们都表示对指定的 ``call`` 资源进行挂断的接口。
+该接口的实现方法是：调用 :c:func:`SmartBusNetCli_SendNotify` ，向指定的流程发送命令。
 
 .. attention::
   所有的资源操作 :term:`RPC` 在调用 :c:func:`SmartBusNetCli_SendNotify` 时，

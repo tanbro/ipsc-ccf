@@ -6,7 +6,7 @@
     <FlowDesc />
     <FlowVer>1.0</FlowVer>
     <CreateDate>2016-06-12T14:00:57+08:00</CreateDate>
-    <ModifyDate>2016-11-19T05:34:17+08:00</ModifyDate>
+    <ModifyDate>2017-01-12T14:05:38+08:00</ModifyDate>
     <DesignVer>2.0</DesignVer>
   </FlowItem>
   <FlowNode>
@@ -559,12 +559,37 @@ except Exception as err:
 	if conf_info['playing']:
 		raise IvrError(0, 'Can not StartConfPlay while another playing is active.')
 
-	StartConfPlay(
-		conf_id,
-		params['file'],
-		mode=int(bool(params.get('is_loop', False)))
-	)
-	conf_info['playing'] = True
+	playdata = []
+
+	try:
+		content = params['content']
+	except KeyError:
+		try:
+			content = str(params['file'])
+		except KeyError:
+			raise KeyError('"content" or "file" key not found.')
+
+	if isinstance(content, str):
+		playdata.append([content, 0, ''])
+	elif isinstance(content, (list, tuple)):
+		for item in content[:30]:
+			if len(item) == 1:
+				item.extend([0, ''])
+			elif len(item) == 2:
+				item.append('')
+			elif item[2] is None:
+				item[2] = ''
+			playdata.append([str(item[0]), int(item[1]), str(item[2])])
+
+	conf_play_mode = int(bool(params.get('is_loop', False)))
+
+	Trace("StartConfPlay(confid={}, playdata={}, mode={})".format(conf_id, playdata, conf_play_mode))
+	ret = StartConfPlay(conf_id, playdata, 0, conf_play_mode)
+	if ret &lt; 0:
+		raise IvrError(0, 'StartConfPlay(%s) returns %s' % (conf_id, ret))
+	else:
+		conf_info['playing'] = True
+		conf_info['play_begin_time'] = now()
 
 	try:
 		jsonrpc.send_result(sender, id_)
