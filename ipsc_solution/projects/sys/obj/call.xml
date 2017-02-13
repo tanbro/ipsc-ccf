@@ -454,7 +454,7 @@ if (id_ is None) and (params is None):
 		raise
 	exit_flag = 0
 else:
-	# call_constgruct
+	# call_construct CALLOUT
 	# 1232
 	last_err = None
 	try:
@@ -468,11 +468,28 @@ else:
 		release_delay = params.get('release_delay', 0)
 		max_answer_seconds = float(params['max_answer_seconds'])
 		max_ring_seconds = int(params.get('max_ring_seconds', 50))
+
+		#####################################################
 		#
 		opts = ''
-		opts_dict = {'AudioCodec1': 0x00}
+		opts_dict = {}
 		parent_call_info = None
 		ring_play_file = None
+
+		####################################################
+		# codesc
+		codecs_dict = _gd_['codecs']
+		codecs = params.get('codecs', None)
+		if bool(codecs)
+			codecs = list(codecs)
+		else:
+			codecs = ['G711_ALAW_20MS', 'G711_ULAW_20MS']
+		if len(codecs) &gt; 0:
+			opts_dict['AudioCodec1'] = codecs_dict[codecs[0]]
+		if len(codecs) &gt; 1:
+			opts_dict['AudioCodec2'] = codecs_dict[codecs[1]]
+		if len(codecs) &gt; 2:
+			opts_dict['AudioCodec3'] = codecs_dict[codecs[2]]
 
 		####################################################
 		#

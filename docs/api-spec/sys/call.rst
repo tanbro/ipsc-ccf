@@ -75,7 +75,7 @@
 ==========
 
 .. function::
-  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, parent_conf_res_id, ring_play_file, ring_play_mode, user_data)
+  construct(from_uri, to_uri, max_answer_seconds, max_ring_seconds, parent_call_res_id, parent_conf_res_id, ring_play_file, ring_play_mode, codecs, user_data)
 
   :param str from_uri: 主叫号码 :term:`SIP URI`。
 
@@ -99,21 +99,21 @@
 
   :param int max_ring_seconds: 外呼时，收到对端振铃后，最大等待时间（秒）。振铃超过这个时间，则认为呼叫失败。
 
-    :default: `50`
+    :default: ``50``
 
   :param str parent_call_res_id: 父呼叫资源ID。
 
     如果该参数不为 `None` ，系统将在此参数指定父呼叫资源上进行拨号。
     拨号期间，父呼叫可以听到拨号提示音。
 
-    :default: `None`
+    :default: ``None``
 
   :param str parent_conf_res_id: 父会议资源ID。
 
     如果该参数不为 `None` ，系统将在此参数指定父会议资源上进行拨号。
     拨号期间，父会议中的呼叫可以听到拨号提示音。
 
-    :default: `None`
+    :default: ``None``
 
   :param str ring_play_file: 拨号时，在对方振铃期间向父呼叫播放的声音文件。
 
@@ -121,7 +121,7 @@
 
     如果指定了 ``parent_call_res_id`` 参数，且本参数为 ``null`` 或者空字符串，则在拨号时向父呼叫透传原始的线路拨号提示音。
 
-    :default: `None`
+    :default: ``None``
 
   :param int ring_play_mode: 回铃音文件 ``ring_play_file`` 播放模式
 
@@ -134,11 +134,27 @@
     ``3``     拨号之前播放回铃音文件，播放完毕后再拨号，拨号时透传对方的回铃音。如果回铃音文件为空，则不播放，直接拨号，且透传回铃音。
     ========= ================================================
 
-    :default: `0`
+    :default: ``0``
+
+  :param list codecs: 外呼采用的VoIP编码
+
+    最多可以指定3个编码格式，目前支持的编码的格式有（注意大小写区别）：
+
+    ======================= =========== =========== ========================
+    编码名称                 系统 ID     Payload     说明
+    ======================= =========== =========== ========================
+    G711_ALAW_20MS          0x00        8
+    G711_ULAW_20MS          0x01        0
+    G729_20MS               0x11        18
+    iLBC_20MS               0x13        80
+    iLBC_30MS               0x14        98
+    ======================= =========== =========== ========================
+
+    :default: ``['G711_ALAW_20MS', 'G711_ULAW_20MS']``
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
-    :default: `None`
+    :default: ``None``
 
   :return: 资源ID和IPSC相关信息。
 
