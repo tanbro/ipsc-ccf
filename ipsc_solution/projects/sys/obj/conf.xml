@@ -85,6 +85,10 @@ Trace('sys.conf.initiated')
           <expression>method == 'conf.get_parts'</expression>
           <ExitType>106</ExitType>
         </case>
+        <case>
+          <expression>method == 'conf.set_parts_threshold'</expression>
+          <ExitType>109</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -141,6 +145,12 @@ Trace('sys.conf.initiated')
           <targetflow>
           </targetflow>
           <target>1957</target>
+        </ExitPort>
+        <ExitPort>
+          <type>109</type>
+          <targetflow>
+          </targetflow>
+          <target>2067</target>
         </ExitPort>
         <ExitPort>
           <type>100</type>
@@ -805,6 +815,41 @@ except Exception as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=
 try:
 	result = conf_info['parts']
+	try:
+		jsonrpc.send_result(sender, id_, result)
+	except IvrError as err:
+		TraceErr(err)
+except Exception as err:
+	jsonrpc.send_error(sender, id_, message='{}'.format(err))
+	raise
+</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1383</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>1383</target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2067</NodeID>
+    <NodeType>SCRIPT</NodeType>
+    <NodeName>set_parts_threshold</NodeName>
+    <ExtendedProperty>ZoneType=0;ScriptContent=
+try:
+	value = abs(int(params['value']))
+	result, _, _ChangeConfDeleLimit(conf_id, -1, value)
+	if result &lt; 1:
+		raise IvrError(0, 'ChangeConfDeleLimit(%s, -1, %s) returns %s'%(conf_id, value, result))
 	try:
 		jsonrpc.send_result(sender, id_, result)
 	except IvrError as err:
