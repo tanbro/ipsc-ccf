@@ -173,7 +173,7 @@ if 'codecs' not in _gd_:
 		'SILK_8KSS_20MS': 0x3A,
 		'SILK_16KSS_20MS': 0x3B,
 		'OPUS_8KSS_20MS': 0x3C,
-		'OPUS_16KSS_20MS' 0x3D,
+		'OPUS_16KSS_20MS': 0x3D,
 	]
 </ExtendedProperty>
     <PropertySet>
