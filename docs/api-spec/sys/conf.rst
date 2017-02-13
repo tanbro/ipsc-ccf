@@ -6,23 +6,29 @@
 构造
 ***********
 
-.. function:: construct(max_seconds, record_file, bg_file, release_threshold)
+.. function:: construct(max_seconds, record_file, bg_file, parts_threshold)
 
   :param int max_seconds: 会议的最大允许时间，单位是秒。
 
   :param str record_file: 录音文件路径。会议创建后，自动将会议的录音存放到这个文件。
 
-    :default: `None` 表示不录音
+    :default: ``None`` 表示不录音
 
   :param str bg_file: 会议创建后，自动播放这个声音文件作为背景音。
 
-    :default: `None` 表示无背景音
+    :default: ``None`` 表示无背景音
 
   :param int parts_threshold: 删除会议的人数阈值。
     会议在第二方加入后，任何一方推出后，如果剩余人数低于该阈值，就删除会议资源。
-    `0` 表示不因与会方退出而删除会议。
 
-    :default: `1`
+    .. warning:: 该参数必须大于等于0。如果传入参数小于0，会被转为绝对值。
+
+    eg:
+
+      * ``1`` 表示：在成员退出后，如果还剩余最后一个成员，则解散会议。
+      * ``0`` 表示：在成员退出后，如果没有剩余的成员了，则解散会议。
+
+    :default: ``1``
 
   :return: 资源ID和IPSC相关信息。
 

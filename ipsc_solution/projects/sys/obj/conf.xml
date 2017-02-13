@@ -494,7 +494,7 @@ try:
 	max_seconds = int(params['max_seconds'])
 	record_file = str(params.get('record_file') or '')
 	bg_file = str(params.get('bg_file') or '')
-	parts_threshold = int(params.get('parts_threshold', 1))
+	parts_threshold = abs(int(params.get('parts_threshold', 1)))
 except Exception as err:
 	last_err = err
 	raise
