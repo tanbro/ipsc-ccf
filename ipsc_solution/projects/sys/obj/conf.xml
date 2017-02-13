@@ -847,7 +847,7 @@ except Exception as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=
 try:
 	value = abs(int(params['value']))
-	result, _, _ChangeConfDeleLimit(conf_id, -1, value)
+	result, _, _ = ChangeConfDeleLimit(conf_id, -1, value)
 	if result &lt; 1:
 		raise IvrError(0, 'ChangeConfDeleLimit(%s, -1, %s) returns %s'%(conf_id, value, result))
 	try:
