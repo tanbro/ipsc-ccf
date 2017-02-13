@@ -110,7 +110,7 @@ if 'conf_map' not in _gd_:
 if 'conf_map_r' not in _gd_:
 	_gd_['conf_map_r'] = {} # res_id -&gt; conf_info
 
-if 'codecs' no in _gd_:
+if 'codecs' not in _gd_:
 	_gd_['codecs'] = [
 		'G711_ALAW_20MS': 0x00,
 		'G711_ULAW_20MS': 0x01,
