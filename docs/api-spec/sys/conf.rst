@@ -173,6 +173,13 @@
 
   :param str res_id: 停止该会议中的录音。
 
+
+改变与会者的成员删除阈值
+========================
+.. function:: set_parts_threshold(res_id, value)
+
+  :param int value: 见 :func:`construct` 的 ``parts_threadhold`` 参数
+
 改变与会者的声音收放模式
 ========================
 
