@@ -480,7 +480,7 @@ else:
 		# codesc
 		codecs_dict = _gd_['codecs']
 		codecs = params.get('codecs', None)
-		if bool(codecs)
+		if bool(codecs):
 			codecs = list(codecs)
 		else:
 			codecs = ['G711_ALAW_20MS', 'G711_ULAW_20MS']
