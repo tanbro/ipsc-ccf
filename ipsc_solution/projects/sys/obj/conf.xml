@@ -353,7 +353,7 @@ if method.startswith('sys.'):
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=0;IsAutoDele=1;ConfTimeOut=max_seconds;ReallocResNum=0;PlayFile=bg_file;PlayMode=1;IsRecord=1;RecordFile=record_file;RecFormat=3;Option="NotUseTimeout=180";OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=parts_threshold</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=max_seconds;ReallocResNum=0;PlayFile=bg_file;PlayMode=1;IsRecord=1;RecordFile=record_file;RecFormat=3;Option="NotUseTimeout=180";OutConfID=conf_id;DeleConfLimitType=0;DeleConfLimit=parts_threshold</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
