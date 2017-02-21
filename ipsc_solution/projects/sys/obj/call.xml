@@ -483,7 +483,7 @@ else:
 		if bool(codecs):
 			codecs = list(codecs)
 		else:
-			codecs = ['G711_ALAW_20MS', 'G711_ULAW_20MS']
+			codecs = ['G729_20MS', 'G711_ALAW_20MS', 'G711_ULAW_20MS']
 		if len(codecs) &gt; 0:
 			opts_dict['AudioCodec1'] = codecs_dict[codecs[0]]
 		if len(codecs) &gt; 1:
