@@ -175,7 +175,6 @@
 
   :param str res_id: 停止该会议中的录音。
 
-
 改变与会者的成员删除阈值
 ========================
 .. function:: set_parts_threshold(res_id, value)
