@@ -846,10 +846,15 @@ except Exception as err:
     <NodeName>set_parts_threshold</NodeName>
     <ExtendedProperty>ZoneType=0;ScriptContent=
 try:
-	value = abs(int(params['value']))
-	result, _, _ = ChangeConfDeleLimit(conf_id, -1, value)
+	value = int(params['value'])
+	if value &lt; 0:
+		deletype = 5
+		value = -1
+	else:
+		deletype = 0
+	result, _, _ = ChangeConfDeleLimit(conf_id, deletype, value)
 	if result &lt; 1:
-		raise IvrError(0, 'ChangeConfDeleLimit(%s, -1, %s) returns %s'%(conf_id, value, result))
+		raise IvrError(0, 'ChangeConfDeleLimit(%s, %s, %s) returns %s'%(conf_id, deletype, value, result))
 	try:
 		jsonrpc.send_result(sender, id_, result)
 	except IvrError as err:

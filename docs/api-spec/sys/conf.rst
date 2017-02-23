@@ -21,7 +21,9 @@
   :param int parts_threshold: 删除会议的人数阈值。
     会议在第二方加入后，任何一方推出后，如果剩余人数低于该阈值，就删除会议资源。
 
-    .. warning:: 该参数必须大于等于0。如果传入参数小于0，会被转为绝对值。
+    .. warning::
+      该参数必须大于等于0。如果传入参数小于0，会被转为绝对值。
+      如果要修改这个值，应在会议资源创建后，调用 :func:`set_parts_threshold`
 
     eg:
 
@@ -179,6 +181,10 @@
 .. function:: set_parts_threshold(res_id, value)
 
   :param int value: 见 :func:`construct` 的 ``parts_threadhold`` 参数
+
+    .. note::
+      此时，可以设置该值小于0。
+      当阈值小于零时，即使会议中的呼叫全部退出，会议也不会解散，除非调用API解散，或者180秒之内没有新的呼叫加入。
 
   .. note:: 调用后，会议不会因阈值的改变而自动释放。只有当某个成员退出时，才会重新按照新的设置计算是否自动释放。
 
