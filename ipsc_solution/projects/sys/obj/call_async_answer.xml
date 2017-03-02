@@ -90,8 +90,8 @@ if codec_id &lt; 0:
 		if lcid in remote_codec_ids:
 			codec_id = lcid
 			break
-Trace('&gt;&gt;&gt; SendAcceptCall(chan=%s, codec_id=%s)' % (chan, codec_id))
-SendAcceptCall(chan, codec)
+Trace('&gt;&gt;&gt; SendAcceptCall(chan=%s, codec=%s)' % (chan, codec_id))
+SendAcceptCall(chan, codec_id)
 ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[0,2,3,4]))
 Trace('&lt;&lt;&lt; WaitCallStatus -&gt; {}'.format(str(ret_val)))
 if ret_val[0] &lt; 1:
