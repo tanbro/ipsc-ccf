@@ -272,7 +272,7 @@
 应答
 -------
 
-.. function:: answer(res_id, max_answer_seconds, codecs=None, user_data=None)
+.. function:: answer(res_id, max_answer_seconds, codecs="", user_data=None)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -285,7 +285,7 @@
     只有该编码与远端提供的编码 :func:`on_incoming` 的 ``codecs`` 参数有重合，且该CTI的硬件支持时，才可能接听成功。
     编码名称参考 :func:`construct` 的 ``codecs`` 参数
 
-    :default: ``None`` CTI服务器自行选择编码
+    :default: ``""`` CTI服务器自行选择编码
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
