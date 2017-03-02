@@ -421,6 +421,7 @@ if (id_ is None) and (params is None):
 					if not k in remote_codecs:
 						remote_codecs.append(k)
 					break
+		Trace('codecs-name-list=%s' % remote_codecs)
 		#
 		from_uri = 'sip:{}'.format(GetOrgCallNo())
 		if GetCalledNo():
