@@ -85,7 +85,7 @@
 	opts_dict = {}
 	opts = ''
 	
-	opts['voice_mode'] = voice_mode
+	opts_dict['voice_mode'] = voice_mode
 
 	for k, v in opts_dict.items():
 		if opts:
