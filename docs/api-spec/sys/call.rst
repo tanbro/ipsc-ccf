@@ -81,7 +81,7 @@
 
     主叫号码隐藏功能可通过该参数的不同赋值实现。
 
-    :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
+    :default: ``None`` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
 
     .. attention:: 不是每个主叫号码都能被 VoIP 网关的外呼线路接受！
 
@@ -272,7 +272,7 @@
 应答
 -------
 
-.. function:: answer(res_id, max_answer_seconds, user_data=None)
+.. function:: answer(res_id, max_answer_seconds, codecs=None, user_data=None)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -280,9 +280,16 @@
 
     .. warning:: 必须合理设定该参数，防止超时呼叫问题！
 
+  :param str codecs: 用这个编码应答
+
+    只有该编码与远端提供的编码 :func:`on_incoming` 的 ``codecs`` 参数有重合，且该CTI的硬件支持时，才可能接听成功。
+    编码名称参考 :func:`construct` 的 ``codecs`` 参数
+
+    :default: ``None`` CTI服务器自行选择编码
+
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
-    :default: `None`
+    :default: ``None``
 
   .. important::
 
@@ -301,7 +308,7 @@
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
-    :default: `None`
+    :default: ``None``
 
   .. important::
 
@@ -343,7 +350,7 @@
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
-    :default: `None`
+    :default: ``None``
 
   .. important::
 
@@ -473,7 +480,7 @@
   :param str finish_keys: 播放的打断按键码串。
     在播放过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止播放。
 
-    :default: `None` 无打断按键
+    :default: ``None`` 无打断按键
 
   :param int repeat: 重复播放次数。重复1次，即表示播放2次。
 
@@ -590,7 +597,7 @@
 
     该参数格式定义见 :func:`play_start` 的 `content` 参数
 
-    :default: `None` 无提示音
+    :default: ``None`` 无提示音
 
   :type play_content: str, list
 
@@ -637,7 +644,7 @@
 
   :param str record_file: 录音文件。如果该参数不为 `None` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
 
-    :default: `None`
+    :default: ``None``
 
   :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。(**尚未实现**)
 
@@ -660,7 +667,7 @@
 
   :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。(**尚未实现**)
 
-    :default: `None` 表示无定时放音
+    :default: ``None`` 表示无定时放音
 
 
   :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。(**尚未实现**)
@@ -700,11 +707,11 @@
 
   :param int volume: 加入会议后的初始音量
 
-    :default: `None` 表示默认音量
+    :default: ``None`` 表示默认音量
 
   :param str play_file: 该呼叫加入后，对会议播放的声音文件
 
-    :default: `None` 表示不播放
+    :default: ``None`` 表示不播放
 
 .. important::
   只有处于 ``Ring``, ``Idle``, ``Play``, ``Dial`` 状态的呼叫才可进入会议。
