@@ -442,6 +442,7 @@ if (id_ is None) and (params is None):
 			'state': 'Initiated',
 			'chan': chan,
 			'ipsc_info': ipsc_info,
+			'remote_codecs': remote_codecs,
 			'call_dir': 'inbound',
 			'bus_addr': sender,
 			'from_uri': from_uri,
