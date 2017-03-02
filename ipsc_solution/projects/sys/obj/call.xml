@@ -417,7 +417,9 @@ if (id_ is None) and (params is None):
 		for codec_id in mi_codecs:
 			for k, v in codecs.items():
 				if int(codec_id) == int(v):
-					remote_codecs.append(str(k))
+					k = str(k)
+					if not k in remote_codecs:
+						remote_codecs.append(k)
 					break
 		#
 		from_uri = 'sip:{}'.format(GetOrgCallNo())
