@@ -412,11 +412,11 @@ if (id_ is None) and (params is None):
 		if mi_cnt &lt; 0:
 			raise IvrError(0, 'GetSipCallMediaCodecInfo(%s) returns %s' % (chan, mi_cnt))
 		codecs = _gd_['codecs']
-		remote_codesc = []
+		remote_codecs = []
 		for codec_id in mi_codecs:
 			for k, v in codecs.items():
 				if int(codec_id) == int(k):
-					remote_codesc.append(str(v))
+					remote_codecs.append(str(v))
 					break
 		#
 		from_uri = 'sip:{}'.format(GetOrgCallNo())
@@ -458,7 +458,7 @@ if (id_ is None) and (params is None):
 				from_uri=from_uri,
 				to_uri=to_uri,
 				begin_time=call_info['begin_time'],
-				codesc=remote_codesc,
+				codecs=remote_codecs,
 				ipsc_info=call_info['ipsc_info'],
 			)
 		)
