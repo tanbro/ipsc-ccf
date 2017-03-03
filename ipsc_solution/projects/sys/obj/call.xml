@@ -407,6 +407,21 @@ if (id_ is None) and (params is None):
 		ipsc_info = dict(process_id=ipsc_info)
 		#
 		chan = GetCurrentCh()
+		#
+		mi_cnt, _, mi_codecs, _, _, _ = GetSipCallMediaCodecInfo(chan)
+		if mi_cnt &lt; 0:
+			raise IvrError(0, 'GetSipCallMediaCodecInfo(%s) returns %s' % (chan, mi_cnt))
+		codecs = _gd_['codecs']
+		remote_codecs = []
+		for codec_id in mi_codecs:
+			for k, v in codecs.items():
+				if int(codec_id) == int(v):
+					k = str(k)
+					if not k in remote_codecs:
+						remote_codecs.append(k)
+					break
+		Trace('codecs-name-list=%s' % remote_codecs)
+		#
 		from_uri = 'sip:{}'.format(GetOrgCallNo())
 		if GetCalledNo():
 			# to_uri = 'sip:{}'.format(GetCalledNo())
@@ -426,6 +441,7 @@ if (id_ is None) and (params is None):
 			'state': 'Initiated',
 			'chan': chan,
 			'ipsc_info': ipsc_info,
+			'remote_codecs': remote_codecs,
 			'call_dir': 'inbound',
 			'bus_addr': sender,
 			'from_uri': from_uri,
@@ -446,6 +462,8 @@ if (id_ is None) and (params is None):
 				from_uri=from_uri,
 				to_uri=to_uri,
 				begin_time=call_info['begin_time'],
+				codecs=remote_codecs,
+				ipsc_info=call_info['ipsc_info'],
 			)
 		)
 	except Exception as err:
