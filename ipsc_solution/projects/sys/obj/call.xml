@@ -409,7 +409,6 @@ if (id_ is None) and (params is None):
 		chan = GetCurrentCh()
 		#
 		mi_cnt, _, mi_codecs, _, _, _ = GetSipCallMediaCodecInfo(chan)
-		Trace('codecs-id-list=%s' % mi_codecs)
 		if mi_cnt &lt; 0:
 			raise IvrError(0, 'GetSipCallMediaCodecInfo(%s) returns %s' % (chan, mi_cnt))
 		codecs = _gd_['codecs']
