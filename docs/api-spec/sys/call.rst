@@ -280,9 +280,9 @@
 
     .. warning:: 必须合理设定该参数，防止超时呼叫问题！
 
-  :param str codecs: 用这个编码应答
+  :param str codec: 用这个编码应答
 
-    只有该编码与远端提供的编码 :func:`on_incoming` 的 ``codecs`` 参数有重合，且该CTI的硬件支持时，才可能接听成功。
+    只有该编码与远端提供的编码 :func:`on_incoming` 的 ``codecs`` 参数列表有重合，且该CTI的硬件支持时，才可能接听成功。
     编码名称参考 :func:`construct` 的 ``codecs`` 参数
 
     :default: ``""`` CTI服务器自行选择编码

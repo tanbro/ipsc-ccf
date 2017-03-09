@@ -74,10 +74,10 @@ Trace('set call state to "%s"' % call_info['state'])
 ####################################################
 # codec negotiation
 codecs_map = _gd_['codecs']
-codecs_name = params.get('codec', '')
+codec_name = params.get('codec', '')
 codec_id = -1
-if codecs_name:
-	codec_id = codecs_map.get(codecs_name, -1)
+if codec_name:
+	codec_id = codecs_map.get(codec_name, -1)
 if codec_id &lt; 0:
 	remote_codecs = call_info['remote_codecs']
 	remote_codec_ids = []
