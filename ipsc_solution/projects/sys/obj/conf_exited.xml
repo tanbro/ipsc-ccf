@@ -64,6 +64,9 @@ except KeyError as e:
 count, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
 if count &lt; 0:
 	raise IvrError(0, "GetConferList(conf_id={}) returns {}".format(conf_id, count))
+
+Trace('conf_exited: conf_id=%s, chan=%s' % (conf_id, chan))
+
 parts = []
 for i in range(count):
 	chan = chan_list[i]

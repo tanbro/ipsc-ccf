@@ -61,6 +61,9 @@ try:
 	conf_info = conf_map[conf_id]
 except KeyError as e:
 	raise IvrError(0, 'conference id &lt;%s&gt; NOT existed' % conf_id)
+
+Trace('conf_entered: conf_id=%s, chan=%s' % (conf_id, chan))
+
 count, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
 if count &lt;= 0:
 	raise IvrError(0, "GetConferList(conf_id={}) returns {}".format(conf_id, count))
