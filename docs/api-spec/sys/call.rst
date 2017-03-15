@@ -498,15 +498,10 @@
 开始录音
 ------------
 
-.. function:: record_start(res_id, max_seconds, beep, record_file, record_format, finish_keys)
+.. function:: record_start(res_id, max_seconds, record_file, record_format, finish_keys)
 
   :param str res_id: 要操作的呼叫资源的ID
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
-
-  :param bool beep: 是否在录音之前播放“嘀”的一声。
-
-    :default: `True`
-
   :param str record_file: 录音文件名，应使用绝对路径。
 
   :param int record_format: 录音文件格式枚举值
