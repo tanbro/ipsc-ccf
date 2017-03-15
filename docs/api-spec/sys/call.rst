@@ -503,23 +503,28 @@
   :param str res_id: 要操作的呼叫资源的ID
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
 
-  :param bool beep: 是否在录音之前播放“嘀”的一声。 (**尚未实现**)
+  :param bool beep: 是否在录音之前播放“嘀”的一声。
 
     :default: `True`
 
   :param str record_file: 录音文件名，应使用绝对路径。
 
-  :param int record_format: 录音文件格式枚举值 (**尚未实现**)
+  :param int record_format: 录音文件格式枚举值
 
     ======== ===========
     枚举值    说明
     ======== ===========
-    ``0x01``  OKI ADPCM
     ``0x03``  CCITT a-law 8k/8bit
-    ``0x04``  g.726
     ``0x07``  CCITT µ-law 8k/8bit
     ``0x08``  PCM liner 8k/8bit
-    ``0x15``  g.721
+    ``0x10``  AMR 4.75kbps
+    ``0x11``  AMR 5.15kbps
+    ``0x12``  AMR 5.9kbps (建议采用)
+    ``0x13``  AMR 6.7kbps
+    ``0x14``  AMR 7.4kbps
+    ``0x15``  AMR 7.95kbps
+    ``0x16``  AMR 10.2kbps
+    ``0x17``  AMR 12.2kbps
     ======== ===========
 
     :default: `3`
@@ -646,9 +651,9 @@
 
     :default: ``None``
 
-  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。(**尚未实现**)
+  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。
 
-    :default: `2`
+    :default: `3`
 
   :param int local_volume: 双通道连接建立后的发起方音量。 (**尚未实现**)
 
