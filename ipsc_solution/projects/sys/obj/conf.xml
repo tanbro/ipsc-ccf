@@ -672,11 +672,12 @@ try:
 		raise IvrError(0, 'Can not StartConfRecord while another recording is active.')
 
 	record_file = str(params['record_file'])
+	record_format = int(params.get('record_format', 3))
 
 	StartConfRecord(
 		confid=conf_id,
 		rec_file=record_file,
-		format=3,
+		format=record_format,
 		reclen=int(params['max_seconds']),
 		pindex=0
 	)
