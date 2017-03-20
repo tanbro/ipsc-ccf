@@ -485,7 +485,14 @@ else:
 			to_uri = '{1}:{2}'.format(user, host, port)
 		release_delay = params.get('release_delay', 0)
 		max_answer_seconds = float(params['max_answer_seconds'])
-		max_ring_seconds = int(params.get('max_ring_seconds', 50))
+		max_ring_seconds = params.get('max_ring_seconds')
+		if max_ring_seconds is None:
+			max_ring_seconds = 50
+		elif isinstance(max_ring_seconds, str):
+			max_ring_seconds = max_ring_seconds.strip()
+			if not max_ring_seconds:
+				max_ring_seconds = 50
+		max_ring_seconds = int(max_ring_seconds)
 
 		#####################################################
 		#
