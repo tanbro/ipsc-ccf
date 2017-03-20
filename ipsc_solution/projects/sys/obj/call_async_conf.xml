@@ -78,6 +78,7 @@
 	voice_mode = int(params.get('voice_mode', 1))
 	if voice_mode not in (1,2,3,4):
 		raise IvrError(0, 'params voice_mode not in (1,2,3,4)')
+	
 
 	#######################################
 	# dial opts
@@ -91,6 +92,7 @@
 		if opts:
 			opts = opts + ';'
 		opts = opts + '{}={}'.format(k,v)
+	Trace('opts=%s' % opts)
 
 except Exception as err:
 	error = str(err)
