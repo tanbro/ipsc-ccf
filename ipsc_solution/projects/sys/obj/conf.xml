@@ -353,7 +353,7 @@ if method.startswith('sys.'):
     <NodeID>1372</NodeID>
     <NodeType>CREATECONFEX</NodeType>
     <NodeName>创建会议组</NodeName>
-    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=1;IsAutoDele=1;ConfTimeOut=max_seconds;ReallocResNum=0;PlayFile=bg_file;PlayMode=1;IsRecord=1;RecordFile=record_file;RecFormat=3;Option="NotUseTimeout=180";OutConfID=conf_id;DeleConfLimitType=del_cond;DeleConfLimit=parts_threshold</ExtendedProperty>
+    <ExtendedProperty>ConfID=;CreateMode=0;ConfMode=0;IsAutoDele=1;ConfTimeOut=max_seconds;ReallocResNum=0;PlayFile=bg_file;PlayMode=1;IsRecord=1;RecordFile=record_file;RecFormat=3;Option="NotUseTimeout=180";OutConfID=conf_id;DeleConfLimitType=del_cond;DeleConfLimit=parts_threshold</ExtendedProperty>
     <PropertySet>
       <Events>
         <EventList>
@@ -672,11 +672,12 @@ try:
 		raise IvrError(0, 'Can not StartConfRecord while another recording is active.')
 
 	record_file = str(params['record_file'])
+	record_format = int(params.get('record_format', 3))
 
 	StartConfRecord(
 		confid=conf_id,
 		rec_file=record_file,
-		format=3,
+		format=record_format,
 		reclen=int(params['max_seconds']),
 		pindex=0
 	)

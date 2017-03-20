@@ -77,6 +77,7 @@ try:
 	#
 	max_seconds = int(params['max_seconds'])
 	record_file = str(params['record_file'])
+	record_format = int(params.get('record_format', 3))
 	finish_keys = str(params.get('finish_keys', ''))
 except Exception as excp:
 	error = '%s' % excp
@@ -95,7 +96,7 @@ except Exception as excp:
           <type>1</type>
           <targetflow>
           </targetflow>
-          <target>1565</target>
+          <target>2072</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -177,41 +178,6 @@ jsonrpc.send_event(
           <targetflow>
           </targetflow>
           <target>1559</target>
-        </ExitPort>
-      </Exit>
-    </PropertySet>
-  </FlowNode>
-  <FlowNode>
-    <NodeID>1565</NodeID>
-    <NodeType>RECORD</NodeType>
-    <NodeName>录音</NodeName>
-    <ExtendedProperty>Format=3;ChNo=chan;BreaktDtmfStr=finish_keys;OutKey=finish_key;Timeout=max_seconds;FileName=record_file;IsPlayBeep=1;TruncateTail=0;RecordVolume=;PlayFile=;MediaType=0;Option=</ExtendedProperty>
-    <PropertySet>
-      <Exit>
-        <ExitPort>
-          <type>2</type>
-          <targetflow>
-          </targetflow>
-          <target>1645</target>
-        </ExitPort>
-        <ExitPort>
-          <type>1</type>
-          <targetflow>
-          </targetflow>
-          <target>
-          </target>
-        </ExitPort>
-        <ExitPort>
-          <type>5</type>
-          <targetflow>
-          </targetflow>
-          <target>1649</target>
-        </ExitPort>
-        <ExitPort>
-          <type>4</type>
-          <targetflow>
-          </targetflow>
-          <target>2006</target>
         </ExitPort>
       </Exit>
     </PropertySet>
@@ -308,6 +274,41 @@ jsonrpc.send_event(
           </targetflow>
           <target>
           </target>
+        </ExitPort>
+      </Exit>
+    </PropertySet>
+  </FlowNode>
+  <FlowNode>
+    <NodeID>2072</NodeID>
+    <NodeType>RECORD</NodeType>
+    <NodeName>录音</NodeName>
+    <ExtendedProperty>Format=record_format;ChNo=chan;BreaktDtmfStr=finish_keys;OutKey=finish_key;Timeout=max_seconds;FileName=record_file;IsPlayBeep=1;TruncateTail=0;RecordVolume=;PlayFile=;MediaType=0;Option=</ExtendedProperty>
+    <PropertySet>
+      <Exit>
+        <ExitPort>
+          <type>2</type>
+          <targetflow>
+          </targetflow>
+          <target>1645</target>
+        </ExitPort>
+        <ExitPort>
+          <type>1</type>
+          <targetflow>
+          </targetflow>
+          <target>
+          </target>
+        </ExitPort>
+        <ExitPort>
+          <type>5</type>
+          <targetflow>
+          </targetflow>
+          <target>1649</target>
+        </ExitPort>
+        <ExitPort>
+          <type>4</type>
+          <targetflow>
+          </targetflow>
+          <target>2006</target>
         </ExitPort>
       </Exit>
     </PropertySet>
