@@ -62,7 +62,7 @@ try:
 except KeyError as e:
 	raise IvrError(0, 'conference id &lt;%s&gt; NOT existed' % conf_id)
 
-Trace('conf_entered: conf_id=%s, chan=%s' % (conf_id, chan))
+Trace('conf_entered: res_id=%s, conf_id=%s, chan=%s' % (conf_info['res_id'], conf_id, chan))
 
 count, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
 if count &lt;= 0:
