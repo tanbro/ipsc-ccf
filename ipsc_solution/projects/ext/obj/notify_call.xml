@@ -112,7 +112,7 @@ try:
 
 	#
 	opts = ''
-	opts_dict = {'AudioCodec1': 0x00}
+	opts_dict = {}
 	for k, v in opts_dict.items():
 		if opts:
 			opts = opts + ';'
@@ -140,6 +140,16 @@ try:
 			except Exception as err:
 				TraceErr('WARNING: %s' % err)
 	play_opts_dict['RepeatNum'] = int(params.get('play_repeat', 0)) + 1
+	#
+	codecs_dict = _gd_['codecs']
+	codecs = ['G729_20MS', 'G711_ALAW_20MS', 'G711_ULAW_20MS']
+	if len(codecs) &gt; 0:
+		opts_dict['AudioCodec1'] = codecs_dict[codecs[0]]
+	if len(codecs) &gt; 1:
+		opts_dict['AudioCodec2'] = codecs_dict[codecs[1]]
+	if len(codecs) &gt; 2:
+		opts_dict['AudioCodec3'] = codecs_dict[codecs[2]]
+	#
 	for k, v in play_opts_dict.items():
 		if play_opts:
 			play_opts = play_opts + ';'
