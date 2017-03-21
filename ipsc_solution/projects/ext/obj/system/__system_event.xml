@@ -59,6 +59,10 @@
           <expression>eventtype == 1</expression>
           <ExitType>101</ExitType>
         </case>
+        <case>
+          <expression>eventtype == 2</expression>
+          <ExitType>102</ExitType>
+        </case>
       </switch>
       <Exit>
         <ExitPort>
@@ -70,6 +74,12 @@
         </ExitPort>
         <ExitPort>
           <type>101</type>
+          <targetflow>
+          </targetflow>
+          <target>3563</target>
+        </ExitPort>
+        <ExitPort>
+          <type>102</type>
           <targetflow>
           </targetflow>
           <target>3563</target>
@@ -88,9 +98,14 @@
     <NodeID>1133</NodeID>
     <NodeType>SCRIPT</NodeType>
     <NodeName>初始化 _gd_</NodeName>
-    <ExtendedProperty>ZoneType=0;ScriptContent=_gd_['duo_callback'] = {}
-_gd_['notify_call'] = {}
-_gd_['captcha_call'] = {}
+    <ExtendedProperty>ZoneType=0;ScriptContent=if 'duo_callback' not in _gd_:
+	_gd_['duo_callback'] = {}
+
+if 'notify_call' not in _gd_:
+	_gd_['notify_call'] = {}
+
+if 'captcha_call' not in _gd_:
+	_gd_['captcha_call'] = {}
 
 
 if 'codecs' not in _gd_:
