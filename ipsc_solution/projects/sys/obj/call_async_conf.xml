@@ -75,24 +75,17 @@
 	conf_info = conf_map_r[conf_res_id]
 	conf_id = conf_info['conf_id']
 
-	voice_mode = int(params.get('voice_mode', 1))
-	if voice_mode not in (1,2,3,4):
-		raise IvrError(0, 'params voice_mode not in (1,2,3,4)')
-	
 
 	#######################################
-	# dial opts
+	# opts
 	#######################################
 	opts_dict = {}
 	opts = ''
-	
-	opts_dict['voice_mode'] = voice_mode
 
 	for k, v in opts_dict.items():
 		if opts:
 			opts = opts + ';'
 		opts = opts + '{}={}'.format(k,v)
-	Trace('opts=%s' % opts)
 
 except Exception as err:
 	error = str(err)
@@ -295,7 +288,7 @@ jsonrpc.send_event(
     <NodeID>1883</NodeID>
     <NodeType>JOINCONFEX</NodeType>
     <NodeName>加入会议组</NodeName>
-    <ExtendedProperty>ConfID=conf_id;InitVolume=int(params.get('volume', 0));WaitMode=0;MainCh=chan;MainJoinMode=1;MainTimeOut=int(params['max_seconds']);AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=params.get('play_file') or '';IsClampTone=0;Option=opts;OutExitData=;MainPmCh=</ExtendedProperty>
+    <ExtendedProperty>ConfID=conf_id;InitVolume=params['volume'];WaitMode=0;MainCh=chan;MainJoinMode=params['voice_mode'];MainTimeOut=params['max_seconds'];AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=params['play_file'];IsClampTone=0;Option=opts;OutExitData=;MainPmCh=</ExtendedProperty>
     <PropertySet>
       <Actions />
       <Exit>

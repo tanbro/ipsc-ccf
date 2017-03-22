@@ -2229,7 +2229,28 @@ except Exception as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	params['max_seconds'] = int(params['max_seconds'])
-	params['volume'] = int(params.get('volume', 0))
+	
+	_volume = params.get('volume')
+	if _volume is None:
+		params['volume'] = 0
+	else:
+		params['volume'] = int(_volume)
+
+	_voice_mode = params.get('voice_mode')
+	if _voice_mode is None:
+		_voice_mode = 1
+	else:
+		_voice_mode = int(_voice_mode)
+	if _voice_mode not in (1,2,3,4):
+		raise IvrError(0, 'parameter voice_mode not in (1,2,3,4)')
+	params['voice_mode'] = _voice_mode
+
+	_play_file = params.get('play_file')
+	if _play_file is None:
+		params['play_file'] = ''
+	else:
+		params['play_file'] = str(_play_file).strip()
+	
 	conf_res_id = params['conf_res_id']
 	conf_info = conf_map_r[conf_res_id]
 	conf_id = conf_info['conf_id']
