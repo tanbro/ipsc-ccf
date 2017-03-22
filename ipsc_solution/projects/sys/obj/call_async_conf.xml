@@ -75,13 +75,6 @@
 	conf_info = conf_map_r[conf_res_id]
 	conf_id = conf_info['conf_id']
 
-	voice_mode = params.get('voice_mode')
-	if voice_mode is None:
-		voice_mode = 1
-	else:
-		voice_mode = int(voice_mode)
-	if voice_mode not in (1,2,3,4):
-		raise IvrError(0, 'params voice_mode not in (1,2,3,4)')
 
 	#######################################
 	# opts
@@ -295,7 +288,7 @@ jsonrpc.send_event(
     <NodeID>1883</NodeID>
     <NodeType>JOINCONFEX</NodeType>
     <NodeName>加入会议组</NodeName>
-    <ExtendedProperty>ConfID=conf_id;InitVolume=int(params.get('volume', 0));WaitMode=0;MainCh=chan;MainJoinMode=voice_mode;MainTimeOut=int(params['max_seconds']);AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=params.get('play_file') or '';IsClampTone=0;Option=opts;OutExitData=;MainPmCh=</ExtendedProperty>
+    <ExtendedProperty>ConfID=conf_id;InitVolume=params['volume'];WaitMode=0;MainCh=chan;MainJoinMode=params['voice_mode'];MainTimeOut=params['max_seconds'];AddChList=;JoinModeList=;TalkChList=;ChTimeOutList=;AddPlay=params['play_file'];IsClampTone=0;Option=opts;OutExitData=;MainPmCh=</ExtendedProperty>
     <PropertySet>
       <Actions />
       <Exit>
