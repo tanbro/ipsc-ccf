@@ -407,6 +407,21 @@ if (id_ is None) and (params is None):
 		ipsc_info = dict(process_id=ipsc_info)
 		#
 		chan = GetCurrentCh()
+		#
+		mi_cnt, _, mi_codecs, _, _, _ = GetSipCallMediaCodecInfo(chan)
+		if mi_cnt &lt; 0:
+			raise IvrError(0, 'GetSipCallMediaCodecInfo(%s) returns %s' % (chan, mi_cnt))
+		codecs = _gd_['codecs']
+		remote_codecs = []
+		for codec_id in mi_codecs:
+			for k, v in codecs.items():
+				if int(codec_id) == int(v):
+					k = str(k)
+					if not k in remote_codecs:
+						remote_codecs.append(k)
+					break
+		Trace('codecs-name-list=%s' % remote_codecs)
+		#
 		from_uri = 'sip:{}'.format(GetOrgCallNo())
 		if GetCalledNo():
 			# to_uri = 'sip:{}'.format(GetCalledNo())
@@ -426,6 +441,7 @@ if (id_ is None) and (params is None):
 			'state': 'Initiated',
 			'chan': chan,
 			'ipsc_info': ipsc_info,
+			'remote_codecs': remote_codecs,
 			'call_dir': 'inbound',
 			'bus_addr': sender,
 			'from_uri': from_uri,
@@ -446,6 +462,8 @@ if (id_ is None) and (params is None):
 				from_uri=from_uri,
 				to_uri=to_uri,
 				begin_time=call_info['begin_time'],
+				codecs=remote_codecs,
+				ipsc_info=call_info['ipsc_info'],
 			)
 		)
 	except Exception as err:
@@ -467,7 +485,14 @@ else:
 			to_uri = '{1}:{2}'.format(user, host, port)
 		release_delay = params.get('release_delay', 0)
 		max_answer_seconds = float(params['max_answer_seconds'])
-		max_ring_seconds = int(params.get('max_ring_seconds', 50))
+		max_ring_seconds = params.get('max_ring_seconds')
+		if max_ring_seconds is None:
+			max_ring_seconds = 50
+		elif isinstance(max_ring_seconds, str):
+			max_ring_seconds = max_ring_seconds.strip()
+			if not max_ring_seconds:
+				max_ring_seconds = 50
+		max_ring_seconds = int(max_ring_seconds)
 
 		#####################################################
 		#
@@ -2204,7 +2229,28 @@ except Exception as err:
     <ExtendedProperty>ZoneType=0;ScriptContent=last_err = None
 try:
 	params['max_seconds'] = int(params['max_seconds'])
-	params['volume'] = int(params.get('volume', 0))
+	
+	_volume = params.get('volume')
+	if _volume is None:
+		params['volume'] = 0
+	else:
+		params['volume'] = int(_volume)
+
+	_voice_mode = params.get('voice_mode')
+	if _voice_mode is None:
+		_voice_mode = 1
+	else:
+		_voice_mode = int(_voice_mode)
+	if _voice_mode not in (1,2,3,4):
+		raise IvrError(0, 'parameter voice_mode not in (1,2,3,4)')
+	params['voice_mode'] = _voice_mode
+
+	_play_file = params.get('play_file')
+	if _play_file is None:
+		params['play_file'] = ''
+	else:
+		params['play_file'] = str(_play_file).strip()
+	
 	conf_res_id = params['conf_res_id']
 	conf_info = conf_map_r[conf_res_id]
 	conf_id = conf_info['conf_id']

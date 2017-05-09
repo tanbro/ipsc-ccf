@@ -96,9 +96,11 @@
 	play_repeat = int(params.get('play_repeat', 0)) + 1
 
 	cl = opts_dict['PlayList'] = []
-	content = params['play_content']
+	content = params.get('play_content')
+	if content is None:
+		content = ''
 	if isinstance(content, str):
-		cl.append([content, 0, ''])
+		cl.append([content.strip(), 0, ''])
 	elif isinstance(content, (list,tuple)):
 		for item in content[:30]:
 			if len(item) == 1:

@@ -12,16 +12,18 @@
 
   :param str record_file: 录音文件路径。会议创建后，自动将会议的录音存放到这个文件。
 
-    :default: ``None`` 表示不录音
+    :default: ``null`` 表示不录音
 
   :param str bg_file: 会议创建后，自动播放这个声音文件作为背景音。
 
-    :default: ``None`` 表示无背景音
+    :default: ``null`` 表示无背景音
 
   :param int parts_threshold: 删除会议的人数阈值。
     会议在第二方加入后，任何一方推出后，如果剩余人数低于该阈值，就删除会议资源。
 
-    .. warning:: 该参数必须大于等于0。如果传入参数小于0，会被转为绝对值。
+    .. warning::
+      如果该参数小于0，则表示即使会议中所有的呼叫退出，也不接散会议，直到调用API解散，或者持续180秒无任何呼叫加入。
+      在会议建立后，如果需要修改这个值，应在会议资源创建后，调用 :func:`set_parts_threshold`
 
     eg:
 
@@ -173,12 +175,15 @@
 
   :param str res_id: 停止该会议中的录音。
 
-
 改变与会者的成员删除阈值
 ========================
 .. function:: set_parts_threshold(res_id, value)
 
   :param int value: 见 :func:`construct` 的 ``parts_threadhold`` 参数
+
+    .. note::
+      此时，可以设置该值小于0。
+      当阈值小于零时，即使会议中的呼叫全部退出，会议也不会解散，除非调用API解散，或者180秒之内没有新的呼叫加入。
 
   .. note:: 调用后，会议不会因阈值的改变而自动释放。只有当某个成员退出时，才会重新按照新的设置计算是否自动释放。
 

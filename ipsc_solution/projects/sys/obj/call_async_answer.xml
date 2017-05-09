@@ -70,10 +70,28 @@ org_state = call_info['state']
 call_info['answer_time'] = now()
 call_info['state'] = 'Answer'
 Trace('set call state to "%s"' % call_info['state'])
-#
-codec = 0x00
-Trace('&gt;&gt;&gt; SendAcceptCall(chan=%s, codec=%s)' % (chan, codec))
-SendAcceptCall(chan, codec)
+
+####################################################
+# codec negotiation
+codecs_map = _gd_['codecs']
+codec_name = params.get('codec', '')
+codec_id = -1
+if codec_name:
+	codec_id = codecs_map.get(codec_name, -1)
+if codec_id &lt; 0:
+	remote_codecs = call_info['remote_codecs']
+	remote_codec_ids = []
+	for rcname in remote_codecs:
+		rcid = codecs_map.get(rcname, -1)
+		if rcid &gt;= 0:
+			if rcid not in remote_codec_ids:
+				remote_codec_ids.append(rcid)
+	for lcid in (0x11, 0x00, 0x01):
+		if lcid in remote_codec_ids:
+			codec_id = lcid
+			break
+Trace('&gt;&gt;&gt; SendAcceptCall(chan=%s, codec=%s)' % (chan, codec_id))
+SendAcceptCall(chan, codec_id)
 ret_val=AsynchInvoke(WaitCallStatus(chan,5000,0,[0,2,3,4]))
 Trace('&lt;&lt;&lt; WaitCallStatus -&gt; {}'.format(str(ret_val)))
 if ret_val[0] &lt; 1:

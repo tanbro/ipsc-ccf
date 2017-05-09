@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-:term:`壹云` :term:`CTI` API 文档
+IPSC 通用 :term:`CTI` 流程 API 手册
 ======================================================
 
 :版本:     |version|
@@ -16,7 +16,6 @@
    :maxdepth: 2
 
    概述 <abstract>
-   系统结构 <structure>
    CTI 总线 <cti-bus/index>
    API 说明 <api-spec/index>
    术语表 <glossary>

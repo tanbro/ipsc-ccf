@@ -3,9 +3,6 @@
 
 .. glossary::
 
-  壹云
-    http://oneyun.com/
-
   CTI
     http://wikipedia.org/wiki/Computer_telephony_integration
 
@@ -23,12 +20,6 @@
 
   smartbus
     http://github.com/Hesong-OpenSource/smartbus-client-sdk
-
-  阿里云
-    http://aliyun.com/
-
-  aliyun
-    http://aliyun.com/
 
   JSON
     http://www.json.org/

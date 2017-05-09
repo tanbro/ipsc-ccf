@@ -55,7 +55,7 @@
 local_clientid  应用服务使用其服务进程中 :doc:`/cti-bus/index` 客户端 ID 是该参数值的客户端发送命令。
 server_unitid   `IPSC` 所在物理服务器的 :doc:`/cti-bus/index` 节点 ID。
 ipscindex       `IPSC` 服务进程在该 :doc:`/cti-bus/index` 节点下的序号。
-projectid       `IPSC` 流程项目 ID 。在 :term:`壹云` 的区域数据中心，我们统一使用 ID 为 ``sys`` 的流程项目 。
+projectid       `IPSC` 流程项目 ID 。在 `CCF` 中，统一使用 ID 为 ``sys`` 的流程项目 。
 
 flowid          使用不同的流程建立不同的资源。目前，流程 `ID` 和资源的对应关系是：
 
@@ -247,7 +247,7 @@ size            包体字节长度
 local_clientid  应用服务使用其服务进程中 :doc:`/cti-bus/index` 客户端 ID 是该参数值的客户端发送命令。
 server_unitid   `IPSC` 所在物理服务器的 :doc:`/cti-bus/index` 节点 ID。
 ipscindex       `IPSC` 服务进程在该 :doc:`/cti-bus/index` 节点下的序号。
-projectid       `IPSC` 流程项目 ID 。在 :term:`壹云` 的区域数据中心，我们统一使用 ID 为 ``sys`` 的流程项目 。
+projectid       `IPSC` 流程项目 ID 。在 `CCF` 中，统一使用 ID 为 ``sys`` 的流程项目 。
 title           `IPSC` 的资源流程在其整个生命周期内，持续监听向该资源 `ID` 发送的通知消息。
                 **该参数填写要操作的资源的 ID** ，即可将控制命令发送给资源所对应的流程实例。
 mode            该参数无意义，填写 ``0`` 即可 。

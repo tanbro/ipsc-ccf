@@ -81,7 +81,7 @@
 
     主叫号码隐藏功能可通过该参数的不同赋值实现。
 
-    :default: `None` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
+    :default: ``null`` 不指定主叫。此时主叫号码由线路及运营商的实际设置情况决定。
 
     .. attention:: 不是每个主叫号码都能被 VoIP 网关的外呼线路接受！
 
@@ -106,14 +106,14 @@
     如果该参数不为 `None` ，系统将在此参数指定父呼叫资源上进行拨号。
     拨号期间，父呼叫可以听到拨号提示音。
 
-    :default: ``None``
+    :default: ``null``
 
   :param str parent_conf_res_id: 父会议资源ID。
 
     如果该参数不为 `None` ，系统将在此参数指定父会议资源上进行拨号。
     拨号期间，父会议中的呼叫可以听到拨号提示音。
 
-    :default: ``None``
+    :default: ``null``
 
   :param str ring_play_file: 拨号时，在对方振铃期间向父呼叫播放的声音文件。
 
@@ -121,7 +121,7 @@
 
     如果指定了 ``parent_call_res_id`` 参数，且本参数为 ``null`` 或者空字符串，则在拨号时向父呼叫透传原始的线路拨号提示音。
 
-    :default: ``None``
+    :default: ``null``
 
   :param int ring_play_mode: 回铃音文件 ``ring_play_file`` 播放模式
 
@@ -138,23 +138,76 @@
 
   :param list codecs: 外呼采用的VoIP编码
 
-    最多可以指定3个编码格式，目前支持的编码的格式有（注意大小写区别）：
+    最多可以指定3个编码格式，目前可以识别的编码的格式有（注意大小写区别，只有粗体的是平台支持的）：
 
-    ======================= =========== =========== ========================
-    编码名称                 系统 ID     Payload     说明
-    ======================= =========== =========== ========================
-    G711_ALAW_20MS          0x00        8
-    G711_ULAW_20MS          0x01        0
-    G729_20MS               0x11        18
-    iLBC_20MS               0x13        80
-    iLBC_30MS               0x14        98
-    ======================= =========== =========== ========================
+    ======================= =========== =========== ======== ========================
+    编码名称                ID          Payload     可用     说明
+    ======================= =========== =========== ======== ========================
+    G711_ALAW_20MS          0x00        8           √        PCMA ALAW 的默认编码，无压缩，需要高带宽
+    G711_ULAW_20MS          0x01        0           √        PCMA ULAW 的默认编码，无压缩，需要高带宽
+    G726_16_20MS            0x02        35
+    G726_24_20MS            0x03        36
+    G726_32_20MS            0x04        2
+    G726_40_20MS            0x05        38
+    G727_16_20MS            0x06        39
+    G727_24_16_20MS         0x07        40
+    G727_24_20MS            0x08        41
+    G727_32_16_20MS         0x09        42
+    G727_32_24_20MS         0x0a        43
+    G727_32_20MS            0x0b        44
+    G727_40_16_20MS         0x0c        45
+    G727_40_24_20MS         0x0d        46
+    G727_40_32_20MS         0x0e        47
+    G723_5_3_30MS           0x0f        4
+    G723_6_3_30MS           0x10        4
+    G729_20MS               0x11        18          √        与其它线路对接时，首推这种高压缩编码
+    G711_ALAW_30MS          0x12        9
+    iLBC_20MS               0x13        80          √        可用，但我们自家SIP客户端不支持该编码！
+    iLBC_30MS               0x14        98          √        我们自家SIP客户端的推荐使用编码
+    CLEAR_CHANNEL           0x15        56
+    GSM_FR                  0x16        96
+    GSM_EFR                 0x17        96
+    AMR_475_OA              0x18        96
+    AMR_795_OA              0x1d        96
+    AMR_102_OA              0x1e        96
+    AMR_122_OA              0x1f        96
+    AMR_475_BE              0x20        96
+    AMR_515_BE              0x21        96
+    AMR_590_BE              0x22        96
+    AMR_670_BE              0x23        96
+    AMR_740_BE              0x24        96
+    AMR_795_BE              0x25        96
+    AMR_102_BE              0x26        96
+    AMR_122_BE              0x27        96
+    AMR_WB_66_BE            0x28        111
+    AMR_WB_885_BE           0x29        111
+    AMR_WB_1265_BE          0x2A        111
+    AMR_WB_1425_BE          0x2B        111
+    AMR_WB_1585_BE          0x2C        111
+    AMR_WB_1825_BE          0x2D        111
+    AMR_WB_1985_BE          0x2E        111
+    AMR_WB_2305_BE          0x2F        111
+    AMR_WB_2385_BE          0x30        111
+    AMR_WB_66_OA            0x31        111
+    AMR_WB_885_OA           0x32        111
+    AMR_WB_1265_OA          0x33        111
+    AMR_WB_1425_OA          0x34        111
+    AMR_WB_1585_OA          0x35        111
+    AMR_WB_1825_OA          0x36        111
+    AMR_WB_1985_OA          0x37        111
+    AMR_WB_2305_OA          0x38        111
+    AMR_WB_2385_OA          0x39        111
+    SILK_8KSS_20MS          0x3A        111                  8K采样
+    SILK_16KSS_20MS         0x3B        111                  16K采样
+    OPUS_8KSS_20MS          0x3C        111                  8K采样
+    OPUS_16KSS_20MS         0x3D        111                  16K采样
+    ======================= =========== =========== ======== ========================
 
-    :default: ``['G711_ALAW_20MS', 'G711_ULAW_20MS']``
+    :default: ``['G729_20MS', G711_ALAW_20MS', 'G711_ULAW_20MS']``
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
-    :default: ``None``
+    :default: ``null``
 
   :return: 资源ID和IPSC相关信息。
 
@@ -219,7 +272,7 @@
 应答
 -------
 
-.. function:: answer(res_id, max_answer_seconds, user_data=None)
+.. function:: answer(res_id, max_answer_seconds, codecs="", user_data=None)
 
   :param str res_id: 要操作的呼叫资源的ID
 
@@ -227,9 +280,16 @@
 
     .. warning:: 必须合理设定该参数，防止超时呼叫问题！
 
+  :param str codec: 用这个编码应答
+
+    只有该编码与远端提供的编码 :func:`on_incoming` 的 ``codecs`` 参数列表有重合，且该CTI的硬件支持时，才可能接听成功。
+    编码名称参考 :func:`construct` 的 ``codecs`` 参数
+
+    :default: ``""`` CTI服务器自行选择编码
+
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
-    :default: `None`
+    :default: ``null``
 
   .. important::
 
@@ -248,7 +308,7 @@
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
-    :default: `None`
+    :default: ``null``
 
   .. important::
 
@@ -290,7 +350,7 @@
 
   :param str user_data: 应用服务自定义数据，可用于 `CDR` 标识。
 
-    :default: `None`
+    :default: ``null``
 
   .. important::
 
@@ -324,15 +384,15 @@
       ====== ===================================================================
       枚举值  说明
       ====== ===================================================================
-      ``0``	 文件播放。此时，放音内容应是文件名字符串。
+      ``0``   文件播放。此时，放音内容应是文件名字符串。
 
-      ``1``	 数字播放。此时，放音内容应是十进制整数或者数字字符串。
+      ``1``   数字播放。此时，放音内容应是十进制整数或者数字字符串。
 
-      ``2``	 数值播放。此时，放音内容应是十进制整数或者浮点数。
+      ``2``   数值播放。此时，放音内容应是十进制整数或者浮点数。
 
-      ``3``	 金额播放。此时，放音内容应是十进制整数或者浮点数。
+      ``3``   金额播放。此时，放音内容应是十进制整数或者浮点数。
 
-      ``4``	 日期时间播放。其格式是：
+      ``4``   日期时间播放。其格式是：
 
              * `YYYY-mm-dd HH:MM:SS`
 
@@ -376,7 +436,7 @@
                `1:5` 读作 “一点五分”，
                `01:23` 读作 “一点二十三分”。
 
-      ``5``	 时长播放。格式是：
+      ``5``   时长播放。格式是：
 
              * `HH:MM:SS`
 
@@ -393,9 +453,9 @@
              .. note::
                时分秒的数值区间必须处于 0 ~ 99 之间。
 
-      ``6``	 **尚未实现！** 其规划功能是：金额播放（元角分）。此时，放音内容应是十进制整数或者浮点数。
+      ``6``   **尚未实现！** 其规划功能是：金额播放（元角分）。此时，放音内容应是十进制整数或者浮点数。
 
-      ``7``	 多文件播放。此时，放音内容应是用 ``|`` 字符分隔的多个文件名字符串组合。
+      ``7``   多文件播放。此时，放音内容应是用 ``|`` 字符分隔的多个文件名字符串组合。
 
       ``10`` **尚未实现！** TTS。此时，放音内容应是欲转换文本内容。
 
@@ -420,7 +480,7 @@
   :param str finish_keys: 播放的打断按键码串。
     在播放过程中，如果接收到了一个等于该字符串中任何一个字符的 :term:`DTMF` 码，则停止播放。
 
-    :default: `None` 无打断按键
+    :default: ``null`` 无打断按键
 
   :param int repeat: 重复播放次数。重复1次，即表示播放2次。
 
@@ -438,28 +498,28 @@
 开始录音
 ------------
 
-.. function:: record_start(res_id, max_seconds, beep, record_file, record_format, finish_keys)
+.. function:: record_start(res_id, max_seconds, record_file, record_format, finish_keys)
 
   :param str res_id: 要操作的呼叫资源的ID
   :param int max_seconds: 录音的最大时间长度，单位是秒。超过该事件，录音会出错，并结束。
-
-  :param bool beep: 是否在录音之前播放“嘀”的一声。 (**尚未实现**)
-
-    :default: `True`
-
   :param str record_file: 录音文件名，应使用绝对路径。
 
-  :param int record_format: 录音文件格式枚举值 (**尚未实现**)
+  :param int record_format: 录音文件格式枚举值
 
     ======== ===========
     枚举值    说明
     ======== ===========
-    ``0x01``  OKI ADPCM
     ``0x03``  CCITT a-law 8k/8bit
-    ``0x04``  g.726
     ``0x07``  CCITT µ-law 8k/8bit
     ``0x08``  PCM liner 8k/8bit
-    ``0x15``  g.721
+    ``0x10``  AMR 4.75kbps
+    ``0x11``  AMR 5.15kbps
+    ``0x12``  AMR 5.9kbps (建议采用)
+    ``0x13``  AMR 6.7kbps
+    ``0x14``  AMR 7.4kbps
+    ``0x15``  AMR 7.95kbps
+    ``0x16``  AMR 10.2kbps
+    ``0x17``  AMR 12.2kbps
     ======== ===========
 
     :default: `3`
@@ -537,7 +597,7 @@
 
     该参数格式定义见 :func:`play_start` 的 `content` 参数
 
-    :default: `None` 无提示音
+    :default: ``null`` 无提示音
 
   :type play_content: str, list
 
@@ -584,11 +644,11 @@
 
   :param str record_file: 录音文件。如果该参数不为 `None` 或空字符串，则连接期间双方的通话被保存在这个文件，否则不录音。
 
-    :default: `None`
+    :default: ``null``
 
-  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。(**尚未实现**)
+  :param int record_format: 见 :func:`record_start` 的 ``record_format`` 参数。
 
-    :default: `2`
+    :default: `3`
 
   :param int local_volume: 双通道连接建立后的发起方音量。 (**尚未实现**)
 
@@ -607,7 +667,7 @@
 
   :param str schedule_play_file: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放此声音文件。(**尚未实现**)
 
-    :default: `None` 表示无定时放音
+    :default: ``null`` 表示无定时放音
 
 
   :param int schedule_play_loop: 当本次双通道连接通话进行到参数 ``schedule_play_time`` 所指定的 :term:`Unix time` 时间点时，播放声音文件的循环次数。0表示不播放，1表示播放一次，2表示播放2次，以此类推。(**尚未实现**)
@@ -647,11 +707,11 @@
 
   :param int volume: 加入会议后的初始音量
 
-    :default: `None` 表示默认音量
+    :default: ``null`` 表示默认音量
 
   :param str play_file: 该呼叫加入后，对会议播放的声音文件
 
-    :default: `None` 表示不播放
+    :default: ``null`` 表示不播放
 
 .. important::
   只有处于 ``Ring``, ``Idle``, ``Play``, ``Dial`` 状态的呼叫才可进入会议。
@@ -671,13 +731,17 @@
 新呼入呼叫
 ------------
 
-.. function:: on_incoming(res_id, from_uri, to_uri, begin_time, user_data, ipsc_info)
+.. function:: on_incoming(res_id, from_uri, to_uri, begin_time, codecs, ipsc_info)
 
   :param str res_id: 触发事件的呼叫资源 `ID`。
   :param str from_uri: 该呼叫的主叫号码(:term:`SIP URI`)。
   :param str to_uri: 该呼叫的被叫号码(:term:`SIP URI`)。
   :param int begin_time: 本次入方向呼叫的开始时间(:term:`CTI` 服务器的 :term:`Unix time`)。
-  :param str user_data: 用户数据，来源于 :func:`construct` 的 ``user_data`` 参数
+
+  :param list[str] codecs: 呼入所能提供的声音编码
+
+    调用 :func:`answer` 进行接听的时候，提供的编码必须与提供的有重合。
+    编码定义见 :func:`construct` 的 ``codecs`` 参数说明。
 
   :param object ipsc_info: IPSC 相关信息，包括 ``process_id`` 属性。
     形如::

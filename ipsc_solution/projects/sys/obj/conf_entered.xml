@@ -61,11 +61,14 @@ try:
 	conf_info = conf_map[conf_id]
 except KeyError as e:
 	raise IvrError(0, 'conference id &lt;%s&gt; NOT existed' % conf_id)
-errno, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
-if errno &lt;= 0:
-	raise IvrError(0, "GetConferList(conf_id={}) returns {}".format(conf_id, errno))
+
+Trace('conf_entered: res_id=%s, conf_id=%s, chan=%s' % (conf_info['res_id'], conf_id, chan))
+
+count, chan_list, mode_list, timeout_list = GetConferList(conf_id, 0)
+if count &lt;= 0:
+	raise IvrError(0, "GetConferList(conf_id={}) returns {}".format(conf_id, count))
 parts = []
-for i in range(len(chan_list)):
+for i in range(count):
 	chan = chan_list[i]
 	call_info = call_map[chan]
 	parts.append({
