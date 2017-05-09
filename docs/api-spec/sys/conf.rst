@@ -12,11 +12,11 @@
 
   :param str record_file: 录音文件路径。会议创建后，自动将会议的录音存放到这个文件。
 
-    :default: ``None`` 表示不录音
+    :default: ``null`` 表示不录音
 
   :param str bg_file: 会议创建后，自动播放这个声音文件作为背景音。
 
-    :default: ``None`` 表示无背景音
+    :default: ``null`` 表示无背景音
 
   :param int parts_threshold: 删除会议的人数阈值。
     会议在第二方加入后，任何一方推出后，如果剩余人数低于该阈值，就删除会议资源。

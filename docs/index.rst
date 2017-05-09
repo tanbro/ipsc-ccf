@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-IPSC :term:`CTI` API 文档
+IPSC 通用 :term:`CTI` 流程 API 手册
 ======================================================
 
 :版本:     |version|

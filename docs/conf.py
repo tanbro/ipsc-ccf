@@ -63,7 +63,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Oneyue CTI API'
+project = u'Comman CTI Flow'
 copyright = u'2016, 刘雪彦'
 author = u'刘雪彦'
 
