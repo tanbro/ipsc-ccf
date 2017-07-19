@@ -411,6 +411,8 @@ if (id_ is None) and (params is None):
 		mi_cnt, _, mi_codecs, _, _, _ = GetSipCallMediaCodecInfo(chan)
 		if mi_cnt &lt; 0:
 			raise IvrError(0, 'GetSipCallMediaCodecInfo(%s) returns %s' % (chan, mi_cnt))
+		if isinstance(mi_codecs, int):
+			mi_codecs = [mi_codecs]
 		codecs = _gd_['codecs']
 		remote_codecs = []
 		for codec_id in mi_codecs:
