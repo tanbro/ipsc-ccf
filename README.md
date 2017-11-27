@@ -1,6 +1,6 @@
 .. image:: https://readthedocs.org/projects/hesong-ipsc-ccf/badge/?version=develop
-:target: http://hesong-ipsc-ccf.readthedocs.io/en/stable/?badge=develop
-:alt: Documentation Status
+  :target: http://hesong-ipsc-ccf.readthedocs.io/en/stable/?badge=develop
+  :alt: Documentation Status
 
 # IPSC通用CTI流程
 
