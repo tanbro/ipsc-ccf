@@ -998,7 +998,7 @@ else:
 Trace('sys.call.released')
 
 try:
-	isxno,brdno,spanno,chno,devtype,talked,endtype,ipsc_reason,callfailcause = GetChInfo(chan)
+	isxno,brdno,spanno,chno,devtype,talked,endtype,ipsc_reason,callfailcause = GetChInfo(chan)[0:9]
 	if endtype == 2:
 		dropped_by = 'usr'
 	else:
