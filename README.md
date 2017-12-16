@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/hesong-ipsc-ccf/badge/?version=develop)](http://hesong-ipsc-ccf.readthedocs.io/en/stable/?badge=develop)
+[![Documentation Status](https://readthedocs.org/projects/hesong-ipsc-ccf/badge/?version=master)](http://hesong-ipsc-ccf.readthedocs.io/en/stable/?badge=master)
 
 # IPSC通用CTI流程
 
