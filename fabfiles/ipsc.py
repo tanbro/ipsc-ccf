@@ -8,7 +8,6 @@ from fabric.api import *
 
 IPSC_DIR = '/home/hesong/ipsc'
 IPSC_SOL_DIR = '/home/hesong/service_logic'
-IPSC_SOL_NAME = 'SampleProject'
 
 
 @task
@@ -39,7 +38,6 @@ def restart():
 @task
 def upload():
     put('../ipsc_solution', IPSC_SOL_DIR)
-    obj_dir = '%s/ipsc_solution/projects/%s/obj' % (IPSC_SOL_DIR, IPSC_SOL_NAME)
 
 
 @task
