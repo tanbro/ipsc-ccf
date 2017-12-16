@@ -296,6 +296,10 @@ local.properties
 .recommenders/
 docs/.atom-build.yml
 
+
+# vscode
+.vscode/
+
 # my ignore
 tests/
 logs/
