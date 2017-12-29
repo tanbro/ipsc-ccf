@@ -518,6 +518,22 @@ else:
 		if len(codecs) &gt; 2:
 			opts_dict['AudioCodec3'] = codecs_dict[codecs[2]]
 
+
+		#####################################################
+		# SIP Options
+		val = params.get('sip_src_ip')
+		if val:
+			opts_dict['SipSrcIp'] = val
+		val = params.get('sip_proxy')
+		if val:
+			opts_dict['SipProxy'] = val
+		val = params.get('sip_auth_username')
+		if val:
+			opts_dict['SipAuthUsername'] = val
+		val = params.get('sip_auth_password')
+		if val:
+			opts_dict['SipAuthPassword'] = val
+
 		####################################################
 		#
 		parent_call_res_id = params.get('parent_call_res_id')
