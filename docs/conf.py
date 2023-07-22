@@ -81,7 +81,7 @@ release = u'1.2.2'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'zh'
+language = 'zh_CN'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -117,7 +117,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+# pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -126,7 +126,7 @@ pygments_style = 'sphinx'
 # keep_warnings = False
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True
+# todo_include_todos = True
 
 
 # -- Options for HTML output ----------------------------------------------
@@ -134,22 +134,21 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 # html_theme = 'alabaster'
-html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {
-    # alabaster
-    # 'show_related': True,
-    # 'fixed_sidebar': True,
-    # 'font_family': "'Microsoft Yahei UI', 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
-    # 'font_size': '18px',
-    # 'head_font_family': "'Microsoft Yahei UI', Garamond, Georgia, serif",
-    # 'code_font_family': "'Source Code Pro', Consolas, Menlo, 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace",
-    # 'code_font_size': '1em',
-}
+# html_theme_options = {
+#     # alabaster
+#     'show_related': True,
+#     'fixed_sidebar': True,
+#     'font_family': "'Microsoft Yahei UI', 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif",
+#     'font_size': '18px',
+#     'head_font_family': "'Microsoft Yahei UI', Garamond, Georgia, serif",
+#     'code_font_family': "'Source Code Pro', Consolas, Menlo, 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace",
+#     'code_font_size': '1em',
+# }
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
@@ -257,68 +256,68 @@ html_static_path = ['_static']
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'yunhuni-peer-comm-cti-flowdoc'
+# htmlhelp_basename = 'yunhuni-peer-comm-cti-flowdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
-if READTHEDOCS:
-    latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
-    # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
-    # Additional stuff for the LaTeX preamble.
-    'preamble': r'''
-    \hypersetup{unicode=true}
-    \usepackage{CJKutf8}
-    \DeclareUnicodeCharacter{00A0}{\nobreakspace}
-    \DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
-    \DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
-    \DeclareUnicodeCharacter{2286}{\ensuremath{\subseteq}}
-    \DeclareUnicodeCharacter{2713}{x}
-    \DeclareUnicodeCharacter{27FA}{\ensuremath{\Longleftrightarrow}}
-    \DeclareUnicodeCharacter{221A}{\ensuremath{\sqrt{}}}
-    \DeclareUnicodeCharacter{221B}{\ensuremath{\sqrt[3]{}}}
-    \DeclareUnicodeCharacter{2295}{\ensuremath{\oplus}}
-    \DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}
-    \begin{CJK}{UTF8}{gbsn}
-    \AtEndDocument{\end{CJK}}
-    ''',
-    }
-else:
-    latex_elements = {
-         # The paper size ('letterpaper' or 'a4paper').
-         #
-         # 'papersize': 'letterpaper',
+# if READTHEDOCS:
+#     latex_elements = {
+#     # The paper size ('letterpaper' or 'a4paper').
+#     #'papersize': 'letterpaper',
+#     # The font size ('10pt', '11pt' or '12pt').
+#     #'pointsize': '10pt',
+#     # Additional stuff for the LaTeX preamble.
+#     'preamble': r'''
+#     \hypersetup{unicode=true}
+#     \usepackage{CJKutf8}
+#     \DeclareUnicodeCharacter{00A0}{\nobreakspace}
+#     \DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+#     \DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+#     \DeclareUnicodeCharacter{2286}{\ensuremath{\subseteq}}
+#     \DeclareUnicodeCharacter{2713}{x}
+#     \DeclareUnicodeCharacter{27FA}{\ensuremath{\Longleftrightarrow}}
+#     \DeclareUnicodeCharacter{221A}{\ensuremath{\sqrt{}}}
+#     \DeclareUnicodeCharacter{221B}{\ensuremath{\sqrt[3]{}}}
+#     \DeclareUnicodeCharacter{2295}{\ensuremath{\oplus}}
+#     \DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}
+#     \begin{CJK}{UTF8}{gbsn}
+#     \AtEndDocument{\end{CJK}}
+#     ''',
+#     }
+# else:
+#     latex_elements = {
+#          # The paper size ('letterpaper' or 'a4paper').
+#          #
+#          # 'papersize': 'letterpaper',
 
-         # The font size ('10pt', '11pt' or '12pt').
-         #
-         # 'pointsize': '10pt',
+#          # The font size ('10pt', '11pt' or '12pt').
+#          #
+#          # 'pointsize': '10pt',
 
-         # Additional stuff for the LaTeX preamble.
-         #
-         # 'preamble': '',
+#          # Additional stuff for the LaTeX preamble.
+#          #
+#          # 'preamble': '',
 
-         # Latex figure (float) alignment
-         #
-         # 'figure_align': 'htbp',
+#          # Latex figure (float) alignment
+#          #
+#          # 'figure_align': 'htbp',
 
-        'papersize' : 'a4paper',
-        'utf8extra' : '',
-        'inputenc'  : '',
-        'babel'     : r'''\usepackage[english]{babel}''',
-        'preamble' : r'''
-        \usepackage{ctex}
-        ''',
-    }
+#         'papersize' : 'a4paper',
+#         'utf8extra' : '',
+#         'inputenc'  : '',
+#         'babel'     : r'''\usepackage[english]{babel}''',
+#         'preamble' : r'''
+#         \usepackage{ctex}
+#         ''',
+#     }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'yunhuni-peer-comm-cti-flow.tex', u'yunhuni-peer-comm-cti-flow Documentation',
-     u'刘雪彦', 'manual'),
-]
+# latex_documents = [
+#     (master_doc, 'yunhuni-peer-comm-cti-flow.tex', u'yunhuni-peer-comm-cti-flow Documentation',
+#      u'刘雪彦', 'manual'),
+# ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
